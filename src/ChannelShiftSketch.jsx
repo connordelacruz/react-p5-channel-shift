@@ -1,17 +1,23 @@
 
 export function ChannelShiftSketch(p5) {
+
+  let sourceImage
+
+  p5.preload = () => {
+    sourceImage = p5.loadImage('test0.jpg')
+  }
+
   p5.setup = () => {
-    p5.createCanvas(600, 400, p5.WEBGL)
+    p5.createCanvas(p5.windowWidth, p5.windowHeight)
   }
 
   p5.draw = () => {
-    p5.background(250)
-    p5.normalMaterial()
-    p5.push()
-    p5.rotateZ(p5.frameCount * 0.01)
-    p5.rotateX(p5.frameCount * 0.01)
-    p5.rotateY(p5.frameCount * 0.01)
-    p5.plane(100)
-    p5.pop()
+    // Match window width, scale height accordingly
+    p5.image(sourceImage, 0, 0, p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
   }
+
+  p5.windowResized = () => {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight)
+  }
+
 }
