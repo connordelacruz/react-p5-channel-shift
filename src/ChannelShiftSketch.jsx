@@ -9,8 +9,11 @@ export function ChannelShiftSketch(p5) {
 
   p5.setup = () => {
     // Match window width, scale height accordingly
-    let renderedImageHeight = (p5.windowWidth / sourceImage.width) * sourceImage.height
-    p5.createCanvas(p5.windowWidth, renderedImageHeight)
+    p5.createCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
+    // Due to weird scoping, need to define windowResized() here so it can use sourceImage dimensions
+    p5.windowResized = () => {
+      p5.resizeCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
+    }
 
     // Extract color channels
     // Initialize to blank images
@@ -46,11 +49,4 @@ export function ChannelShiftSketch(p5) {
     p5.blend(gImage, 0, 0, gImage.width, gImage.height, 0, 0, p5.width, p5.height, p5.ADD)
     p5.blend(bImage, 0, 0, bImage.width, bImage.height, 0, 0, p5.width, p5.height, p5.ADD)
   }
-
-  p5.windowResized = () => {
-    // Match window width, scale height accordingly
-    let renderedImageHeight = (p5.windowWidth / sourceImage.width) * sourceImage.height
-    p5.resizeCanvas(p5.windowWidth, renderedImageHeight)
-  }
-
 }
