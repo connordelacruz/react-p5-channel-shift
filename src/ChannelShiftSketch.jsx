@@ -1,12 +1,17 @@
 
 export function ChannelShiftSketch(p5) {
+  // Offsets into p5.js pixels array for RGBA
+  // Also used as indexes into sourceChannels
   const R_OFFSET = 0
   const G_OFFSET = 1
   const B_OFFSET = 2
   const A_OFFSET = 3
 
   // Source image + RGB channel images
-  let sourceImage, sourceRImage, sourceGImage, sourceBImage
+  let sourceImage
+  let sourceChannels = []
+  // TODO: separate previewChannels array
+
   // Graphics object for preview + RGB channel images
   let previewGraphics
 
@@ -30,20 +35,39 @@ export function ChannelShiftSketch(p5) {
     // Match window width, scale height accordingly
     p5.createCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
 
-    /**
-     * p5 windowResized
-     *
-     * Due to weird scoping, need to define windowResized() here so it can use sourceImage dimensions
-     */
-    p5.windowResized = () => {
-      p5.resizeCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
-    }
-
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
 
     // Extract color channels
     initializeRGBImages(sourceImage)
+
+    // --------------------------------------------------------------------------------
+    // additional p5.js methods (need to be defined here because of variable scope)
+    // --------------------------------------------------------------------------------
+
+    /**
+     * p5 windowResized
+     */
+    p5.windowResized = () => {
+      p5.resizeCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
+    }
+
+    /**
+     * p5 keyPressed
+     *
+     * TODO: For testing, remove once GUI is implemented
+     */
+    p5.keyPressed = () => {
+      if (p5.key === 'r') {
+        // Randomly pick 2 channels to swap
+        let randyChannels = [R_OFFSET, G_OFFSET, B_OFFSET]
+        let sourceChannel = p5.random(randyChannels)
+        randyChannels.splice(randyChannels.indexOf(sourceChannel), 1)
+        let targetChannel = p5.random(randyChannels)
+        // Swap em
+        swapChannels(sourceChannel, targetChannel)
+      }
+    }
   }
 
 
@@ -51,14 +75,11 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // TODO TESTING
-    let [newRImage, newBImage] = swapChannels(sourceRImage, R_OFFSET, sourceBImage, B_OFFSET)
-
-    // Blend RGB channels
     previewGraphics.background(0)
-    previewGraphics.blend(newRImage, 0, 0, sourceRImage.width, sourceRImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
-    previewGraphics.blend(sourceGImage, 0, 0, sourceGImage.width, sourceGImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
-    previewGraphics.blend(newBImage, 0, 0, sourceBImage.width, sourceBImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
+    // Blend RGB channels
+    sourceChannels.forEach((channelImage, i) => {
+      previewGraphics.blend(channelImage, 0, 0, channelImage.width, channelImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
+    })
 
     // Render to screen
     p5.image(previewGraphics, 0, 0, p5.width, p5.height)
@@ -74,11 +95,11 @@ export function ChannelShiftSketch(p5) {
    */
   function initializeRGBImages() {
     // Initialize to blank images
-    sourceRImage = p5.createImage(sourceImage.width, sourceImage.height)
+    let sourceRImage = p5.createImage(sourceImage.width, sourceImage.height)
     sourceRImage.loadPixels()
-    sourceGImage = p5.createImage(sourceImage.width, sourceImage.height)
+    let sourceGImage = p5.createImage(sourceImage.width, sourceImage.height)
     sourceGImage.loadPixels()
-    sourceBImage = p5.createImage(sourceImage.width, sourceImage.height)
+    let sourceBImage = p5.createImage(sourceImage.width, sourceImage.height)
     sourceBImage.loadPixels()
     // Copy color channels from sourceImage.pixels
     // This is a 1D array that stores RGBA values. See docs for details:
@@ -86,24 +107,35 @@ export function ChannelShiftSketch(p5) {
     sourceImage.loadPixels()
     for (let i = 0; i < sourceImage.pixels.length; i += 4) {
       // Red
-      sourceRImage.pixels[i] = sourceImage.pixels[i]
+      sourceRImage.pixels[i + R_OFFSET] = sourceImage.pixels[i + R_OFFSET]
       // Green
-      sourceGImage.pixels[i + 1] = sourceImage.pixels[i + 1]
+      sourceGImage.pixels[i + G_OFFSET] = sourceImage.pixels[i + G_OFFSET]
       // Blue
-      sourceBImage.pixels[i + 2] = sourceImage.pixels[i + 2]
+      sourceBImage.pixels[i + B_OFFSET] = sourceImage.pixels[i + B_OFFSET]
       // Alpha
-      sourceRImage.pixels[i + 3] = sourceGImage.pixels[i + 3] = sourceBImage.pixels[i + 3] = 255
+      sourceRImage.pixels[i + A_OFFSET] = sourceGImage.pixels[i + A_OFFSET] = sourceBImage.pixels[i + A_OFFSET] = 255
     }
     sourceRImage.updatePixels()
+    sourceChannels[R_OFFSET] = sourceRImage
     sourceGImage.updatePixels()
+    sourceChannels[G_OFFSET] = sourceGImage
     sourceBImage.updatePixels()
+    sourceChannels[B_OFFSET] = sourceBImage
   }
 
 
-  // TODO: doc
-  function swapChannels(channelImage0, channelOffset0, channelImage1, channelOffset1) {
-    let newChannelImage0 = p5.createImage(channelImage0.width, channelImage1.height)
+  /**
+   * Swap 2 color channels. Params are indexes into sourceChannels.
+   *
+   * @param channelOffset0
+   * @param channelOffset1
+   */
+  function swapChannels(channelOffset0, channelOffset1) {
+    let channelImage0 = sourceChannels[channelOffset0]
+    let newChannelImage0 = p5.createImage(channelImage0.width, channelImage0.height)
     newChannelImage0.loadPixels()
+
+    let channelImage1 = sourceChannels[channelOffset1]
     let newChannelImage1 = p5.createImage(channelImage1.width, channelImage1.height)
     newChannelImage1.loadPixels()
 
@@ -116,6 +148,8 @@ export function ChannelShiftSketch(p5) {
     newChannelImage0.updatePixels()
     newChannelImage1.updatePixels()
 
-    return [newChannelImage0, newChannelImage1]
+    // TODO: use previewChannels instead
+    sourceChannels[channelOffset0] = newChannelImage0
+    sourceChannels[channelOffset1] = newChannelImage1
   }
 }
