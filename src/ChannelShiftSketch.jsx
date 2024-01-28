@@ -83,6 +83,11 @@ export function ChannelShiftSketch(p5) {
    */
   p5.draw = () => {
     previewGraphics.background(0)
+    // TODO DEBUGGING
+    shiftChannels(p5.frameCount * 5 % sourceImage.width, 0, R_OFFSET)
+    shiftChannels(0, p5.frameCount * 5 % sourceImage.height, B_OFFSET)
+    shiftChannels(p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height, G_OFFSET)
+
     // Blend RGB channels
     previewChannels.forEach((channelImage, i) => {
       previewGraphics.blend(channelImage, 0, 0, channelImage.width, channelImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
@@ -135,6 +140,35 @@ export function ChannelShiftSketch(p5) {
     sourceBImage.updatePixels()
     sourceChannels[B_OFFSET] = sourceBImage
     previewChannels[B_OFFSET] = sourceBImage.get(0, 0, sourceBImage.width, sourceBImage.height)
+  }
+
+
+  // TODO: DOC N IMPLEMENT
+  function shiftChannels(xShift, yShift, sourceChannelOffset, targetChannelOffset = null) {
+    if (targetChannelOffset === null) {
+      targetChannelOffset = sourceChannelOffset
+    }
+    let sourceChannelImage = sourceChannels[sourceChannelOffset]
+    sourceChannelImage.loadPixels()
+    // TODO: this does not account for swapping target to source
+    let newChannelImage = p5.createImage(sourceChannelImage.width, sourceChannelImage.height)
+    newChannelImage.loadPixels()
+
+    for (let i = 0; i < sourceChannelImage.pixels.length; i += 4) {
+      // Convert 1D index into x,y coords for source
+      let sourceX = (i / 4) % sourceChannelImage.width
+      let sourceY = Math.floor((i / 4) / sourceChannelImage.width)
+      // Shift source coords
+      let targetX = (sourceX + xShift) % sourceChannelImage.width
+      let targetY = (sourceY + yShift) % sourceChannelImage.height
+      // Convert 2D target coords to 1D index
+      let targetIndex = (targetY * sourceChannelImage.width + targetX) * 4
+      newChannelImage.pixels[targetIndex + targetChannelOffset] = sourceChannelImage.pixels[i + sourceChannelOffset]
+      newChannelImage.pixels[targetIndex + A_OFFSET] = 255
+    }
+    newChannelImage.updatePixels()
+
+    previewChannels[targetChannelOffset] = newChannelImage
   }
 
 
