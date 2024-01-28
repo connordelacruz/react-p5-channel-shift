@@ -10,8 +10,9 @@ export function ChannelShiftSketch(p5) {
   // Source image + RGB channel images
   let sourceImage
   let sourceChannels = []
-  // TODO: separate previewChannels array
 
+  // Preview RGB channels, based on sourceChannels but with shifts/swaps applied
+  let previewChannels = []
   // Graphics object for preview + RGB channel images
   let previewGraphics
 
@@ -38,7 +39,7 @@ export function ChannelShiftSketch(p5) {
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
 
-    // Extract color channels
+    // Extract color channels and initialize previewChannels
     initializeRGBImages(sourceImage)
 
     // --------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ export function ChannelShiftSketch(p5) {
   p5.draw = () => {
     previewGraphics.background(0)
     // Blend RGB channels
-    sourceChannels.forEach((channelImage, i) => {
+    previewChannels.forEach((channelImage, i) => {
       previewGraphics.blend(channelImage, 0, 0, channelImage.width, channelImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
     })
 
@@ -121,15 +122,23 @@ export function ChannelShiftSketch(p5) {
       // Alpha
       sourceRImage.pixels[i + A_OFFSET] = sourceGImage.pixels[i + A_OFFSET] = sourceBImage.pixels[i + A_OFFSET] = 255
     }
+    // Load into sourceChannels and previewChannels
+    // Red
     sourceRImage.updatePixels()
     sourceChannels[R_OFFSET] = sourceRImage
+    previewChannels[R_OFFSET] = sourceRImage.get(0, 0, sourceRImage.width, sourceRImage.height)
+    // Green
     sourceGImage.updatePixels()
     sourceChannels[G_OFFSET] = sourceGImage
+    previewChannels[G_OFFSET] = sourceGImage.get(0, 0, sourceGImage.width, sourceGImage.height)
+    // Blue
     sourceBImage.updatePixels()
     sourceChannels[B_OFFSET] = sourceBImage
+    previewChannels[B_OFFSET] = sourceBImage.get(0, 0, sourceBImage.width, sourceBImage.height)
   }
 
 
+  // TODO: merge w/ shiftChannels()
   /**
    * Swap 2 color channels. Params are indexes into sourceChannels.
    *
@@ -137,11 +146,13 @@ export function ChannelShiftSketch(p5) {
    * @param channelOffset1
    */
   function swapChannels(channelOffset0, channelOffset1) {
-    let channelImage0 = sourceChannels[channelOffset0]
+    let channelImage0 = previewChannels[channelOffset0]
+    channelImage0.loadPixels()
     let newChannelImage0 = p5.createImage(channelImage0.width, channelImage0.height)
     newChannelImage0.loadPixels()
 
-    let channelImage1 = sourceChannels[channelOffset1]
+    let channelImage1 = previewChannels[channelOffset1]
+    channelImage1.loadPixels()
     let newChannelImage1 = p5.createImage(channelImage1.width, channelImage1.height)
     newChannelImage1.loadPixels()
 
@@ -154,8 +165,8 @@ export function ChannelShiftSketch(p5) {
     newChannelImage0.updatePixels()
     newChannelImage1.updatePixels()
 
-    // TODO: use previewChannels instead
-    sourceChannels[channelOffset0] = newChannelImage0
-    sourceChannels[channelOffset1] = newChannelImage1
+    // Load into previewChannels
+    previewChannels[channelOffset0] = newChannelImage0
+    previewChannels[channelOffset1] = newChannelImage1
   }
 }
