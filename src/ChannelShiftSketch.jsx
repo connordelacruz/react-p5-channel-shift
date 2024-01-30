@@ -10,10 +10,12 @@ export function ChannelShiftSketch(p5) {
   // Source image + RGB channel images
   let sourceImage
   let sourceChannels = []
-
-  // Preview RGB channels, based on sourceChannels but with shifts/swaps applied
+  // Preview RGB channels, based on sourceChannels but with swaps applied
   let previewChannels = []
-  // Graphics object for preview + RGB channel images
+  // x/y shift values to apply to each preview channel
+  let channelShiftValues = []
+
+  // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
 
 
@@ -39,8 +41,13 @@ export function ChannelShiftSketch(p5) {
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
 
+    // Initialize shift values to 0,0
+    channelShiftValues[R_OFFSET] = [0, 0]
+    channelShiftValues[G_OFFSET] = [0, 0]
+    channelShiftValues[B_OFFSET] = [0, 0]
+
     // Extract color channels and initialize previewChannels
-    initializeRGBImages(sourceImage)
+    initializeRGBImages()
 
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
@@ -84,14 +91,15 @@ export function ChannelShiftSketch(p5) {
   p5.draw = () => {
     previewGraphics.background(0)
     // TODO DEBUGGING
-    shiftChannels(p5.frameCount * 5 % sourceImage.width, 0, R_OFFSET)
-    shiftChannels(0, p5.frameCount * 5 % sourceImage.height, B_OFFSET)
-    shiftChannels(p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height, G_OFFSET)
+    channelShiftValues[R_OFFSET][0] = p5.frameCount * 5 % sourceImage.width
+    channelShiftValues[G_OFFSET] = [p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height]
+    // channelShiftValues[G_OFFSET] = [p5.frameCount * 5 % sourceImage.width, p5.frameCount * 5 % sourceImage.height]
+    channelShiftValues[B_OFFSET][1] = p5.frameCount * 5 % sourceImage.height
 
     // Blend RGB channels
-    previewChannels.forEach((channelImage, i) => {
-      previewGraphics.blend(channelImage, 0, 0, channelImage.width, channelImage.height, 0, 0, previewGraphics.width, previewGraphics.height, p5.ADD)
-    })
+    drawChannelToPreviewGraphics(R_OFFSET)
+    drawChannelToPreviewGraphics(G_OFFSET)
+    drawChannelToPreviewGraphics(B_OFFSET)
 
     // Render to screen
     p5.image(previewGraphics, 0, 0, p5.width, p5.height)
@@ -107,100 +115,117 @@ export function ChannelShiftSketch(p5) {
    */
   function initializeRGBImages() {
     // Initialize to blank images
-    let sourceRImage = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceRImage.loadPixels()
-    let sourceGImage = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceGImage.loadPixels()
-    let sourceBImage = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceBImage.loadPixels()
+    sourceChannels[R_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[R_OFFSET].loadPixels()
+    sourceChannels[G_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[G_OFFSET].loadPixels()
+    sourceChannels[B_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[B_OFFSET].loadPixels()
     // Copy color channels from sourceImage.pixels
     // This is a 1D array that stores RGBA values. See docs for details:
     // https://p5js.org/reference/#/p5.Image/pixels
     sourceImage.loadPixels()
     for (let i = 0; i < sourceImage.pixels.length; i += 4) {
       // Red
-      sourceRImage.pixels[i + R_OFFSET] = sourceImage.pixels[i + R_OFFSET]
+      sourceChannels[R_OFFSET].pixels[i + R_OFFSET] = sourceImage.pixels[i + R_OFFSET]
       // Green
-      sourceGImage.pixels[i + G_OFFSET] = sourceImage.pixels[i + G_OFFSET]
+      sourceChannels[G_OFFSET].pixels[i + G_OFFSET] = sourceImage.pixels[i + G_OFFSET]
       // Blue
-      sourceBImage.pixels[i + B_OFFSET] = sourceImage.pixels[i + B_OFFSET]
+      sourceChannels[B_OFFSET].pixels[i + B_OFFSET] = sourceImage.pixels[i + B_OFFSET]
       // Alpha
-      sourceRImage.pixels[i + A_OFFSET] = sourceGImage.pixels[i + A_OFFSET] = sourceBImage.pixels[i + A_OFFSET] = 255
+      sourceChannels[R_OFFSET].pixels[i + A_OFFSET] = sourceChannels[G_OFFSET].pixels[i + A_OFFSET] = sourceChannels[B_OFFSET].pixels[i + A_OFFSET] = 255
     }
     // Load into sourceChannels and previewChannels
     // Red
-    sourceRImage.updatePixels()
-    sourceChannels[R_OFFSET] = sourceRImage
-    previewChannels[R_OFFSET] = sourceRImage.get(0, 0, sourceRImage.width, sourceRImage.height)
+    sourceChannels[R_OFFSET].updatePixels()
+    previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
     // Green
-    sourceGImage.updatePixels()
-    sourceChannels[G_OFFSET] = sourceGImage
-    previewChannels[G_OFFSET] = sourceGImage.get(0, 0, sourceGImage.width, sourceGImage.height)
+    sourceChannels[G_OFFSET].updatePixels()
+    previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
     // Blue
-    sourceBImage.updatePixels()
-    sourceChannels[B_OFFSET] = sourceBImage
-    previewChannels[B_OFFSET] = sourceBImage.get(0, 0, sourceBImage.width, sourceBImage.height)
+    sourceChannels[B_OFFSET].updatePixels()
+    previewChannels[B_OFFSET] = sourceChannels[B_OFFSET].get(0, 0, sourceChannels[B_OFFSET].width, sourceChannels[B_OFFSET].height)
   }
 
 
-  // TODO: DOC N IMPLEMENT
-  function shiftChannels(xShift, yShift, sourceChannelOffset, targetChannelOffset = null) {
-    if (targetChannelOffset === null) {
-      targetChannelOffset = sourceChannelOffset
-    }
-    let sourceChannelImage = sourceChannels[sourceChannelOffset]
-    sourceChannelImage.loadPixels()
-    // TODO: this does not account for swapping target to source
-    let newChannelImage = p5.createImage(sourceChannelImage.width, sourceChannelImage.height)
-    newChannelImage.loadPixels()
+  /**
+   * Draw preview channel to previewGraphics, applying any x/y shifts to it.
+   *
+   * @param channelOffset
+   */
+  function drawChannelToPreviewGraphics(channelOffset) {
+    let [xShift, yShift] = channelShiftValues[channelOffset]
 
-    for (let i = 0; i < sourceChannelImage.pixels.length; i += 4) {
-      // Convert 1D index into x,y coords for source
-      let sourceX = (i / 4) % sourceChannelImage.width
-      let sourceY = Math.floor((i / 4) / sourceChannelImage.width)
-      // Shift source coords
-      let targetX = (sourceX + xShift) % sourceChannelImage.width
-      let targetY = (sourceY + yShift) % sourceChannelImage.height
-      // Convert 2D target coords to 1D index
-      let targetIndex = (targetY * sourceChannelImage.width + targetX) * 4
-      newChannelImage.pixels[targetIndex + targetChannelOffset] = sourceChannelImage.pixels[i + sourceChannelOffset]
-      newChannelImage.pixels[targetIndex + A_OFFSET] = 255
+    // Grab subsection of image from (0,0) with dimensions (width - xShift * height - yShift).
+    // Draw on canvas from (xShift, yShift) to bottom right corner of canvas.
+    previewGraphics.blend(
+      previewChannels[channelOffset],
+      0, 0, previewChannels[channelOffset].width - xShift, previewChannels[channelOffset].height - yShift,
+      xShift, yShift, previewChannels[channelOffset].width - xShift, previewChannels[channelOffset].height - yShift,
+      p5.ADD
+      )
+    // If xShift > 0, grab subsection of image from (width - xShift, 0) with dimensions (xShift * height - yShift).
+    // Draw on canvas from (0, yShift) to left edge of x shifted image.
+    if (xShift > 0) {
+      previewGraphics.blend(
+        previewChannels[channelOffset],
+        previewChannels[channelOffset].width - xShift, 0, xShift, previewChannels[channelOffset].height - yShift,
+        0, yShift, xShift, previewChannels[channelOffset].height - yShift,
+        p5.ADD
+      )
     }
-    newChannelImage.updatePixels()
-
-    previewChannels[targetChannelOffset] = newChannelImage
+    // If yShift > 0, grab subsection of image from (0, height - yShift) with dimensions (width - xShift * yShift).
+    // Draw on canvas from (xShift, 0) to the top edge of the y shifted image.
+    if (yShift > 0) {
+      previewGraphics.blend(
+        previewChannels[channelOffset],
+        0, previewChannels[channelOffset].height - yShift, previewChannels[channelOffset].width - xShift, yShift,
+        xShift, 0, previewChannels[channelOffset].width - xShift, yShift,
+        p5.ADD
+      )
+    }
+    // If both shift values > 0, grab subsection of image from (width - xShift, height - yShift) with dimensions (xShift * yShift).
+    // Draw on canvas from (0,0) to top left corner of x/y shifted image.
+    if (xShift > 0 && yShift > 0) {
+      previewGraphics.blend(
+        previewChannels[channelOffset],
+        previewChannels[channelOffset].width - xShift, previewChannels[channelOffset].height - yShift, xShift, yShift,
+        0, 0, xShift, yShift,
+        p5.ADD
+      )
+    }
   }
 
 
-  // TODO: merge w/ shiftChannels()
   /**
    * Swap 2 color channels. Params are indexes into sourceChannels.
    *
-   * @param channelOffset0
-   * @param channelOffset1
+   * @param sourceChannelOffset
+   * @param targetChannelOffset
    */
-  function swapChannels(channelOffset0, channelOffset1) {
-    let channelImage0 = previewChannels[channelOffset0]
+  function swapChannels(sourceChannelOffset, targetChannelOffset) {
+    // TODO: access array directly? Or assign final with .get() and set temp vars to undefined
+    let channelImage0 = previewChannels[sourceChannelOffset]
     channelImage0.loadPixels()
     let newChannelImage0 = p5.createImage(channelImage0.width, channelImage0.height)
     newChannelImage0.loadPixels()
 
-    let channelImage1 = previewChannels[channelOffset1]
+    let channelImage1 = previewChannels[targetChannelOffset]
     channelImage1.loadPixels()
     let newChannelImage1 = p5.createImage(channelImage1.width, channelImage1.height)
     newChannelImage1.loadPixels()
 
     for (let i = 0; i < newChannelImage0.pixels.length; i += 4) {
-      newChannelImage0.pixels[i + channelOffset0] = channelImage1.pixels[i + channelOffset1]
+      newChannelImage0.pixels[i + sourceChannelOffset] = channelImage1.pixels[i + targetChannelOffset]
       newChannelImage0.pixels[i + A_OFFSET] = 255
-      newChannelImage1.pixels[i + channelOffset1] = channelImage0.pixels[i + channelOffset0]
+      newChannelImage1.pixels[i + targetChannelOffset] = channelImage0.pixels[i + sourceChannelOffset]
       newChannelImage1.pixels[i + A_OFFSET] = 255
     }
     newChannelImage0.updatePixels()
     newChannelImage1.updatePixels()
 
     // Load into previewChannels
-    previewChannels[channelOffset0] = newChannelImage0
-    previewChannels[channelOffset1] = newChannelImage1
+    previewChannels[sourceChannelOffset] = newChannelImage0
+    previewChannels[targetChannelOffset] = newChannelImage1
   }
 }
