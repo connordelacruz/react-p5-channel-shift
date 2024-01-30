@@ -1,0 +1,9 @@
+body {
+    margin: 0;
+}
+
+.react-p5-wrapper .p5Canvas {
+    // horizontally center canvas
+    display: block;
+    margin: 0 auto;
+}

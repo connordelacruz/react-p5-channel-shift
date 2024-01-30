@@ -36,7 +36,7 @@ export function ChannelShiftSketch(p5) {
    */
   p5.setup = () => {
     // Match window width, scale height accordingly
-    p5.createCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
+    p5.createCanvas(...calculateCanvasDimensions())
 
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
@@ -57,7 +57,7 @@ export function ChannelShiftSketch(p5) {
      * p5 windowResized
      */
     p5.windowResized = () => {
-      p5.resizeCanvas(p5.windowWidth, (p5.windowWidth / sourceImage.width) * sourceImage.height)
+      p5.resizeCanvas(...calculateCanvasDimensions())
     }
 
     /**
@@ -91,10 +91,9 @@ export function ChannelShiftSketch(p5) {
   p5.draw = () => {
     previewGraphics.background(0)
     // TODO DEBUGGING
-    channelShiftValues[R_OFFSET][0] = p5.frameCount * 5 % sourceImage.width
-    channelShiftValues[G_OFFSET] = [p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height]
-    // channelShiftValues[G_OFFSET] = [p5.frameCount * 5 % sourceImage.width, p5.frameCount * 5 % sourceImage.height]
-    channelShiftValues[B_OFFSET][1] = p5.frameCount * 5 % sourceImage.height
+    // channelShiftValues[R_OFFSET][0] = p5.frameCount * 5 % sourceImage.width
+    // channelShiftValues[G_OFFSET] = [p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height]
+    // channelShiftValues[B_OFFSET][1] = p5.frameCount * 5 % sourceImage.height
 
     // Blend RGB channels
     drawChannelToPreviewGraphics(R_OFFSET)
@@ -109,6 +108,19 @@ export function ChannelShiftSketch(p5) {
   // ================================================================================
   // Helper functions
   // ================================================================================
+
+  /**
+   * Returns an array with width and height to set canvas size to.
+   *
+   * Set width to 90% of the window width, calculate height to maintain image aspect ratio.
+   *
+   * @returns {number[]}
+   */
+  function calculateCanvasDimensions() {
+    // TODO: base on height instead? e.g. 2/3 the screen?
+    return [p5.windowWidth * 0.9, (p5.windowWidth * 0.9 / sourceImage.width) * sourceImage.height]
+  }
+
 
   /**
    * Extract RGB channels from sourceImage and initialize RGB image variables
