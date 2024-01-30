@@ -34,9 +34,24 @@ function App() {
                   aria-labelledby="source-channel-label"
                   name="source-channel-radio-group"
                 >
-                  <FormControlLabel value="red" control={ <Radio/> } label="Red"/>
-                  <FormControlLabel value="green" control={ <Radio/> } label="Green"/>
-                  <FormControlLabel value="blue" control={ <Radio/> } label="Blue"/>
+                  <FormControlLabel
+                    value="red"
+                    label="Red"
+                    control={ <Radio color="error"/> }
+                    sx={{ color: 'error.main' }}
+                  />
+                  <FormControlLabel
+                    value="green"
+                    label="Green"
+                    control={ <Radio color="success"/> }
+                    sx={{ color: 'success.main' }}
+                  />
+                  <FormControlLabel
+                    value="blue"
+                    label="Blue"
+                    control={ <Radio color="primary"/> }
+                    sx={{ color: 'primary.main' }}
+                  />
                 </RadioGroup>
               </FormControl>
             </Paper>
@@ -53,9 +68,24 @@ function App() {
                   aria-labelledby="target-channel-label"
                   name="target-channel-radio-group"
                 >
-                  <FormControlLabel value="red" control={ <Radio/> } label="Red"/>
-                  <FormControlLabel value="green" control={ <Radio/> } label="Green"/>
-                  <FormControlLabel value="blue" control={ <Radio/> } label="Blue"/>
+                  <FormControlLabel
+                    value="red"
+                    label="Red"
+                    control={ <Radio color="error"/> }
+                    sx={{ color: 'error.main' }}
+                  />
+                  <FormControlLabel
+                    value="green"
+                    label="Green"
+                    control={ <Radio color="success"/> }
+                    sx={{ color: 'success.main' }}
+                  />
+                  <FormControlLabel
+                    value="blue"
+                    label="Blue"
+                    control={ <Radio color="primary"/> }
+                    sx={{ color: 'primary.main' }}
+                  />
                 </RadioGroup>
               </FormControl>
             </Paper>
@@ -79,6 +109,7 @@ function App() {
                     {value: 0, label: '0%'},
                     {value: 100, label: '100%'}
                   ]}
+                  color="error"
                   aria-labelledby="x-shift-slider-label"
                 />
               </Box>
@@ -103,6 +134,7 @@ function App() {
                     {value: 0, label: '0%'},
                     {value: 100, label: '100%'}
                   ]}
+                  color="success"
                   aria-labelledby="y-shift-slider-label"
                 />
               </Box>
