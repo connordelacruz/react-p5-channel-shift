@@ -9,15 +9,34 @@ export function ChannelShiftSketch(p5) {
 
   // Source image + RGB channel images
   let sourceImage
+  // TODO rename arrays to sourceChannelImages for clarity
   let sourceChannels = []
   // Preview RGB channels, based on sourceChannels but with swaps applied
   let previewChannels = []
+
   // x/y shift values to apply to each preview channel
   let channelShiftValues = []
+  // Initialize shift values to 0,0
+  channelShiftValues[R_OFFSET] = [0, 0]
+  channelShiftValues[G_OFFSET] = [0, 0]
+  channelShiftValues[B_OFFSET] = [0, 0]
+
+  // Selected source/target channels
+  let sourceChannel, targetChannel
+  // Array to convert radio button values to channel offsets
+  const CHANNEL_RADIO_VAL_TO_OFFSET = {
+    'red': R_OFFSET,
+    'green': G_OFFSET,
+    'blue': B_OFFSET,
+  }
 
   // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
 
+  // Kind of a hack but need some way to communicate image dimensions to App.js.
+  // These are set initially in updateWithProps and called in setup after image is loaded.
+  let setImageWidth = null
+  let setImageHeight = null
 
   // ================================================================================
   // p5 Sketch Methods
@@ -41,13 +60,13 @@ export function ChannelShiftSketch(p5) {
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
 
-    // Initialize shift values to 0,0
-    channelShiftValues[R_OFFSET] = [0, 0]
-    channelShiftValues[G_OFFSET] = [0, 0]
-    channelShiftValues[B_OFFSET] = [0, 0]
-
     // Extract color channels and initialize previewChannels
     initializeRGBImages()
+
+    // Set parent's state for image dimensions
+    // (These are initialized when updateWithProps() is called on initial load)
+    setImageWidth(sourceImage.width)
+    setImageHeight(sourceImage.height)
 
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
@@ -86,14 +105,41 @@ export function ChannelShiftSketch(p5) {
 
 
   /**
+   * React to React props.
+   *
+   * @param props
+   */
+  p5.updateWithProps = props => {
+    // Set state setting functions so they're accessible in setup()
+    if (setImageWidth === null) {
+      setImageWidth = props.setImageWidth
+    }
+    if (setImageHeight === null) {
+      setImageHeight = props.setImageHeight
+    }
+    // Set source/target channels
+    // TODO: check if channel doesn't match for both
+    if (props.sourceChannel) {
+      sourceChannel = CHANNEL_RADIO_VAL_TO_OFFSET[props.sourceChannel]
+    }
+    if (props.targetChannel) {
+      targetChannel = CHANNEL_RADIO_VAL_TO_OFFSET[props.targetChannel]
+    }
+    // Set shift values
+    if (props.xShift !== channelShiftValues[targetChannel][0]) {
+      channelShiftValues[targetChannel][0] = props.xShift
+    }
+    if (props.yShift !== channelShiftValues[targetChannel][1]) {
+      channelShiftValues[targetChannel][1] = props.yShift
+    }
+  }
+
+
+  /**
    * p5 draw
    */
   p5.draw = () => {
     previewGraphics.background(0)
-    // TODO DEBUGGING
-    // channelShiftValues[R_OFFSET][0] = p5.frameCount * 5 % sourceImage.width
-    // channelShiftValues[G_OFFSET] = [p5.mouseX % sourceImage.width, p5.mouseY % sourceImage.height]
-    // channelShiftValues[B_OFFSET][1] = p5.frameCount * 5 % sourceImage.height
 
     // Blend RGB channels
     drawChannelToPreviewGraphics(R_OFFSET)
