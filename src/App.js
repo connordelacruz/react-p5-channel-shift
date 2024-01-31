@@ -16,14 +16,44 @@ import {
 } from '@mui/material'
 
 function App() {
+  // Indexes into RGB arrays + values of radio buttons
+  const R_OFFSET = 0
+  const G_OFFSET = 1
+  const B_OFFSET = 2
+
   // Image dimensions (sketch sets these after image is loaded)
   const [imageWidth, setImageWidth] = React.useState(0)
   const [imageHeight, setImageHeight] = React.useState(0)
 
   // Source and target channels
-  const [sourceChannel, setSourceChannel] = React.useState('red')
-  const [targetChannel, setTargetChannel] = React.useState('red')
-  // onChange method for source/target channel radios
+  const [sourceChannel, setSourceChannel] = React.useState(R_OFFSET)
+  const [targetChannel, setTargetChannel] = React.useState(R_OFFSET)
+  // Since RGB radio elements are identical in source and target, use this method to generate common markup
+  const ChannelRadioElements = () => {
+    return (
+      <React.Fragment>
+        <FormControlLabel
+          value={R_OFFSET}
+          label="Red"
+          control={ <Radio color="error"/> }
+          sx={{ color: 'error.main' }}
+        />
+        <FormControlLabel
+          value={G_OFFSET}
+          label="Green"
+          control={ <Radio color="success"/> }
+          sx={{ color: 'success.main' }}
+        />
+        <FormControlLabel
+          value={B_OFFSET}
+          label="Blue"
+          control={ <Radio color="primary"/> }
+          sx={{ color: 'primary.main' }}
+        />
+      </React.Fragment>
+    )
+  }
+  // onChange method for source/target channel radio groups
   const channelRadioOnChangeHandler = setterFunction => {
     return (event) => {
       setterFunction(event.target.value)
@@ -31,13 +61,23 @@ function App() {
   }
 
   // x/y shift states
-  // TODO: per-channel? make consistent w/ sketch
-  const [xShift, setXShift] = React.useState(0)
-  const [yShift, setYShift] = React.useState(0)
+  // Can't define array literals with indexes, so initializing default as a constant
+  const CHANNEL_SHIFT_VALUES_DEFAULT = []
+  CHANNEL_SHIFT_VALUES_DEFAULT[R_OFFSET] = [0, 0]
+  CHANNEL_SHIFT_VALUES_DEFAULT[G_OFFSET] = [0, 0]
+  CHANNEL_SHIFT_VALUES_DEFAULT[B_OFFSET] = [0, 0]
+  const [channelShiftValues, setChannelShiftValues] = React.useState(CHANNEL_SHIFT_VALUES_DEFAULT)
+  // Helper function for updating shift values
+  const setChannelShiftValue = (coordinateIndex, newValue) => {
+    const newChannelShiftValues = [...channelShiftValues]
+    // Update selected targetChannel
+    newChannelShiftValues[targetChannel][coordinateIndex] = newValue
+    setChannelShiftValues(newChannelShiftValues)
+  }
   // onChange method for x/y shift sliders
-  const shiftSliderOnChangeHandler = setterFunction => {
+  const shiftSliderOnChangeHandler = coordinateIndex => {
     return (event, newValue) => {
-      setterFunction(newValue)
+      setChannelShiftValue(coordinateIndex, newValue)
     }
   }
   
@@ -47,7 +87,7 @@ function App() {
         sketch={ ChannelShiftSketch }
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
         sourceChannel={ sourceChannel } targetChannel={ targetChannel }
-        xShift={ xShift } yShift={ yShift }
+        channelShiftValues={ channelShiftValues }
       />
       <Container maxWidth="md">
         <Grid container justifyContent="center" spacing={ 2 } my={ 2 }>
@@ -64,24 +104,7 @@ function App() {
                   aria-labelledby="source-channel-label"
                   name="source-channel-radio-group"
                 >
-                  <FormControlLabel
-                    value="red"
-                    label="Red"
-                    control={ <Radio color="error"/> }
-                    sx={{ color: 'error.main' }}
-                  />
-                  <FormControlLabel
-                    value="green"
-                    label="Green"
-                    control={ <Radio color="success"/> }
-                    sx={{ color: 'success.main' }}
-                  />
-                  <FormControlLabel
-                    value="blue"
-                    label="Blue"
-                    control={ <Radio color="primary"/> }
-                    sx={{ color: 'primary.main' }}
-                  />
+                  <ChannelRadioElements/>
                 </RadioGroup>
               </FormControl>
             </Paper>
@@ -99,24 +122,7 @@ function App() {
                   aria-labelledby="target-channel-label"
                   name="target-channel-radio-group"
                 >
-                  <FormControlLabel
-                    value="red"
-                    label="Red"
-                    control={ <Radio color="error"/> }
-                    sx={{ color: 'error.main' }}
-                  />
-                  <FormControlLabel
-                    value="green"
-                    label="Green"
-                    control={ <Radio color="success"/> }
-                    sx={{ color: 'success.main' }}
-                  />
-                  <FormControlLabel
-                    value="blue"
-                    label="Blue"
-                    control={ <Radio color="primary"/> }
-                    sx={{ color: 'primary.main' }}
-                  />
+                  <ChannelRadioElements/>
                 </RadioGroup>
               </FormControl>
             </Paper>
@@ -132,8 +138,8 @@ function App() {
               >
                 <Typography id="x-shift-slider-label">X Shift</Typography>
                 <Slider
-                  value={xShift}
-                  onChange={shiftSliderOnChangeHandler(setXShift)}
+                  value={channelShiftValues[targetChannel][0]}
+                  onChange={shiftSliderOnChangeHandler(0)}
                   min={0}
                   max={imageWidth}
                   valueLabelDisplay="auto"
@@ -158,8 +164,8 @@ function App() {
               >
                 <Typography id="y-shift-slider-label">Y Shift</Typography>
                 <Slider
-                  value={yShift}
-                  onChange={shiftSliderOnChangeHandler(setYShift)}
+                  value={channelShiftValues[targetChannel][1]}
+                  onChange={shiftSliderOnChangeHandler(1)}
                   min={0}
                   max={imageHeight}
                   valueLabelDisplay="auto"

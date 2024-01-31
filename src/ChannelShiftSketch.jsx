@@ -9,26 +9,16 @@ export function ChannelShiftSketch(p5) {
 
   // Source image + RGB channel images
   let sourceImage
-  // TODO rename arrays to sourceChannelImages for clarity
+  // TODO rename arrays to originalChannels
   let sourceChannels = []
   // Preview RGB channels, based on sourceChannels but with swaps applied
   let previewChannels = []
 
   // x/y shift values to apply to each preview channel
-  let channelShiftValues = []
-  // Initialize shift values to 0,0
-  channelShiftValues[R_OFFSET] = [0, 0]
-  channelShiftValues[G_OFFSET] = [0, 0]
-  channelShiftValues[B_OFFSET] = [0, 0]
+  let channelShiftValues
 
   // Selected source/target channels
   let sourceChannel, targetChannel
-  // Array to convert radio button values to channel offsets
-  const CHANNEL_RADIO_VAL_TO_OFFSET = {
-    'red': R_OFFSET,
-    'green': G_OFFSET,
-    'blue': B_OFFSET,
-  }
 
   // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
@@ -117,20 +107,18 @@ export function ChannelShiftSketch(p5) {
     if (setImageHeight === null) {
       setImageHeight = props.setImageHeight
     }
-    // Set source/target channels
-    // TODO: check if channel doesn't match for both
-    if (props.sourceChannel) {
-      sourceChannel = CHANNEL_RADIO_VAL_TO_OFFSET[props.sourceChannel]
+    // Set source/target channels if modified
+    let propsSourceChannelInt = parseInt(props.sourceChannel)
+    if (!isNaN(propsSourceChannelInt) && propsSourceChannelInt !== sourceChannel) {
+      sourceChannel = props.sourceChannel
     }
-    if (props.targetChannel) {
-      targetChannel = CHANNEL_RADIO_VAL_TO_OFFSET[props.targetChannel]
+    let propsTargetChannelInt = parseInt(props.targetChannel)
+    if (!isNaN(propsTargetChannelInt) && propsTargetChannelInt !== targetChannel) {
+      targetChannel = props.targetChannel
     }
-    // Set shift values
-    if (props.xShift !== channelShiftValues[targetChannel][0]) {
-      channelShiftValues[targetChannel][0] = props.xShift
-    }
-    if (props.yShift !== channelShiftValues[targetChannel][1]) {
-      channelShiftValues[targetChannel][1] = props.yShift
+    // Set shift values if modified
+    if (JSON.stringify(props.channelShiftValues) !== JSON.stringify(channelShiftValues)) {
+      channelShiftValues = [...props.channelShiftValues]
     }
   }
 
@@ -139,6 +127,7 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
+    // TODO: keep track of whether something changed, only re-draw on change
     previewGraphics.background(0)
 
     // Blend RGB channels
