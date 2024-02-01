@@ -19,6 +19,9 @@ export function ChannelShiftSketch(p5) {
 
   // Selected source/target channels
   let sourceChannel, targetChannel
+  // If there's a change in selected source/target channels, this will be set to true.
+  // Sketch will update previewChannels accordingly then set this back to false
+  let selectedChannelsWereUpdated = false
 
   // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
@@ -110,11 +113,13 @@ export function ChannelShiftSketch(p5) {
     // Set source/target channels if modified
     let propsSourceChannelInt = parseInt(props.sourceChannel)
     if (!isNaN(propsSourceChannelInt) && propsSourceChannelInt !== sourceChannel) {
-      sourceChannel = props.sourceChannel
+      sourceChannel = propsSourceChannelInt
+      selectedChannelsWereUpdated = true
     }
     let propsTargetChannelInt = parseInt(props.targetChannel)
     if (!isNaN(propsTargetChannelInt) && propsTargetChannelInt !== targetChannel) {
-      targetChannel = props.targetChannel
+      targetChannel = propsTargetChannelInt
+      selectedChannelsWereUpdated = true
     }
     // Set shift values if modified
     if (JSON.stringify(props.channelShiftValues) !== JSON.stringify(channelShiftValues)) {
@@ -127,14 +132,20 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // TODO: keep track of whether something changed, only re-draw on change
+    // Update previewChannels if source/target channel selection was changed
+    if (selectedChannelsWereUpdated) {
+      resetPreviewChannels()
+      // Swap channels if source and target are different
+      if (sourceChannel !== targetChannel) {
+        swapChannels(sourceChannel, targetChannel)
+        selectedChannelsWereUpdated = false
+      }
+    }
     previewGraphics.background(0)
-
     // Blend RGB channels
     drawChannelToPreviewGraphics(R_OFFSET)
     drawChannelToPreviewGraphics(G_OFFSET)
     drawChannelToPreviewGraphics(B_OFFSET)
-
     // Render to screen
     p5.image(previewGraphics, 0, 0, p5.width, p5.height)
   }
@@ -183,14 +194,19 @@ export function ChannelShiftSketch(p5) {
       sourceChannels[R_OFFSET].pixels[i + A_OFFSET] = sourceChannels[G_OFFSET].pixels[i + A_OFFSET] = sourceChannels[B_OFFSET].pixels[i + A_OFFSET] = 255
     }
     // Load into sourceChannels and previewChannels
-    // Red
     sourceChannels[R_OFFSET].updatePixels()
-    previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
-    // Green
     sourceChannels[G_OFFSET].updatePixels()
-    previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
-    // Blue
     sourceChannels[B_OFFSET].updatePixels()
+    resetPreviewChannels()
+  }
+
+
+  /**
+   * Reset previewChannels to match sourceChannels.
+   */
+  function resetPreviewChannels() {
+    previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
+    previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
     previewChannels[B_OFFSET] = sourceChannels[B_OFFSET].get(0, 0, sourceChannels[B_OFFSET].width, sourceChannels[B_OFFSET].height)
   }
 
