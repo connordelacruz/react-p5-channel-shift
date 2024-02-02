@@ -30,6 +30,8 @@ export function ChannelShiftSketch(p5) {
   // These are set initially in updateWithProps and called in setup after image is loaded.
   let setImageWidth = null
   let setImageHeight = null
+  // Same thing for handling the save button being clicked, need to set the state to false when complete
+  let setShouldSaveResult = null
 
   // ================================================================================
   // p5 Sketch Methods
@@ -110,6 +112,16 @@ export function ChannelShiftSketch(p5) {
     if (setImageHeight === null) {
       setImageHeight = props.setImageHeight
     }
+    if (setShouldSaveResult === null) {
+      setShouldSaveResult = props.setShouldSaveResult
+    }
+
+    // Handle save button click
+    if (props.shouldSaveResult) {
+      saveResult()
+      setShouldSaveResult(false)
+    }
+
     // Set source/target channels if modified
     let propsSourceChannelInt = parseInt(props.sourceChannel)
     if (!isNaN(propsSourceChannelInt) && propsSourceChannelInt !== sourceChannel) {
@@ -121,6 +133,7 @@ export function ChannelShiftSketch(p5) {
       targetChannel = propsTargetChannelInt
       selectedChannelsWereUpdated = true
     }
+
     // Set shift values if modified
     if (JSON.stringify(props.channelShiftValues) !== JSON.stringify(channelShiftValues)) {
       channelShiftValues = [...props.channelShiftValues]
@@ -208,6 +221,16 @@ export function ChannelShiftSketch(p5) {
     previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
     previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
     previewChannels[B_OFFSET] = sourceChannels[B_OFFSET].get(0, 0, sourceChannels[B_OFFSET].width, sourceChannels[B_OFFSET].height)
+  }
+
+
+  /**
+   * Save the current result as a png.
+   */
+  function saveResult() {
+    // TODO: better default filename? save as dialog?
+    let ts = Date.now()
+    p5.save(previewGraphics, `${ts}.png`)
   }
 
 

@@ -94,8 +94,15 @@ function App() {
     setTargetChannel(R_OFFSET)
     setChannelShiftValues([...CHANNEL_SHIFT_VALUES_DEFAULT])
   }
+
+  // Set to true when save button is clicked, sketch will save image and set back to false when complete
+  const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
+  // Save button click handler
+  const saveButtonOnClick = () => {
+    setShouldSaveResult(true)
+  }
+
   // TODO: confirm button
-  // TODO: save button
 
 
   // TODO: show shift values for unselected channels
@@ -117,6 +124,7 @@ function App() {
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
         sourceChannel={ sourceChannel } targetChannel={ targetChannel }
         channelShiftValues={ channelShiftValues }
+        shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
       />
       </Paper>
       <Container maxWidth="md">
@@ -278,6 +286,7 @@ function App() {
           </Tooltip>
           <Tooltip title="Download current result as full-res PNG" placement="top">
             <Button
+              onClick={ saveButtonOnClick }
               startIcon={ <Save/> }
               variant="contained"
             >
