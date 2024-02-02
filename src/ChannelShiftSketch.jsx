@@ -73,29 +73,6 @@ export function ChannelShiftSketch(p5) {
     p5.windowResized = () => {
       p5.resizeCanvas(...calculateCanvasDimensions())
     }
-
-    /**
-     * p5 keyPressed
-     *
-     * TODO: For testing, remove once GUI is implemented
-     */
-    p5.keyPressed = () => {
-      // Randomize
-      if (p5.key === 'r') {
-        // Randomly pick 2 channels to swap
-        let randyChannels = [R_OFFSET, G_OFFSET, B_OFFSET]
-        let sourceChannel = p5.random(randyChannels)
-        randyChannels.splice(randyChannels.indexOf(sourceChannel), 1)
-        let targetChannel = p5.random(randyChannels)
-        // Swap em
-        swapChannels(sourceChannel, targetChannel)
-      }
-      // Save
-      else if (p5.key === 's') {
-        let ts = Date.now()
-        p5.save(previewGraphics, `${ts}.png`)
-      }
-    }
   }
 
 
