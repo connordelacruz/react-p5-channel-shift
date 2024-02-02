@@ -26,10 +26,15 @@ export function ChannelShiftSketch(p5) {
   // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
 
+  // Pause drawing when confirming a result
+  let confirmResultInProgress = false
+
   // Kind of a hack but need some way to communicate image dimensions to App.js.
   // These are set initially in updateWithProps and called in setup after image is loaded.
   let setImageWidth = null
   let setImageHeight = null
+  // Likewise for handling post-confirm
+  let postConfirmResult = null
   // Same thing for handling the save button being clicked, need to set the state to false when complete
   let setShouldSaveResult = null
 
@@ -89,8 +94,25 @@ export function ChannelShiftSketch(p5) {
     if (setImageHeight === null) {
       setImageHeight = props.setImageHeight
     }
+    if (postConfirmResult === null) {
+      postConfirmResult = props.postConfirmResult
+    }
     if (setShouldSaveResult === null) {
       setShouldSaveResult = props.setShouldSaveResult
+    }
+
+    // Handle confirm button click
+    if (props.shouldConfirmResult) {
+      // Pause redraws
+      confirmResultInProgress = true
+      // Copy previewGraphics to sourceImage and re-initialize channel images
+      sourceImage = previewGraphics.get(0, 0, previewGraphics.width, previewGraphics.height)
+      initializeRGBImages()
+      // Tell app to handle post-confirmation tasks
+      postConfirmResult()
+      // Resume redraws
+      // TODO: there's a delay from app updating shift dimensions and this, figure out how to account for that so there isn't a frame of jitter
+      confirmResultInProgress = false
     }
 
     // Handle save button click
@@ -122,22 +144,25 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // Update previewChannels if source/target channel selection was changed
-    if (selectedChannelsWereUpdated) {
-      resetPreviewChannels()
-      // Swap channels if source and target are different
-      if (sourceChannel !== targetChannel) {
-        swapChannels(sourceChannel, targetChannel)
-        selectedChannelsWereUpdated = false
+    // Pause re-draws when confirming a result
+    if (!confirmResultInProgress) {
+      // Update previewChannels if source/target channel selection was changed
+      if (selectedChannelsWereUpdated) {
+        resetPreviewChannels()
+        // Swap channels if source and target are different
+        if (sourceChannel !== targetChannel) {
+          swapChannels(sourceChannel, targetChannel)
+          selectedChannelsWereUpdated = false
+        }
       }
+      previewGraphics.background(0)
+      // Blend RGB channels
+      drawChannelToPreviewGraphics(R_OFFSET)
+      drawChannelToPreviewGraphics(G_OFFSET)
+      drawChannelToPreviewGraphics(B_OFFSET)
+      // Render to screen
+      p5.image(previewGraphics, 0, 0, p5.width, p5.height)
     }
-    previewGraphics.background(0)
-    // Blend RGB channels
-    drawChannelToPreviewGraphics(R_OFFSET)
-    drawChannelToPreviewGraphics(G_OFFSET)
-    drawChannelToPreviewGraphics(B_OFFSET)
-    // Render to screen
-    p5.image(previewGraphics, 0, 0, p5.width, p5.height)
   }
 
 

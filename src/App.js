@@ -92,7 +92,11 @@ function App() {
   const resetShiftAndSwap = () => {
     setSourceChannel(R_OFFSET)
     setTargetChannel(R_OFFSET)
-    setChannelShiftValues([...CHANNEL_SHIFT_VALUES_DEFAULT])
+    const newChannelShiftValues = []
+    newChannelShiftValues[R_OFFSET] = [0, 0]
+    newChannelShiftValues[G_OFFSET] = [0, 0]
+    newChannelShiftValues[B_OFFSET] = [0, 0]
+    setChannelShiftValues(newChannelShiftValues)
   }
 
   // Set to true when save button is clicked, sketch will save image and set back to false when complete
@@ -102,7 +106,19 @@ function App() {
     setShouldSaveResult(true)
   }
 
-  // TODO: confirm button
+  // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
+  const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
+  // Confirm button click handler
+  const confirmButtonOnClick = () => {
+    setShouldConfirmResult(true)
+  }
+  // Post-confirm method, called from sketch after handling the confirmation
+  const postConfirmResult = () => {
+    resetShiftAndSwap()
+    setShouldConfirmResult(false)
+  }
+
+  // TODO: disable reset/confirm if shifts are all 0 and source and target match
 
 
   // TODO: show shift values for unselected channels
@@ -125,6 +141,7 @@ function App() {
         sourceChannel={ sourceChannel } targetChannel={ targetChannel }
         channelShiftValues={ channelShiftValues }
         shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
+        shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
       />
       </Paper>
       <Container maxWidth="md">
@@ -278,6 +295,7 @@ function App() {
           </Tooltip>
           <Tooltip title="Use current result as base image" placement="top">
             <Button
+              onClick={ confirmButtonOnClick }
               startIcon={ <CheckCircleOutline/> }
               variant="contained"
             >
