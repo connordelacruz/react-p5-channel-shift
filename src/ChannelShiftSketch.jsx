@@ -164,7 +164,7 @@ export function ChannelShiftSketch(p5) {
    */
   function calculateCanvasDimensions() {
     // TODO: base on height instead? e.g. 2/3 the screen?
-    return [p5.windowWidth * 0.9, (p5.windowWidth * 0.9 / sourceImage.width) * sourceImage.height]
+    return [p5.windowWidth * 0.7, (p5.windowWidth * 0.7 / sourceImage.width) * sourceImage.height]
   }
 
 

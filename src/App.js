@@ -3,15 +3,15 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 import {
-  Box,
-  Container,
+  Box, Button,
+  Container, Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider,
+  RadioGroup, Slider, Stack,
   Typography
 } from '@mui/material'
 
@@ -88,62 +88,30 @@ function App() {
   }
 
 
+  // TODO: show shift values for unselected channels
+  // TODO: reset, confirm, save buttons
   return (
     <React.Fragment>
-      <ReactP5Wrapper
+      <Paper
+        sx={{
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          right: 0,
+          background: 'black',
+          zIndex: 999,
+        }}
+        elevation={3}
+      >
+        <ReactP5Wrapper
         sketch={ ChannelShiftSketch }
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
         sourceChannel={ sourceChannel } targetChannel={ targetChannel }
         channelShiftValues={ channelShiftValues }
       />
+      </Paper>
       <Container maxWidth="md">
-        <Grid container justifyContent="center" spacing={ 4 } my={ 2 }>
-          <Grid item xs={ 12 }>
-            <Paper
-              variant="outlined"
-              sx={ { p: 2 } }
-            >
-             <Typography variant="h5" gutterBottom>Swap Channels</Typography>
-              <Grid container justifyContent="center" spacing={2}>
-                <Grid item xs={ 6 }>
-                  <Paper
-                    variant="outlined"
-                    sx={{ p: 2 }}
-                  >
-                    <FormControl>
-                      <FormLabel id="source-channel-label">Source Channel:</FormLabel>
-                      <RadioGroup
-                        value={ sourceChannel }
-                        onChange={ channelRadioOnChangeHandler(setSourceChannel) }
-                        aria-labelledby="source-channel-label"
-                        name="source-channel-radio-group"
-                      >
-                        <ChannelRadioElements/>
-                      </RadioGroup>
-                    </FormControl>
-                  </Paper>
-                </Grid>
-                <Grid item xs={ 6 }>
-                  <Paper
-                    variant="outlined"
-                    sx={{ p: 2 }}
-                  >
-                    <FormControl>
-                      <FormLabel id="target-channel-label">Target Channel:</FormLabel>
-                      <RadioGroup
-                        value={ targetChannel }
-                        onChange={ channelRadioOnChangeHandler(setTargetChannel) }
-                        aria-labelledby="target-channel-label"
-                        name="target-channel-radio-group"
-                      >
-                        <ChannelRadioElements/>
-                      </RadioGroup>
-                    </FormControl>
-                  </Paper>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
+        <Grid container justifyContent="center" spacing={ 4 } my={ 1 }>
 
           <Grid item xs={ 12 }>
             <Paper
@@ -215,8 +183,76 @@ function App() {
               </Paper>
             </Paper>
           </Grid>
+
+          <Grid item xs={ 12 }>
+            <Paper
+              variant="outlined"
+              sx={ { p: 2 } }
+            >
+              <Typography variant="h5" gutterBottom>Swap Channels</Typography>
+              <Grid container justifyContent="center" spacing={2}>
+                <Grid item xs={ 6 }>
+                  <Paper
+                    variant="outlined"
+                    sx={{ p: 2 }}
+                  >
+                    <FormControl>
+                      <FormLabel id="source-channel-label">Source Channel:</FormLabel>
+                      <RadioGroup
+                        value={ sourceChannel }
+                        onChange={ channelRadioOnChangeHandler(setSourceChannel) }
+                        aria-labelledby="source-channel-label"
+                        name="source-channel-radio-group"
+                      >
+                        <ChannelRadioElements/>
+                      </RadioGroup>
+                    </FormControl>
+                  </Paper>
+                </Grid>
+                <Grid item xs={ 6 }>
+                  <Paper
+                    variant="outlined"
+                    sx={{ p: 2 }}
+                  >
+                    <FormControl>
+                      <FormLabel id="target-channel-label">Target Channel:</FormLabel>
+                      <RadioGroup
+                        value={ targetChannel }
+                        onChange={ channelRadioOnChangeHandler(setTargetChannel) }
+                        aria-labelledby="target-channel-label"
+                        name="target-channel-radio-group"
+                      >
+                        <ChannelRadioElements/>
+                      </RadioGroup>
+                    </FormControl>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+
         </Grid>
+
       </Container>
+      <Paper
+        sx={ {
+          position: 'sticky',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          p: 2,
+      } }
+        elevation={ 3 }
+      >
+        <Stack
+          direction="row"
+          divider={<Divider orientation="vertical" flexItem/> }
+          spacing={2}
+        >
+          <Button variant="contained">Reset Step</Button>
+          <Button variant="contained">Confirm Step</Button>
+        </Stack>
+      </Paper>
     </React.Fragment>
   )
 }
