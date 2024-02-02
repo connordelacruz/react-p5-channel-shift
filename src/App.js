@@ -68,12 +68,16 @@ function App() {
     setSelectedShiftChannel(event.target.value)
   }
   // x/y shift states
+  // JS struggles with copying multi-dimensional arrays, so using a function to give us the default for channelShiftValues
+  const getChannelShiftValuesDefault = () => {
+    const channelShiftValuesDefault = []
+    channelShiftValuesDefault[R_OFFSET] = [0, 0]
+    channelShiftValuesDefault[G_OFFSET] = [0, 0]
+    channelShiftValuesDefault[B_OFFSET] = [0, 0]
+    return channelShiftValuesDefault
+  }
   // Can't define array literals with indexes, so initializing default as a constant
-  const CHANNEL_SHIFT_VALUES_DEFAULT = []
-  CHANNEL_SHIFT_VALUES_DEFAULT[R_OFFSET] = [0, 0]
-  CHANNEL_SHIFT_VALUES_DEFAULT[G_OFFSET] = [0, 0]
-  CHANNEL_SHIFT_VALUES_DEFAULT[B_OFFSET] = [0, 0]
-  const [channelShiftValues, setChannelShiftValues] = React.useState([...CHANNEL_SHIFT_VALUES_DEFAULT])
+  const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
   // Helper function for updating shift values
   const setChannelShiftValue = (coordinateIndex, newValue) => {
     const newChannelShiftValues = [...channelShiftValues]
@@ -92,11 +96,7 @@ function App() {
   const resetShiftAndSwap = () => {
     setSourceChannel(R_OFFSET)
     setTargetChannel(R_OFFSET)
-    const newChannelShiftValues = []
-    newChannelShiftValues[R_OFFSET] = [0, 0]
-    newChannelShiftValues[G_OFFSET] = [0, 0]
-    newChannelShiftValues[B_OFFSET] = [0, 0]
-    setChannelShiftValues(newChannelShiftValues)
+    setChannelShiftValues(getChannelShiftValuesDefault())
   }
 
   // Set to true when save button is clicked, sketch will save image and set back to false when complete
@@ -118,7 +118,13 @@ function App() {
     setShouldConfirmResult(false)
   }
 
-  // TODO: disable reset/confirm if shifts are all 0 and source and target match
+  // Returns true if any changes were made during this step. Used to enable/disable reset and confirm buttons
+  const imageModifiedDuringStep = () => {
+    let sourceAndTargetChannelsDiffer = sourceChannel !== targetChannel
+    let channelShiftValuesDefault = getChannelShiftValuesDefault()
+    let channelsHaveBeenShifted = JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
+    return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
+  }
 
 
   // TODO: show shift values for unselected channels
@@ -287,6 +293,7 @@ function App() {
           <Tooltip title="Reset all shift and swap values" placement="top">
             <Button
               onClick={ resetShiftAndSwap }
+              disabled={ !imageModifiedDuringStep() }
               startIcon={ <RestartAlt/> }
               variant="contained"
             >
@@ -296,6 +303,7 @@ function App() {
           <Tooltip title="Use current result as base image" placement="top">
             <Button
               onClick={ confirmButtonOnClick }
+              disabled={ !imageModifiedDuringStep() }
               startIcon={ <CheckCircleOutline/> }
               variant="contained"
             >
