@@ -11,9 +11,10 @@ import {
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack,
+  RadioGroup, Slider, Stack, Tooltip,
   Typography
 } from '@mui/material'
+import { CheckCircleOutline, RestartAlt, Save } from '@mui/icons-material'
 
 function App() {
   // Indexes into RGB arrays + values of radio buttons
@@ -72,7 +73,7 @@ function App() {
   CHANNEL_SHIFT_VALUES_DEFAULT[R_OFFSET] = [0, 0]
   CHANNEL_SHIFT_VALUES_DEFAULT[G_OFFSET] = [0, 0]
   CHANNEL_SHIFT_VALUES_DEFAULT[B_OFFSET] = [0, 0]
-  const [channelShiftValues, setChannelShiftValues] = React.useState(CHANNEL_SHIFT_VALUES_DEFAULT)
+  const [channelShiftValues, setChannelShiftValues] = React.useState([...CHANNEL_SHIFT_VALUES_DEFAULT])
   // Helper function for updating shift values
   const setChannelShiftValue = (coordinateIndex, newValue) => {
     const newChannelShiftValues = [...channelShiftValues]
@@ -87,9 +88,17 @@ function App() {
     }
   }
 
+  // Reset all values
+  const resetShiftAndSwap = () => {
+    setSourceChannel(R_OFFSET)
+    setTargetChannel(R_OFFSET)
+    setChannelShiftValues([...CHANNEL_SHIFT_VALUES_DEFAULT])
+  }
+  // TODO: confirm button
+  // TODO: save button
+
 
   // TODO: show shift values for unselected channels
-  // TODO: reset, confirm, save buttons
   return (
     <React.Fragment>
       <Paper
@@ -232,25 +241,49 @@ function App() {
           </Grid>
 
         </Grid>
-
       </Container>
+
       <Paper
+        elevation={ 3 }
         sx={ {
           position: 'sticky',
           bottom: 0,
           left: 0,
           right: 0,
           p: 2,
-      } }
-        elevation={ 3 }
+        } }
       >
         <Stack
           direction="row"
-          divider={<Divider orientation="vertical" flexItem/> }
-          spacing={2}
+          divider={ <Divider orientation="vertical" flexItem/> }
+          justifyContent="space-evenly"
+          spacing={ 2 }
         >
-          <Button variant="contained">Reset Step</Button>
-          <Button variant="contained">Confirm Step</Button>
+          <Tooltip title="Reset all shift and swap values" placement="top">
+            <Button
+              onClick={ resetShiftAndSwap }
+              startIcon={ <RestartAlt/> }
+              variant="contained"
+            >
+              Reset Step
+            </Button>
+          </Tooltip>
+          <Tooltip title="Use current result as base image" placement="top">
+            <Button
+              startIcon={ <CheckCircleOutline/> }
+              variant="contained"
+            >
+              Confirm Step
+            </Button>
+          </Tooltip>
+          <Tooltip title="Download current result as full-res PNG" placement="top">
+            <Button
+              startIcon={ <Save/> }
+              variant="contained"
+            >
+              Save Image
+            </Button>
+          </Tooltip>
         </Stack>
       </Paper>
     </React.Fragment>
