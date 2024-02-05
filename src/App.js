@@ -4,7 +4,7 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 import {
   Box, Button,
-  Container, Divider,
+  Container, CssBaseline, Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -120,23 +120,24 @@ function App() {
 
   // Returns true if any changes were made during this step. Used to enable/disable reset and confirm buttons
   const imageModifiedDuringStep = () => {
-    let sourceAndTargetChannelsDiffer = sourceChannel !== targetChannel
+    let sourceAndTargetChannelsDiffer = parseInt(sourceChannel) !== parseInt(targetChannel)
     let channelShiftValuesDefault = getChannelShiftValuesDefault()
     let channelsHaveBeenShifted = JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
     return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
   }
 
 
-  // TODO: show shift values for unselected channels
+  // TODO: show shift values for unselected channels; use Chip element instead of radios for shift?
   return (
     <React.Fragment>
+      <CssBaseline/>
       <Paper
         sx={{
           position: 'sticky',
           top: 0,
           left: 0,
           right: 0,
-          background: 'black',
+          bgcolor: 'text.primary',
           zIndex: 999,
         }}
         elevation={3}
@@ -155,8 +156,8 @@ function App() {
 
           <Grid item xs={ 12 }>
             <Paper
-              variant="outlined"
               sx={ { p: 2 } }
+              elevation={1}
             >
               <Typography variant="h5" gutterBottom>Shift Channels</Typography>
               <RadioGroup
@@ -168,11 +169,11 @@ function App() {
                 <ChannelRadioElements/>
               </RadioGroup>
               <Paper
-                variant="outlined"
                 sx={ {
                   p: 2,
                   my: 2,
                 } }
+                elevation={0}
               >
                 {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
                 <Box
@@ -195,11 +196,11 @@ function App() {
                 </Box>
               </Paper>
               <Paper
-                variant="outlined"
                 sx={ {
                   p: 2,
                   my: 2,
                 } }
+                elevation={0}
               >
                 {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
                 <Box
@@ -226,15 +227,15 @@ function App() {
 
           <Grid item xs={ 12 }>
             <Paper
-              variant="outlined"
               sx={ { p: 2 } }
+              elevation={1}
             >
               <Typography variant="h5" gutterBottom>Swap Channels</Typography>
               <Grid container justifyContent="center" spacing={2}>
                 <Grid item xs={ 6 }>
                   <Paper
-                    variant="outlined"
                     sx={{ p: 2 }}
+                    elevation={0}
                   >
                     <FormControl>
                       <FormLabel id="source-channel-label">Source Channel:</FormLabel>
@@ -251,8 +252,8 @@ function App() {
                 </Grid>
                 <Grid item xs={ 6 }>
                   <Paper
-                    variant="outlined"
                     sx={{ p: 2 }}
+                    elevation={0}
                   >
                     <FormControl>
                       <FormLabel id="target-channel-label">Target Channel:</FormLabel>
@@ -291,33 +292,33 @@ function App() {
           spacing={ 2 }
         >
           <Tooltip title="Reset all shift and swap values" placement="top">
-            <Button
+            <span><Button
               onClick={ resetShiftAndSwap }
               disabled={ !imageModifiedDuringStep() }
               startIcon={ <RestartAlt/> }
               variant="contained"
             >
               Reset Step
-            </Button>
+            </Button></span>
           </Tooltip>
           <Tooltip title="Use current result as base image" placement="top">
-            <Button
+            <span><Button
               onClick={ confirmButtonOnClick }
               disabled={ !imageModifiedDuringStep() }
               startIcon={ <CheckCircleOutline/> }
               variant="contained"
             >
               Confirm Step
-            </Button>
+            </Button></span>
           </Tooltip>
           <Tooltip title="Download current result as full-res PNG" placement="top">
-            <Button
+            <span><Button
               onClick={ saveButtonOnClick }
               startIcon={ <Save/> }
               variant="contained"
             >
               Save Image
-            </Button>
+            </Button></span>
           </Tooltip>
         </Stack>
       </Paper>

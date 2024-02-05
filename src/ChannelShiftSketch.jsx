@@ -173,13 +173,24 @@ export function ChannelShiftSketch(p5) {
   /**
    * Returns an array with width and height to set canvas size to.
    *
-   * Set width to 90% of the window width, calculate height to maintain image aspect ratio.
+   * First attempt to set height to 50% of the window, scale width accordingly.
+   *
+   * If new image width exceeds window width, instead set new width to 100% the window width and scale height accordingly.
    *
    * @returns {number[]}
    */
   function calculateCanvasDimensions() {
-    // TODO: base on height instead? e.g. 2/3 the screen?
-    return [p5.windowWidth * 0.7, (p5.windowWidth * 0.7 / sourceImage.width) * sourceImage.height]
+    // First try to set height to 50% of window height and scale width accordingly
+    let newHeight = 0.5 * p5.windowHeight
+    let ratio = newHeight / sourceImage.height
+    let newWidth = sourceImage.width * ratio
+    // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
+    if (newWidth > p5.windowWidth) {
+      newWidth = p5.windowWidth
+      ratio = newWidth / sourceImage.width
+      newHeight = sourceImage.height * ratio
+    }
+    return [newWidth, newHeight]
   }
 
 
