@@ -11,10 +11,10 @@ import {
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack, Tooltip,
+  RadioGroup, Slider, Stack, styled, Tooltip,
   Typography
 } from '@mui/material'
-import { CheckCircleOutline, RestartAlt, Save } from '@mui/icons-material'
+import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
 
 function App() {
   // Indexes into RGB arrays + values of radio buttons
@@ -99,13 +99,6 @@ function App() {
     setChannelShiftValues(getChannelShiftValuesDefault())
   }
 
-  // Set to true when save button is clicked, sketch will save image and set back to false when complete
-  const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
-  // Save button click handler
-  const saveButtonOnClick = () => {
-    setShouldSaveResult(true)
-  }
-
   // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
   const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
   // Confirm button click handler
@@ -124,6 +117,26 @@ function App() {
     let channelShiftValuesDefault = getChannelShiftValuesDefault()
     let channelsHaveBeenShifted = JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
     return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
+  }
+
+  // Hidden file input element for load button
+  const HiddenFileInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  })
+
+  // Set to true when save button is clicked, sketch will save image and set back to false when complete
+  const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
+  // Save button click handler
+  const saveButtonOnClick = () => {
+    setShouldSaveResult(true)
   }
 
 
@@ -292,33 +305,51 @@ function App() {
           spacing={ 2 }
         >
           <Tooltip title="Reset all shift and swap values" placement="top">
-            <span><Button
-              onClick={ resetShiftAndSwap }
-              disabled={ !imageModifiedDuringStep() }
-              startIcon={ <RestartAlt/> }
-              variant="contained"
-            >
+            <span>
+              <Button
+                onClick={ resetShiftAndSwap }
+                disabled={ !imageModifiedDuringStep() }
+                startIcon={ <RestartAlt/> }
+                variant="contained"
+              >
               Reset Step
-            </Button></span>
+            </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Use current result as base image" placement="top">
-            <span><Button
-              onClick={ confirmButtonOnClick }
-              disabled={ !imageModifiedDuringStep() }
-              startIcon={ <CheckCircleOutline/> }
-              variant="contained"
-            >
+            <span>
+              <Button
+                onClick={ confirmButtonOnClick }
+                disabled={ !imageModifiedDuringStep() }
+                startIcon={ <CheckCircleOutline/> }
+                variant="contained"
+              >
               Confirm Step
-            </Button></span>
+            </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title="Load a new image" placement="top">
+            <span>
+              <Button
+                startIcon={ <FileUpload/> }
+                component="label"
+                variant="contained"
+              >
+              Load Image
+              <HiddenFileInput type="file"/>
+            </Button>
+            </span>
           </Tooltip>
           <Tooltip title="Download current result as full-res PNG" placement="top">
-            <span><Button
-              onClick={ saveButtonOnClick }
-              startIcon={ <Save/> }
-              variant="contained"
-            >
+            <span>
+              <Button
+                onClick={ saveButtonOnClick }
+                startIcon={ <Save/> }
+                variant="contained"
+              >
               Save Image
-            </Button></span>
+            </Button>
+            </span>
           </Tooltip>
         </Stack>
       </Paper>
