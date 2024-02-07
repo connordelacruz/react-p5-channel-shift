@@ -119,6 +119,9 @@ function App() {
     return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
   }
 
+  // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
+  // Sketch will load data as image and set to null again when complete
+  const [newFileDataURL, setNewFileDataURL] = React.useState(null)
   // Hidden file input element for load button
   const HiddenFileInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -131,6 +134,21 @@ function App() {
     whiteSpace: 'nowrap',
     width: 1,
   })
+  // Change listener for file input
+  const loadImageFileInputOnChange = (event) => {
+    if (event.target.files.length > 0) {
+      let file = event.target.files[0]
+      // Verify it's an image
+      if (file.type.split('/')[0] === 'image') {
+        // Read file as base64 data URL
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          setNewFileDataURL(reader.result)
+        }
+      }
+    }
+  }
 
   // Set to true when save button is clicked, sketch will save image and set back to false when complete
   const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
@@ -150,7 +168,7 @@ function App() {
           top: 0,
           left: 0,
           right: 0,
-          bgcolor: 'text.primary',
+          bgcolor: 'gray',
           zIndex: 999,
         }}
         elevation={3}
@@ -160,6 +178,8 @@ function App() {
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
         sourceChannel={ sourceChannel } targetChannel={ targetChannel }
         channelShiftValues={ channelShiftValues }
+        newFileDataURL={newFileDataURL} setNewFileDataURL={setNewFileDataURL}
+        resetShiftAndSwap={ resetShiftAndSwap }
         shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
         shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
       />
@@ -336,7 +356,11 @@ function App() {
                 variant="contained"
               >
               Load Image
-              <HiddenFileInput type="file"/>
+              <HiddenFileInput
+                type="file"
+                accept="image/*"
+                onChange={loadImageFileInputOnChange}
+                id="load-image-file-input"/>
             </Button>
             </span>
           </Tooltip>

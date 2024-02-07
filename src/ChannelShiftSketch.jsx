@@ -29,14 +29,23 @@ export function ChannelShiftSketch(p5) {
   // Pause drawing when confirming a result
   let confirmResultInProgress = false
 
-  // Kind of a hack but need some way to communicate image dimensions to App.js.
-  // These are set initially in updateWithProps and called in setup after image is loaded.
+  // --------------------------------------------------------------------------------
+  // Function Variables
+  //
+  // Kind of a hack, but need to get various state-related functions passed from App.js.
+  // These get initialized once in updateWithProps().
+  // --------------------------------------------------------------------------------
+  // Image dimension setter functions
   let setImageWidth = null
   let setImageHeight = null
-  // Likewise for handling post-confirm
+  // Function to run after confirming a result
   let postConfirmResult = null
-  // Same thing for handling the save button being clicked, need to set the state to false when complete
+  // Function to set newFileDataURL to null after load
+  let setNewFileDataURL = null
+  // Function to set shouldSaveResult state to false after completing a save
   let setShouldSaveResult = null
+  // Function to reset all shift and swap states
+  let resetShiftAndSwap = null
 
   // ================================================================================
   // p5 Sketch Methods
@@ -57,16 +66,8 @@ export function ChannelShiftSketch(p5) {
     // Match window width, scale height accordingly
     p5.createCanvas(...calculateCanvasDimensions())
 
-    // Graphics object that will be drawn with the RGB layers on it
-    previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
-
-    // Extract color channels and initialize previewChannels
-    initializeRGBImages()
-
-    // Set parent's state for image dimensions
-    // (These are initialized when updateWithProps() is called on initial load)
-    setImageWidth(sourceImage.width)
-    setImageHeight(sourceImage.height)
+    // Initialize previewGraphics, source/preview RGB channel images, and update the image dimension states
+    initializeAll()
 
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
@@ -87,7 +88,7 @@ export function ChannelShiftSketch(p5) {
    * @param props
    */
   p5.updateWithProps = props => {
-    // Set state setting functions so they're accessible in setup()
+    // Initialize state-related function variables
     if (setImageWidth === null) {
       setImageWidth = props.setImageWidth
     }
@@ -100,9 +101,21 @@ export function ChannelShiftSketch(p5) {
     if (setShouldSaveResult === null) {
       setShouldSaveResult = props.setShouldSaveResult
     }
+    if (resetShiftAndSwap === null) {
+      resetShiftAndSwap = props.resetShiftAndSwap
+    }
+    if (setNewFileDataURL === null) {
+      setNewFileDataURL = props.setNewFileDataURL
+    }
+
+    // Handle a new image being uploaded
+    if (props.newFileDataURL !== null) {
+      loadImageFile(props.newFileDataURL)
+    }
 
     // Handle confirm button click
     if (props.shouldConfirmResult) {
+      // TODO: move to function
       // Pause redraws
       confirmResultInProgress = true
       // Copy previewGraphics to sourceImage and re-initialize channel images
@@ -169,6 +182,21 @@ export function ChannelShiftSketch(p5) {
   // ================================================================================
   // Helper functions
   // ================================================================================
+  // TODO: reorganize these
+
+  // TODO DOC, rename?
+  function initializeAll() {
+    // Graphics object that will be drawn with the RGB layers on it
+    previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
+
+    // Extract color channels and initialize previewChannels
+    initializeRGBImages()
+
+    // Set parent's state for image dimensions
+    // (These are initialized when updateWithProps() is called on initial load)
+    setImageWidth(sourceImage.width)
+    setImageHeight(sourceImage.height)
+  }
 
   /**
    * Returns an array with width and height to set canvas size to.
@@ -234,6 +262,28 @@ export function ChannelShiftSketch(p5) {
     previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
     previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
     previewChannels[B_OFFSET] = sourceChannels[B_OFFSET].get(0, 0, sourceChannels[B_OFFSET].width, sourceChannels[B_OFFSET].height)
+  }
+
+
+  // TODO DOC
+  function loadImageFile(newFileDataURL) {
+    const loadCallback = (newImage) => {
+      // Load image file into sourceImage
+      // TODO: use .get() to create copy?
+      sourceImage = newImage
+
+      // Reset shift/swap states
+      resetShiftAndSwap()
+      // Re-initialize image-related variables and update dimension states
+      initializeAll()
+      // Resize canvas
+      p5.windowResized()
+      // Set state back to null
+      setNewFileDataURL(null)
+    }
+
+    // Have p5 load the image and pass it our callback
+    p5.loadImage(newFileDataURL, loadCallback)
   }
 
 
