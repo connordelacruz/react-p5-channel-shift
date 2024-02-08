@@ -30,6 +30,7 @@ function App() {
   // ================================================================================
   // State and UI
   // ================================================================================
+  // TODO: organize these by order of UI appearance?
 
   // --------------------------------------------------------------------------------
   // Image Dimensions
@@ -134,6 +135,38 @@ function App() {
   }
 
   // --------------------------------------------------------------------------------
+  // Change Detection Helpers
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Returns true if channels were swapped during this step.
+   *
+   * @return {boolean}
+   */
+  const swapModifiedDuringStep = () => {
+    return parseInt(sourceChannel) !== parseInt(targetChannel)
+  }
+
+  /**
+   * Returns true if channels were shifted during this step.
+   *
+   * @return {boolean}
+   */
+  const shiftModifiedDuringStep = () => {
+    let channelShiftValuesDefault = getChannelShiftValuesDefault()
+    return JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
+  }
+
+  /**
+   * Returns true if any changes were made during this step.
+   *
+   * @return {boolean}
+   */
+  const imageModifiedDuringStep = () => {
+    return swapModifiedDuringStep() || shiftModifiedDuringStep()
+  }
+
+  // --------------------------------------------------------------------------------
   // Reset Button
   // --------------------------------------------------------------------------------
 
@@ -167,24 +200,6 @@ function App() {
   const postConfirmResult = () => {
     resetShiftAndSwap()
     setShouldConfirmResult(false)
-  }
-
-
-  // --------------------------------------------------------------------------------
-  // Reset + Confirm Buttons
-  // --------------------------------------------------------------------------------
-
-  // TODO: split into shiftModifiedDuringStep and swapModifiedDuringStep for use with tabs*
-  /**
-   * Returns true if any changes were made during this step.
-   *
-   * Used to enable/disable reset and confirm buttons.
-   */
-  const imageModifiedDuringStep = () => {
-    let sourceAndTargetChannelsDiffer = parseInt(sourceChannel) !== parseInt(targetChannel)
-    let channelShiftValuesDefault = getChannelShiftValuesDefault()
-    let channelsHaveBeenShifted = JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
-    return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
   }
 
   // --------------------------------------------------------------------------------
@@ -353,8 +368,8 @@ function App() {
             onChange={toolTabsOnChangeHandler}
             variant="fullWidth"
           >
-            <Tab value={SHIFT_TAB_VALUE} label="Shift Channels"/>
-            <Tab value={SWAP_TAB_VALUE} label="Swap Channels"/>
+            <Tab value={SHIFT_TAB_VALUE} label={`Shift Channels${shiftModifiedDuringStep() ? '*' : ''}`}/>
+            <Tab value={SWAP_TAB_VALUE} label={`Swap Channels${swapModifiedDuringStep() ? '*' : ''}`}/>
           </Tabs>
         </Box>
 
