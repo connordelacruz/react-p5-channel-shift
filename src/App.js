@@ -12,7 +12,7 @@ import {
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack, styled, Toolbar, Tooltip,
+  RadioGroup, Slider, Stack, styled, Tab, Tabs, Toolbar, Tooltip,
   Typography
 } from '@mui/material'
 import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
@@ -241,6 +241,20 @@ function App() {
     setShouldSaveResult(true)
   }
 
+  // --------------------------------------------------------------------------------
+  // Tool Tabs
+  // --------------------------------------------------------------------------------
+  // Constants for tab values
+  const SHIFT_TAB_VALUE = 'shift'
+  const SWAP_TAB_VALUE = 'swap'
+  // Currently selected tool tab
+  const [selectedToolTab, setSelectedToolTab] = React.useState(SHIFT_TAB_VALUE)
+
+  // onChange handler for tool tabs
+  const toolTabsOnChangeHandler = (event, newValue) => {
+    setSelectedToolTab(newValue)
+  }
+
 
   // ================================================================================
   // Render
@@ -249,7 +263,7 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline/>
-      {/*App Bar and Canvas*/}
+      {/*App Bar, Canvas, and Tool Tabs Container*/}
       <Paper
         sx={{
           position: 'sticky',
@@ -262,6 +276,7 @@ function App() {
         square
         elevation={3}
       >
+        {/*App Bar*/}
         <AppBar position="static" color="primary">
           <Toolbar>
             <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
@@ -305,6 +320,7 @@ function App() {
           </Toolbar>
         </AppBar>
 
+        {/*Canvas*/}
         <ReactP5Wrapper
         sketch={ ChannelShiftSketch }
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
@@ -314,14 +330,33 @@ function App() {
         resetShiftAndSwap={ resetShiftAndSwap }
         shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
         shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
-      />
+        />
+
+        {/*Tool Tabs*/}
+        <Box
+          sx={{
+            width: '100%',
+            bgcolor: 'background.default'
+          }}
+        >
+          <Tabs
+            value={selectedToolTab}
+            onChange={toolTabsOnChangeHandler}
+            variant="fullWidth"
+          >
+            <Tab value={SHIFT_TAB_VALUE} label="Shift Channels"/>
+            <Tab value={SWAP_TAB_VALUE} label="Swap Channels"/>
+          </Tabs>
+        </Box>
+
       </Paper>
 
       {/*Tools UI*/}
       <Container maxWidth="md">
         <Grid container justifyContent="center" spacing={ 4 } my={ 1 }>
 
-          <Grid item xs={ 12 }>
+          {/*Shift Channels*/}
+          <Grid item xs={ 12 } hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
             <Paper
               sx={ { p: 2 } }
               elevation={1}
@@ -392,7 +427,8 @@ function App() {
             </Paper>
           </Grid>
 
-          <Grid item xs={ 12 }>
+          {/*Swap Channels*/}
+          <Grid item xs={ 12 } hidden={selectedToolTab !== SWAP_TAB_VALUE}>
             <Paper
               sx={ { p: 2 } }
               elevation={1}
@@ -442,6 +478,7 @@ function App() {
         </Grid>
       </Container>
 
+      {/*Reset/Confirm Buttons*/}
       <Paper
         elevation={ 3 }
         sx={ {
