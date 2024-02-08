@@ -277,9 +277,18 @@ function App() {
         elevation={3}
       >
         {/*App Bar*/}
-        <AppBar position="static" color="primary">
+        <AppBar
+          position="static"
+          color="default"
+          elevation={0}
+        >
           <Toolbar>
-            <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
+            <Typography
+              color="primary"
+              variant="h6"
+              component="div"
+              sx={ { flexGrow: 1 } }
+            >
               Channel Shift / Swap
             </Typography>
             <Stack
@@ -293,7 +302,7 @@ function App() {
                     startIcon={ <FileUpload/> }
                     component="label"
                     variant="outlined"
-                    color="inherit"
+                    color="primary"
                   >
                   Load Image
                   <VisuallyHiddenInput
@@ -310,7 +319,7 @@ function App() {
                     onClick={ saveButtonOnClick }
                     startIcon={ <Save/> }
                     variant="outlined"
-                    color="inherit"
+                    color="primary"
                   >
                   Save Image
                 </Button>
@@ -352,137 +361,135 @@ function App() {
       </Paper>
 
       {/*Tools UI*/}
-      <Container maxWidth="md">
-        <Grid container justifyContent="center" spacing={ 4 } my={ 1 }>
+      <Container maxWidth="md" sx={{ pb: 8, my: 2 }}>
 
-          {/*Shift Channels*/}
-          <Grid item xs={ 12 } hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
-            <Paper
-              sx={ { p: 2 } }
-              elevation={1}
+        {/*Shift Channels*/}
+        <Box hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
+          <Paper
+            sx={ { p: 2 } }
+            elevation={1}
+          >
+            <FormLabel id="shift-channels-selected-channel-label">Selected Channel:</FormLabel>
+            <RadioGroup
+              value={ selectedShiftChannel }
+              onChange={ shiftChannelSelectionOnChangeHandler }
+              aria-labelledby="shift-channels-selected-channel-label"
+              row
             >
-              <Typography variant="h5" gutterBottom>Shift Channels</Typography>
-              <RadioGroup
-                value={ selectedShiftChannel }
-                onChange={ shiftChannelSelectionOnChangeHandler }
-                aria-label="selected-shift-channel"
-                row
+              <ChannelRadioElements/>
+            </RadioGroup>
+            <Paper
+              sx={ {
+                p: 2,
+                my: 2,
+              } }
+              elevation={0}
+            >
+              {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
+              <Box
+                sx={ { px: 2 } }
               >
-                <ChannelRadioElements/>
-              </RadioGroup>
-              <Paper
-                sx={ {
-                  p: 2,
-                  my: 2,
-                } }
-                elevation={0}
-              >
-                {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
-                <Box
-                  sx={ { p: 2 } }
-                >
-                  <FormLabel id="x-shift-slider-label">X Shift</FormLabel>
-                  <Slider
-                    value={ channelShiftValues[selectedShiftChannel][0] }
-                    onChange={ shiftSliderOnChangeHandler(0) }
-                    min={ 0 }
-                    max={ imageWidth }
-                    valueLabelDisplay="auto"
-                    marks={ [
-                      { value: 0, label: '0px' },
-                      { value: imageWidth, label: `${ imageWidth }px` }
-                    ] }
-                    color="error"
-                    aria-labelledby="x-shift-slider-label"
-                  />
-                </Box>
-              </Paper>
-              <Paper
-                sx={ {
-                  p: 2,
-                  my: 2,
-                } }
-                elevation={0}
-              >
-                {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
-                <Box
-                  sx={ { p: 2 } }
-                >
-                  <FormLabel id="y-shift-slider-label">Y Shift</FormLabel>
-                  <Slider
-                    value={ channelShiftValues[selectedShiftChannel][1] }
-                    onChange={ shiftSliderOnChangeHandler(1) }
-                    min={ 0 }
-                    max={ imageHeight }
-                    valueLabelDisplay="auto"
-                    marks={ [
-                      { value: 0, label: '0px' },
-                      { value: imageHeight, label: `${ imageHeight }px` }
-                    ] }
-                    color="success"
-                    aria-labelledby="y-shift-slider-label"
-                  />
-                </Box>
-              </Paper>
+                <FormLabel id="x-shift-slider-label">X Shift:</FormLabel>
+                <Slider
+                  value={ channelShiftValues[selectedShiftChannel][0] }
+                  onChange={ shiftSliderOnChangeHandler(0) }
+                  min={ 0 }
+                  max={ imageWidth }
+                  valueLabelDisplay="auto"
+                  marks={ [
+                    { value: 0, label: '0px' },
+                    { value: imageWidth, label: `${ imageWidth }px` }
+                  ] }
+                  color="error"
+                  aria-labelledby="x-shift-slider-label"
+                />
+              </Box>
             </Paper>
-          </Grid>
-
-          {/*Swap Channels*/}
-          <Grid item xs={ 12 } hidden={selectedToolTab !== SWAP_TAB_VALUE}>
             <Paper
-              sx={ { p: 2 } }
-              elevation={1}
+              sx={ {
+                p: 2,
+                my: 2,
+              } }
+              elevation={0}
             >
-              <Typography variant="h5" gutterBottom>Swap Channels</Typography>
-              <Grid container justifyContent="center" spacing={2}>
-                <Grid item xs={ 6 }>
-                  <Paper
-                    sx={{ p: 2 }}
-                    elevation={0}
-                  >
-                    <FormControl>
-                      <FormLabel id="source-channel-label">Source Channel:</FormLabel>
-                      <RadioGroup
-                        value={ sourceChannel }
-                        onChange={ channelRadioOnChangeHandler(setSourceChannel) }
-                        aria-labelledby="source-channel-label"
-                        name="source-channel-radio-group"
-                      >
-                        <ChannelRadioElements/>
-                      </RadioGroup>
-                    </FormControl>
-                  </Paper>
-                </Grid>
-                <Grid item xs={ 6 }>
-                  <Paper
-                    sx={{ p: 2 }}
-                    elevation={0}
-                  >
-                    <FormControl>
-                      <FormLabel id="target-channel-label">Target Channel:</FormLabel>
-                      <RadioGroup
-                        value={ targetChannel }
-                        onChange={ channelRadioOnChangeHandler(setTargetChannel) }
-                        aria-labelledby="target-channel-label"
-                        name="target-channel-radio-group"
-                      >
-                        <ChannelRadioElements/>
-                      </RadioGroup>
-                    </FormControl>
-                  </Paper>
-                </Grid>
+              {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
+              <Box
+                sx={ { px: 2 } }
+              >
+                <FormLabel id="y-shift-slider-label">Y Shift:</FormLabel>
+                <Slider
+                  value={ channelShiftValues[selectedShiftChannel][1] }
+                  onChange={ shiftSliderOnChangeHandler(1) }
+                  min={ 0 }
+                  max={ imageHeight }
+                  valueLabelDisplay="auto"
+                  marks={ [
+                    { value: 0, label: '0px' },
+                    { value: imageHeight, label: `${ imageHeight }px` }
+                  ] }
+                  color="success"
+                  aria-labelledby="y-shift-slider-label"
+                />
+              </Box>
+            </Paper>
+          </Paper>
+        </Box>
+
+        {/*Swap Channels*/}
+        <Box hidden={selectedToolTab !== SWAP_TAB_VALUE}>
+          <Paper
+            sx={ { p: 2 } }
+            elevation={1}
+          >
+            <Typography variant="h5" gutterBottom>Swap Channels</Typography>
+            <Grid container justifyContent="center" spacing={2}>
+              <Grid item xs={ 6 }>
+                <Paper
+                  sx={{ p: 2 }}
+                  elevation={0}
+                >
+                  <FormControl>
+                    <FormLabel id="source-channel-label">Source Channel:</FormLabel>
+                    <RadioGroup
+                      value={ sourceChannel }
+                      onChange={ channelRadioOnChangeHandler(setSourceChannel) }
+                      aria-labelledby="source-channel-label"
+                      name="source-channel-radio-group"
+                    >
+                      <ChannelRadioElements/>
+                    </RadioGroup>
+                  </FormControl>
+                </Paper>
               </Grid>
-            </Paper>
-          </Grid>
+              <Grid item xs={ 6 }>
+                <Paper
+                  sx={{ p: 2 }}
+                  elevation={0}
+                >
+                  <FormControl>
+                    <FormLabel id="target-channel-label">Target Channel:</FormLabel>
+                    <RadioGroup
+                      value={ targetChannel }
+                      onChange={ channelRadioOnChangeHandler(setTargetChannel) }
+                      aria-labelledby="target-channel-label"
+                      name="target-channel-radio-group"
+                    >
+                      <ChannelRadioElements/>
+                    </RadioGroup>
+                  </FormControl>
+                </Paper>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Box>
 
-        </Grid>
       </Container>
 
       {/*Reset/Confirm Buttons*/}
       <Paper
         elevation={ 3 }
         sx={ {
-          position: 'sticky',
+          position: 'fixed',
           bottom: 0,
           left: 0,
           right: 0,
