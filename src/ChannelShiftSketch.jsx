@@ -8,6 +8,7 @@ export function ChannelShiftSketch(p5) {
   const A_OFFSET = 3
 
   // Source image + RGB channel images
+  // TODO rename to originalImage
   let sourceImage
   // TODO rename arrays to originalChannels
   let sourceChannels = []
@@ -115,17 +116,7 @@ export function ChannelShiftSketch(p5) {
 
     // Handle confirm button click
     if (props.shouldConfirmResult) {
-      // TODO: move to function
-      // Pause redraws
-      confirmResultInProgress = true
-      // Copy previewGraphics to sourceImage and re-initialize channel images
-      sourceImage = previewGraphics.get(0, 0, previewGraphics.width, previewGraphics.height)
-      initializeRGBImages()
-      // Tell app to handle post-confirmation tasks
-      postConfirmResult()
-      // Resume redraws
-      // TODO: there's a delay from app updating shift dimensions and this, figure out how to account for that so there isn't a frame of jitter
-      confirmResultInProgress = false
+      confirmResult()
     }
 
     // Handle save button click
@@ -159,6 +150,7 @@ export function ChannelShiftSketch(p5) {
   p5.draw = () => {
     // Pause re-draws when confirming a result
     if (!confirmResultInProgress) {
+
       // Update previewChannels if source/target channel selection was changed
       if (selectedChannelsWereUpdated) {
         resetPreviewChannels()
@@ -168,6 +160,8 @@ export function ChannelShiftSketch(p5) {
           selectedChannelsWereUpdated = false
         }
       }
+
+      // Draw to previewGraphics
       previewGraphics.background(0)
       // Blend RGB channels
       drawChannelToPreviewGraphics(R_OFFSET)
@@ -180,11 +174,16 @@ export function ChannelShiftSketch(p5) {
 
 
   // ================================================================================
-  // Helper functions
+  // Helper Functions
   // ================================================================================
-  // TODO: reorganize these
 
-  // TODO DOC, rename?
+  // --------------------------------------------------------------------------------
+  // Initialization Functions
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Initialize previewGraphics, RGB image arrays, and set image dimension states.
+   */
   function initializeAll() {
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
@@ -196,29 +195,6 @@ export function ChannelShiftSketch(p5) {
     // (These are initialized when updateWithProps() is called on initial load)
     setImageWidth(sourceImage.width)
     setImageHeight(sourceImage.height)
-  }
-
-  /**
-   * Returns an array with width and height to set canvas size to.
-   *
-   * First attempt to set height to 50% of the window, scale width accordingly.
-   *
-   * If new image width exceeds window width, instead set new width to 100% the window width and scale height accordingly.
-   *
-   * @returns {number[]}
-   */
-  function calculateCanvasDimensions() {
-    // First try to set height to 50% of window height and scale width accordingly
-    let newHeight = 0.5 * p5.windowHeight
-    let ratio = newHeight / sourceImage.height
-    let newWidth = sourceImage.width * ratio
-    // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
-    if (newWidth > p5.windowWidth) {
-      newWidth = p5.windowWidth
-      ratio = newWidth / sourceImage.width
-      newHeight = sourceImage.height * ratio
-    }
-    return [newWidth, newHeight]
   }
 
 
@@ -265,7 +241,43 @@ export function ChannelShiftSketch(p5) {
   }
 
 
-  // TODO DOC
+  /**
+   * Returns an array with width and height to set canvas size to.
+   *
+   * First attempt to set height to 50% of the window, scale width accordingly.
+   *
+   * If new image width exceeds window width, instead set new width to 100% the window width and scale height accordingly.
+   *
+   * @returns {number[]}
+   */
+  function calculateCanvasDimensions() {
+    // First try to set height to 50% of window height and scale width accordingly
+    let newHeight = 0.5 * p5.windowHeight
+    let ratio = newHeight / sourceImage.height
+    let newWidth = sourceImage.width * ratio
+    // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
+    if (newWidth > p5.windowWidth) {
+      newWidth = p5.windowWidth
+      ratio = newWidth / sourceImage.width
+      newHeight = sourceImage.height * ratio
+    }
+    return [newWidth, newHeight]
+  }
+
+
+  // --------------------------------------------------------------------------------
+  // Load / Save / Confirm Functions
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Takes a base64 encoded data URL with the new image file and loads it.
+   *
+   * Once loaded, sets sourceImage to it, resets shift/swap states, re-initializes all,
+   * calls windowResized() to set canvas size to fit new image, then sets newFileDataURL
+   * state back to null.
+   *
+   * @param newFileDataURL
+   */
   function loadImageFile(newFileDataURL) {
     const loadCallback = (newImage) => {
       // Load image file into sourceImage
@@ -296,6 +308,29 @@ export function ChannelShiftSketch(p5) {
     p5.save(previewGraphics, `${ts}.png`)
   }
 
+
+  /**
+   * Sets confirmResultInProgress to true, sets sourceImage to current previewGraphics,
+   * re-initializes RGB channel arrays, calls postConfirmResult(), then sets
+   * confirmResultInProgress to false.
+   */
+  function confirmResult() {
+    // Pause redraws
+    confirmResultInProgress = true
+    // Copy previewGraphics to sourceImage and re-initialize channel images
+    sourceImage = previewGraphics.get(0, 0, previewGraphics.width, previewGraphics.height)
+    initializeRGBImages()
+    // Tell app to handle post-confirmation tasks
+    postConfirmResult()
+    // Resume redraws
+    // TODO: there's a delay from app updating shift dimensions and this, figure out how to account for that so there isn't a frame of jitter
+    confirmResultInProgress = false
+  }
+
+
+  // --------------------------------------------------------------------------------
+  // Channel Shift / Swap Functions
+  // --------------------------------------------------------------------------------
 
   /**
    * Draw preview channel to previewGraphics, applying any x/y shifts to it.
@@ -354,27 +389,32 @@ export function ChannelShiftSketch(p5) {
    */
   function swapChannels(sourceChannelOffset, targetChannelOffset) {
     // TODO: access array directly? Or assign final with .get() and set temp vars to undefined
-    let channelImage0 = previewChannels[sourceChannelOffset]
-    channelImage0.loadPixels()
-    let newChannelImage0 = p5.createImage(channelImage0.width, channelImage0.height)
-    newChannelImage0.loadPixels()
+    // Load source channel image and create a new image to be modified
+    let sourceChannelImage = previewChannels[sourceChannelOffset]
+    sourceChannelImage.loadPixels()
+    let newSourceChannelImage = p5.createImage(sourceChannelImage.width, sourceChannelImage.height)
+    newSourceChannelImage.loadPixels()
 
-    let channelImage1 = previewChannels[targetChannelOffset]
-    channelImage1.loadPixels()
-    let newChannelImage1 = p5.createImage(channelImage1.width, channelImage1.height)
-    newChannelImage1.loadPixels()
+    // Load target channel image and create a new image to be modified
+    let targetChannelImage = previewChannels[targetChannelOffset]
+    targetChannelImage.loadPixels()
+    let newTargetChannelImage = p5.createImage(targetChannelImage.width, targetChannelImage.height)
+    newTargetChannelImage.loadPixels()
 
-    for (let i = 0; i < newChannelImage0.pixels.length; i += 4) {
-      newChannelImage0.pixels[i + sourceChannelOffset] = channelImage1.pixels[i + targetChannelOffset]
-      newChannelImage0.pixels[i + A_OFFSET] = 255
-      newChannelImage1.pixels[i + targetChannelOffset] = channelImage0.pixels[i + sourceChannelOffset]
-      newChannelImage1.pixels[i + A_OFFSET] = 255
+    // Iterate thru pixels
+    for (let i = 0; i < newSourceChannelImage.pixels.length; i += 4) {
+      // Set new source channel pixel to value of target channel pixel
+      newSourceChannelImage.pixels[i + sourceChannelOffset] = targetChannelImage.pixels[i + targetChannelOffset]
+      newSourceChannelImage.pixels[i + A_OFFSET] = 255
+      // Set new target channel pixel to value of source channel pixel
+      newTargetChannelImage.pixels[i + targetChannelOffset] = sourceChannelImage.pixels[i + sourceChannelOffset]
+      newTargetChannelImage.pixels[i + A_OFFSET] = 255
     }
-    newChannelImage0.updatePixels()
-    newChannelImage1.updatePixels()
+    newSourceChannelImage.updatePixels()
+    newTargetChannelImage.updatePixels()
 
     // Load into previewChannels
-    previewChannels[sourceChannelOffset] = newChannelImage0
-    previewChannels[targetChannelOffset] = newChannelImage1
+    previewChannels[sourceChannelOffset] = newSourceChannelImage
+    previewChannels[targetChannelOffset] = newTargetChannelImage
   }
 }
