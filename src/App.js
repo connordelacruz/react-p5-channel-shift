@@ -3,6 +3,7 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 import {
+  AppBar,
   Box, Button,
   Container, CssBaseline, Divider,
   FormControl,
@@ -11,7 +12,7 @@ import {
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack, styled, Tooltip,
+  RadioGroup, Slider, Stack, styled, Toolbar, Tooltip,
   Typography
 } from '@mui/material'
 import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
@@ -90,9 +91,6 @@ function App() {
     setSelectedShiftChannel(event.target.value)
   }
 
-  // Initialize shift values state
-  const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
-
   /**
    * Returns default value of all 0's for each channel
    *
@@ -105,6 +103,9 @@ function App() {
     channelShiftValuesDefault[B_OFFSET] = [0, 0]
     return channelShiftValuesDefault
   }
+
+  // Initialize shift values state
+  const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
 
   /**
    * Set a new shift value at the selected shift channel
@@ -248,6 +249,7 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline/>
+      {/*App Bar and Canvas*/}
       <Paper
         sx={{
           position: 'sticky',
@@ -257,8 +259,52 @@ function App() {
           bgcolor: 'gray',
           zIndex: 999,
         }}
+        square
         elevation={3}
       >
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Typography variant="h6" component="div" sx={ { flexGrow: 1 } }>
+              Channel Shift / Swap
+            </Typography>
+            <Stack
+              direction="row"
+              justifyContent="space-evenly"
+              spacing={ 2 }
+            >
+              <Tooltip title="Load a new image" placement="bottom">
+                <span>
+                  <Button
+                    startIcon={ <FileUpload/> }
+                    component="label"
+                    variant="outlined"
+                    color="inherit"
+                  >
+                  Load Image
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    onChange={ loadImageFileInputOnChange }
+                    id="load-image-file-input"/>
+                  </Button>
+                </span>
+              </Tooltip>
+              <Tooltip title="Download current result as full-res PNG" placement="bottom">
+                <span>
+                  <Button
+                    onClick={ saveButtonOnClick }
+                    startIcon={ <Save/> }
+                    variant="outlined"
+                    color="inherit"
+                  >
+                  Save Image
+                </Button>
+                </span>
+              </Tooltip>
+            </Stack>
+          </Toolbar>
+        </AppBar>
+
         <ReactP5Wrapper
         sketch={ ChannelShiftSketch }
         setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
@@ -270,6 +316,8 @@ function App() {
         shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
       />
       </Paper>
+
+      {/*Tools UI*/}
       <Container maxWidth="md">
         <Grid container justifyContent="center" spacing={ 4 } my={ 1 }>
 
@@ -431,33 +479,6 @@ function App() {
                 variant="contained"
               >
               Confirm Step
-            </Button>
-            </span>
-          </Tooltip>
-          <Tooltip title="Load a new image" placement="top">
-            <span>
-              <Button
-                startIcon={ <FileUpload/> }
-                component="label"
-                variant="contained"
-              >
-              Load Image
-              <VisuallyHiddenInput
-                type="file"
-                accept="image/*"
-                onChange={loadImageFileInputOnChange}
-                id="load-image-file-input"/>
-            </Button>
-            </span>
-          </Tooltip>
-          <Tooltip title="Download current result as full-res PNG" placement="top">
-            <span>
-              <Button
-                onClick={ saveButtonOnClick }
-                startIcon={ <Save/> }
-                variant="contained"
-              >
-              Save Image
             </Button>
             </span>
           </Tooltip>
