@@ -16,19 +16,34 @@ import {
 } from '@mui/material'
 import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
 
+
 function App() {
+  // ================================================================================
+  // Constants
+  // ================================================================================
   // Indexes into RGB arrays + values of radio buttons
   const R_OFFSET = 0
   const G_OFFSET = 1
   const B_OFFSET = 2
 
+  // ================================================================================
+  // State and UI
+  // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // Image Dimensions
+  // --------------------------------------------------------------------------------
   // Image dimensions (sketch sets these after image is loaded)
   const [imageWidth, setImageWidth] = React.useState(0)
   const [imageHeight, setImageHeight] = React.useState(0)
 
+  // --------------------------------------------------------------------------------
+  // Channel Swap
+  // --------------------------------------------------------------------------------
   // Source and target channels
   const [sourceChannel, setSourceChannel] = React.useState(R_OFFSET)
   const [targetChannel, setTargetChannel] = React.useState(R_OFFSET)
+
   // Since RGB radio elements are identical in source and target, use this method to generate common markup
   const ChannelRadioElements = () => {
     return (
@@ -54,6 +69,7 @@ function App() {
       </React.Fragment>
     )
   }
+
   // onChange method for source/target channel radio groups
   const channelRadioOnChangeHandler = setterFunction => {
     return (event) => {
@@ -61,14 +77,27 @@ function App() {
     }
   }
 
-  // x/y shift channel selection
+  // --------------------------------------------------------------------------------
+  // Channel Shift
+  // --------------------------------------------------------------------------------
+  // x/y shift current channel selection
   const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(R_OFFSET)
-  // onChange method for selecting x/y shift channel
+
+  /**
+   * onChange method for selecting x/y shift channel
+   */
   const shiftChannelSelectionOnChangeHandler = (event) => {
     setSelectedShiftChannel(event.target.value)
   }
-  // x/y shift states
-  // JS struggles with copying multi-dimensional arrays, so using a function to give us the default for channelShiftValues
+
+  // Initialize shift values state
+  const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
+
+  /**
+   * Returns default value of all 0's for each channel
+   *
+   * @return array
+   */
   const getChannelShiftValuesDefault = () => {
     const channelShiftValuesDefault = []
     channelShiftValuesDefault[R_OFFSET] = [0, 0]
@@ -76,42 +105,80 @@ function App() {
     channelShiftValuesDefault[B_OFFSET] = [0, 0]
     return channelShiftValuesDefault
   }
-  // Can't define array literals with indexes, so initializing default as a constant
-  const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
-  // Helper function for updating shift values
+
+  /**
+   * Set a new shift value at the selected shift channel
+   *
+   * @param coordinateIndex 0 for x, 1 for y
+   * @param newValue New shift value to set
+   */
   const setChannelShiftValue = (coordinateIndex, newValue) => {
     const newChannelShiftValues = [...channelShiftValues]
     // Update selected targetChannel
     newChannelShiftValues[selectedShiftChannel][coordinateIndex] = newValue
     setChannelShiftValues(newChannelShiftValues)
   }
-  // onChange method for x/y shift sliders
+
+  /**
+   * Returns onChange method for x/y shift sliders
+   *
+   * @param coordinateIndex 0 for x, 1 for y
+   *
+   * @return onChange handler function for x/y shift slider
+   */
   const shiftSliderOnChangeHandler = coordinateIndex => {
     return (event, newValue) => {
       setChannelShiftValue(coordinateIndex, newValue)
     }
   }
 
-  // Reset all values
+  // --------------------------------------------------------------------------------
+  // Reset Button
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Reset all shift/swap states
+   */
   const resetShiftAndSwap = () => {
     setSourceChannel(R_OFFSET)
     setTargetChannel(R_OFFSET)
     setChannelShiftValues(getChannelShiftValuesDefault())
   }
 
+  // --------------------------------------------------------------------------------
+  // Confirm Button
+  // --------------------------------------------------------------------------------
   // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
   const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
-  // Confirm button click handler
+
+  /**
+   * Confirm button onClick handler
+   */
   const confirmButtonOnClick = () => {
     setShouldConfirmResult(true)
   }
-  // Post-confirm method, called from sketch after handling the confirmation
+
+  /**
+   * Post-confirm method, called from sketch after handling the confirmation.
+   *
+   * Resets shift/swap states and sets shouldConfirmResult state to false.
+   */
   const postConfirmResult = () => {
     resetShiftAndSwap()
     setShouldConfirmResult(false)
   }
 
-  // Returns true if any changes were made during this step. Used to enable/disable reset and confirm buttons
+
+  // --------------------------------------------------------------------------------
+  // Reset + Confirm Buttons
+  // --------------------------------------------------------------------------------
+
+  // TODO: split into shiftModifiedDuringStep and swapModifiedDuringStep for use with tabs*
+  /**
+   * Returns true if any changes were made during this step.
+   *
+   * Used to enable/disable reset and confirm buttons.
+   */
   const imageModifiedDuringStep = () => {
     let sourceAndTargetChannelsDiffer = parseInt(sourceChannel) !== parseInt(targetChannel)
     let channelShiftValuesDefault = getChannelShiftValuesDefault()
@@ -119,11 +186,15 @@ function App() {
     return sourceAndTargetChannelsDiffer || channelsHaveBeenShifted
   }
 
+  // --------------------------------------------------------------------------------
+  // Load Image Button
+  // --------------------------------------------------------------------------------
   // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
   // Sketch will load data as image and set to null again when complete
   const [newFileDataURL, setNewFileDataURL] = React.useState(null)
-  // Hidden file input element for load button
-  const HiddenFileInput = styled('input')({
+
+  // Styled hidden input element. Required to use button as file input with MUI
+  const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
     height: 1,
@@ -134,7 +205,13 @@ function App() {
     whiteSpace: 'nowrap',
     width: 1,
   })
-  // Change listener for file input
+
+  /**
+   * onChange listener for file input.
+   *
+   * If there's a file selected and it's an image file, read it as a
+   * base64 data URL and set newFileDataURL to it.
+   */
   const loadImageFileInputOnChange = (event) => {
     if (event.target.files.length > 0) {
       let file = event.target.files[0]
@@ -150,15 +227,24 @@ function App() {
     }
   }
 
+  // --------------------------------------------------------------------------------
+  // Save Image Button
+  // --------------------------------------------------------------------------------
   // Set to true when save button is clicked, sketch will save image and set back to false when complete
   const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
-  // Save button click handler
+
+  /**
+   * Save button onClick handler
+   */
   const saveButtonOnClick = () => {
     setShouldSaveResult(true)
   }
 
 
-  // TODO: show shift values for unselected channels; use Chip element instead of radios for shift?
+  // ================================================================================
+  // Render
+  // ================================================================================
+
   return (
     <React.Fragment>
       <CssBaseline/>
@@ -356,7 +442,7 @@ function App() {
                 variant="contained"
               >
               Load Image
-              <HiddenFileInput
+              <VisuallyHiddenInput
                 type="file"
                 accept="image/*"
                 onChange={loadImageFileInputOnChange}
