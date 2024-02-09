@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/react-p5-channel-shift/static/css/main.bace52aa.css",
+    "main.js": "/react-p5-channel-shift/static/js/main.3afc4249.js",
+    "index.html": "/react-p5-channel-shift/index.html",
+    "main.bace52aa.css.map": "/react-p5-channel-shift/static/css/main.bace52aa.css.map",
+    "main.3afc4249.js.map": "/react-p5-channel-shift/static/js/main.3afc4249.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.bace52aa.css",
+    "static/js/main.3afc4249.js"
+  ]
+}
