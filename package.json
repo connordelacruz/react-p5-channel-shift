@@ -1,6 +1,7 @@
 {
   "name": "react-p5-channel-shift",
   "version": "0.1.0",
+  "homepage": "https://connordelacruz.github.io/react-p5-channel-shift",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -14,6 +15,8 @@
     "sass": "^1.70.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -33,5 +36,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }
