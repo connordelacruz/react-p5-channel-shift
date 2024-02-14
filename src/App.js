@@ -4,7 +4,7 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 import {
   AppBar,
-  Box, Button,
+  Box, Button, Chip,
   Container, CssBaseline, Divider,
   FormControl,
   FormControlLabel,
@@ -151,13 +151,6 @@ function App() {
   // --------------------------------------------------------------------------------
   // x/y shift current channel selection
   const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(R_OFFSET)
-
-  /**
-   * onChange method for selecting x/y shift channel
-   */
-  const shiftChannelSelectionOnChangeHandler = (event) => {
-    setSelectedShiftChannel(event.target.value)
-  }
 
   /**
    * Returns default value of all 0's for each channel
@@ -383,15 +376,29 @@ function App() {
             sx={ { p: 2 } }
             elevation={1}
           >
-            <FormLabel id="shift-channels-selected-channel-label">Selected Channel:</FormLabel>
-            <RadioGroup
-              value={ selectedShiftChannel }
-              onChange={ shiftChannelSelectionOnChangeHandler }
-              aria-labelledby="shift-channels-selected-channel-label"
-              row
-            >
-              <ChannelRadioElements/>
-            </RadioGroup>
+            <Stack direction="row" spacing={1}>
+              <Chip
+                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Red</Typography>}
+                label={`x: ${channelShiftValues[R_OFFSET][0]}px / y: ${channelShiftValues[R_OFFSET][1]}px`}
+                variant={parseInt(selectedShiftChannel) === R_OFFSET ? 'filled' : 'outlined'}
+                onClick={() => {setSelectedShiftChannel(R_OFFSET)}}
+                color="error"
+              />
+              <Chip
+                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Green</Typography>}
+                label={`x: ${channelShiftValues[G_OFFSET][0]}px / y: ${channelShiftValues[G_OFFSET][1]}px`}
+                variant={parseInt(selectedShiftChannel) === G_OFFSET ? 'filled' : 'outlined'}
+                onClick={() => {setSelectedShiftChannel(G_OFFSET)}}
+                color="success"
+              />
+              <Chip
+                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Blue</Typography>}
+                label={`x: ${channelShiftValues[B_OFFSET][0]}px / y: ${channelShiftValues[B_OFFSET][1]}px`}
+                variant={parseInt(selectedShiftChannel) === B_OFFSET ? 'filled' : 'outlined'}
+                onClick={() => {setSelectedShiftChannel(B_OFFSET)}}
+                color="primary"
+                />
+            </Stack>
             <Paper
               sx={ {
                 p: 2,
@@ -414,8 +421,8 @@ function App() {
                     { value: 0, label: '0px' },
                     { value: imageWidth, label: `${ imageWidth }px` }
                   ] }
-                  color="error"
                   aria-labelledby="x-shift-slider-label"
+                  color="error"
                 />
               </Box>
             </Paper>
