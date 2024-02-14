@@ -376,13 +376,28 @@ function App() {
             sx={ { p: 2 } }
             elevation={1}
           >
-            <Stack direction="row" spacing={1}>
+            {/*Shift Channel Select Buttons*/}
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{
+                p: 2,
+              }}
+            >
+              <FormLabel
+                id="selected-shift-channel-label"
+                sx={{display: 'block'}}
+              >
+                Selected Channel:
+              </FormLabel>
               <Chip
                 icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Red</Typography>}
                 label={`x: ${channelShiftValues[R_OFFSET][0]}px / y: ${channelShiftValues[R_OFFSET][1]}px`}
                 variant={parseInt(selectedShiftChannel) === R_OFFSET ? 'filled' : 'outlined'}
                 onClick={() => {setSelectedShiftChannel(R_OFFSET)}}
                 color="error"
+                aria-labelledby="selected-shift-channel-label"
               />
               <Chip
                 icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Green</Typography>}
@@ -390,6 +405,7 @@ function App() {
                 variant={parseInt(selectedShiftChannel) === G_OFFSET ? 'filled' : 'outlined'}
                 onClick={() => {setSelectedShiftChannel(G_OFFSET)}}
                 color="success"
+                aria-labelledby="selected-shift-channel-label"
               />
               <Chip
                 icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Blue</Typography>}
@@ -397,6 +413,7 @@ function App() {
                 variant={parseInt(selectedShiftChannel) === B_OFFSET ? 'filled' : 'outlined'}
                 onClick={() => {setSelectedShiftChannel(B_OFFSET)}}
                 color="primary"
+                aria-labelledby="selected-shift-channel-label"
                 />
             </Stack>
             <Paper
