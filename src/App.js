@@ -20,7 +20,7 @@ import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-mat
 
 function App() {
   // ================================================================================
-  // Constants
+  // General Constants
   // ================================================================================
   // Indexes into RGB arrays + values of radio buttons
   const R_OFFSET = 0
@@ -30,7 +30,6 @@ function App() {
   // ================================================================================
   // State and UI
   // ================================================================================
-  // TODO: organize these by order of UI appearance?
 
   // --------------------------------------------------------------------------------
   // Image Dimensions
@@ -38,6 +37,74 @@ function App() {
   // Image dimensions (sketch sets these after image is loaded)
   const [imageWidth, setImageWidth] = React.useState(0)
   const [imageHeight, setImageHeight] = React.useState(0)
+
+  // --------------------------------------------------------------------------------
+  // Load Image Button
+  // --------------------------------------------------------------------------------
+  // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
+  // Sketch will load data as image and set to null again when complete
+  const [newFileDataURL, setNewFileDataURL] = React.useState(null)
+
+  // Styled hidden input element. Required to use button as file input with MUI
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  })
+
+  /**
+   * onChange listener for file input.
+   *
+   * If there's a file selected and it's an image file, read it as a
+   * base64 data URL and set newFileDataURL to it.
+   */
+  const loadImageFileInputOnChange = (event) => {
+    if (event.target.files.length > 0) {
+      let file = event.target.files[0]
+      // Verify it's an image
+      if (file.type.split('/')[0] === 'image') {
+        // Read file as base64 data URL
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+          setNewFileDataURL(reader.result)
+        }
+      }
+    }
+  }
+
+  // --------------------------------------------------------------------------------
+  // Save Image Button
+  // --------------------------------------------------------------------------------
+  // Set to true when save button is clicked, sketch will save image and set back to false when complete
+  const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
+
+  /**
+   * Save button onClick handler
+   */
+  const saveButtonOnClick = () => {
+    setShouldSaveResult(true)
+  }
+
+  // --------------------------------------------------------------------------------
+  // Tool Tabs
+  // --------------------------------------------------------------------------------
+  // Constants for tab values
+  const SHIFT_TAB_VALUE = 'shift'
+  const SWAP_TAB_VALUE = 'swap'
+  // Currently selected tool tab
+  const [selectedToolTab, setSelectedToolTab] = React.useState(SHIFT_TAB_VALUE)
+
+  // onChange handler for tool tabs
+  const toolTabsOnChangeHandler = (event, newValue) => {
+    setSelectedToolTab(newValue)
+  }
 
   // --------------------------------------------------------------------------------
   // Channel Swap
@@ -200,74 +267,6 @@ function App() {
   const postConfirmResult = () => {
     resetShiftAndSwap()
     setShouldConfirmResult(false)
-  }
-
-  // --------------------------------------------------------------------------------
-  // Load Image Button
-  // --------------------------------------------------------------------------------
-  // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
-  // Sketch will load data as image and set to null again when complete
-  const [newFileDataURL, setNewFileDataURL] = React.useState(null)
-
-  // Styled hidden input element. Required to use button as file input with MUI
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  })
-
-  /**
-   * onChange listener for file input.
-   *
-   * If there's a file selected and it's an image file, read it as a
-   * base64 data URL and set newFileDataURL to it.
-   */
-  const loadImageFileInputOnChange = (event) => {
-    if (event.target.files.length > 0) {
-      let file = event.target.files[0]
-      // Verify it's an image
-      if (file.type.split('/')[0] === 'image') {
-        // Read file as base64 data URL
-        let reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = () => {
-          setNewFileDataURL(reader.result)
-        }
-      }
-    }
-  }
-
-  // --------------------------------------------------------------------------------
-  // Save Image Button
-  // --------------------------------------------------------------------------------
-  // Set to true when save button is clicked, sketch will save image and set back to false when complete
-  const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
-
-  /**
-   * Save button onClick handler
-   */
-  const saveButtonOnClick = () => {
-    setShouldSaveResult(true)
-  }
-
-  // --------------------------------------------------------------------------------
-  // Tool Tabs
-  // --------------------------------------------------------------------------------
-  // Constants for tab values
-  const SHIFT_TAB_VALUE = 'shift'
-  const SWAP_TAB_VALUE = 'swap'
-  // Currently selected tool tab
-  const [selectedToolTab, setSelectedToolTab] = React.useState(SHIFT_TAB_VALUE)
-
-  // onChange handler for tool tabs
-  const toolTabsOnChangeHandler = (event, newValue) => {
-    setSelectedToolTab(newValue)
   }
 
 
