@@ -447,7 +447,7 @@ function App() {
                     { value: imageWidth, label: `${ imageWidth }px` }
                   ] }
                   aria-labelledby="x-shift-slider-label"
-                  color="error"
+                  color={CHANNEL_MUI_COLORS[selectedShiftChannel]}
                 />
               </Box>
             </Paper>
@@ -473,7 +473,7 @@ function App() {
                     { value: 0, label: '0px' },
                     { value: imageHeight, label: `${ imageHeight }px` }
                   ] }
-                  color="success"
+                  color={CHANNEL_MUI_COLORS[selectedShiftChannel]}
                   aria-labelledby="y-shift-slider-label"
                 />
               </Box>
