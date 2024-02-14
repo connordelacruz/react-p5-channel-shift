@@ -27,6 +27,18 @@ function App() {
   const G_OFFSET = 1
   const B_OFFSET = 2
 
+  // Display names for color channels indexed by above offsets
+  const CHANNEL_DISPLAY_NAMES = []
+  CHANNEL_DISPLAY_NAMES[R_OFFSET] = 'Red'
+  CHANNEL_DISPLAY_NAMES[G_OFFSET] = 'Green'
+  CHANNEL_DISPLAY_NAMES[B_OFFSET] = 'Blue'
+
+  // MUI colors to use for color channels indexed by above offsets
+  const CHANNEL_MUI_COLORS = []
+  CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
+  CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
+  CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
+
   // ================================================================================
   // State and UI
   // ================================================================================
@@ -115,6 +127,7 @@ function App() {
 
   // Since RGB radio elements are identical in source and target, use this method to generate common markup
   const ChannelRadioElements = () => {
+    // TODO: make each radio generic like shift chips
     return (
       <React.Fragment>
         <FormControlLabel
@@ -192,6 +205,22 @@ function App() {
     return (event, newValue) => {
       setChannelShiftValue(coordinateIndex, newValue)
     }
+  }
+
+  /**
+   * Component for channel shift select chips
+   */
+  const ShiftChannelSelectChip = (props) => {
+    return (
+      <Chip
+        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{CHANNEL_DISPLAY_NAMES[props.channelOffset]}</Typography>}
+        label={`x: ${channelShiftValues[props.channelOffset][0]}px / y: ${channelShiftValues[props.channelOffset][1]}px`}
+        variant={parseInt(selectedShiftChannel) === props.channelOffset ? 'filled' : 'outlined'}
+        onClick={() => {setSelectedShiftChannel(props.channelOffset)}}
+        color={CHANNEL_MUI_COLORS[props.channelOffset]}
+        aria-labelledby="selected-shift-channel-label"
+      />
+    )
   }
 
   // --------------------------------------------------------------------------------
@@ -391,30 +420,9 @@ function App() {
               >
                 Selected Channel:
               </FormLabel>
-              <Chip
-                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Red</Typography>}
-                label={`x: ${channelShiftValues[R_OFFSET][0]}px / y: ${channelShiftValues[R_OFFSET][1]}px`}
-                variant={parseInt(selectedShiftChannel) === R_OFFSET ? 'filled' : 'outlined'}
-                onClick={() => {setSelectedShiftChannel(R_OFFSET)}}
-                color="error"
-                aria-labelledby="selected-shift-channel-label"
-              />
-              <Chip
-                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Green</Typography>}
-                label={`x: ${channelShiftValues[G_OFFSET][0]}px / y: ${channelShiftValues[G_OFFSET][1]}px`}
-                variant={parseInt(selectedShiftChannel) === G_OFFSET ? 'filled' : 'outlined'}
-                onClick={() => {setSelectedShiftChannel(G_OFFSET)}}
-                color="success"
-                aria-labelledby="selected-shift-channel-label"
-              />
-              <Chip
-                icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>Blue</Typography>}
-                label={`x: ${channelShiftValues[B_OFFSET][0]}px / y: ${channelShiftValues[B_OFFSET][1]}px`}
-                variant={parseInt(selectedShiftChannel) === B_OFFSET ? 'filled' : 'outlined'}
-                onClick={() => {setSelectedShiftChannel(B_OFFSET)}}
-                color="primary"
-                aria-labelledby="selected-shift-channel-label"
-                />
+              <ShiftChannelSelectChip channelOffset={R_OFFSET}/>
+              <ShiftChannelSelectChip channelOffset={G_OFFSET}/>
+              <ShiftChannelSelectChip channelOffset={B_OFFSET}/>
             </Stack>
             <Paper
               sx={ {
