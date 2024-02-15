@@ -5,17 +5,18 @@ import { ChannelShiftSketch } from './ChannelShiftSketch'
 import {
   AppBar,
   Box, Button, Chip,
-  Container, CssBaseline, Divider,
+  Container, createTheme, CssBaseline, Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack, styled, Tab, Tabs, Toolbar, Tooltip,
+  RadioGroup, Slider, Stack, styled, Tab, Tabs, ThemeProvider, Toolbar, Tooltip,
   Typography
 } from '@mui/material'
 import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
+import { blueGrey, teal } from '@mui/material/colors'
 
 
 function App() {
@@ -293,11 +294,23 @@ function App() {
 
 
   // ================================================================================
+  // Theme
+  // ================================================================================
+  const theme = createTheme({
+    palette: {
+      secondary: {
+        main: teal[500]
+      },
+    }
+  })
+
+
+  // ================================================================================
   // Render
   // ================================================================================
 
   return (
-    <React.Fragment>
+    <ThemeProvider theme={theme}>
       <CssBaseline/>
       {/*App Bar, Canvas, and Tool Tabs Container*/}
       <Paper
@@ -306,7 +319,7 @@ function App() {
           top: 0,
           left: 0,
           right: 0,
-          bgcolor: 'gray',
+          bgcolor: blueGrey[900],
           zIndex: 999,
         }}
         square
@@ -320,12 +333,15 @@ function App() {
         >
           <Toolbar>
             <Typography
-              color="primary"
+              color="secondary"
               variant="h6"
               component="div"
-              sx={ { flexGrow: 1 } }
+              sx={ {
+                flexGrow: 1,
+                fontWeight: 'bold',
+            } }
             >
-              Channel Shift / Swap
+              Channel Shift // Swap
             </Typography>
             <Stack
               direction="row"
@@ -337,8 +353,8 @@ function App() {
                   <Button
                     startIcon={ <FileUpload/> }
                     component="label"
-                    variant="outlined"
-                    color="primary"
+                    variant="contained"
+                    color="secondary"
                   >
                   Load Image
                   <VisuallyHiddenInput
@@ -354,8 +370,8 @@ function App() {
                   <Button
                     onClick={ saveButtonOnClick }
                     startIcon={ <Save/> }
-                    variant="outlined"
-                    color="primary"
+                    variant="contained"
+                    color="secondary"
                   >
                   Save Image
                 </Button>
@@ -388,9 +404,19 @@ function App() {
             value={selectedToolTab}
             onChange={toolTabsOnChangeHandler}
             variant="fullWidth"
+            indicatorColor="secondary"
+            textColor="secondary"
           >
-            <Tab value={SHIFT_TAB_VALUE} label={`Shift Channels${shiftModifiedDuringStep() ? '*' : ''}`}/>
-            <Tab value={SWAP_TAB_VALUE} label={`Swap Channels${swapModifiedDuringStep() ? '*' : ''}`}/>
+            <Tab
+              value={SHIFT_TAB_VALUE}
+              label={`Shift Channels${shiftModifiedDuringStep() ? '*' : ''}`}
+              sx={{fontWeight: 'bold'}}
+            />
+            <Tab
+              value={SWAP_TAB_VALUE}
+              label={`Swap Channels${swapModifiedDuringStep() ? '*' : ''}`}
+              sx={{fontWeight: 'bold'}}
+            />
           </Tabs>
         </Box>
 
@@ -403,7 +429,7 @@ function App() {
         <Box hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
           <Paper
             sx={ { p: 2 } }
-            elevation={1}
+            variant="outlined"
           >
             {/*Shift Channel Select Buttons*/}
             <Stack
@@ -429,7 +455,7 @@ function App() {
                 p: 2,
                 my: 2,
               } }
-              elevation={0}
+              variant="outlined"
             >
               {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
               <Box
@@ -456,7 +482,7 @@ function App() {
                 p: 2,
                 my: 2,
               } }
-              elevation={0}
+              variant="outlined"
             >
               {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
               <Box
@@ -485,17 +511,29 @@ function App() {
         <Box hidden={selectedToolTab !== SWAP_TAB_VALUE}>
           <Paper
             sx={ { p: 2 } }
-            elevation={1}
+            variant="outlined"
           >
-            <Typography variant="h5" gutterBottom>Swap Channels</Typography>
+            <FormLabel
+              sx={{
+                display: 'block',
+                mb: 2,
+            }}
+            >
+              Select channels to swap:
+            </FormLabel>
             <Grid container justifyContent="center" spacing={2}>
               <Grid item xs={ 6 }>
                 <Paper
                   sx={{ p: 2 }}
-                  elevation={0}
+                  variant="outlined"
                 >
                   <FormControl>
-                    <FormLabel id="source-channel-label">Source Channel:</FormLabel>
+                    <FormLabel
+                      id="source-channel-label"
+                      color={CHANNEL_MUI_COLORS[sourceChannel]}
+                    >
+                      Source Channel:
+                    </FormLabel>
                     <RadioGroup
                       value={ sourceChannel }
                       onChange={ channelRadioOnChangeHandler(setSourceChannel) }
@@ -510,10 +548,15 @@ function App() {
               <Grid item xs={ 6 }>
                 <Paper
                   sx={{ p: 2 }}
-                  elevation={0}
+                  variant="outlined"
                 >
                   <FormControl>
-                    <FormLabel id="target-channel-label">Target Channel:</FormLabel>
+                    <FormLabel
+                      id="target-channel-label"
+                      color={CHANNEL_MUI_COLORS[targetChannel]}
+                    >
+                      Target Channel:
+                    </FormLabel>
                     <RadioGroup
                       value={ targetChannel }
                       onChange={ channelRadioOnChangeHandler(setTargetChannel) }
@@ -555,6 +598,7 @@ function App() {
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <RestartAlt/> }
                 variant="contained"
+                color="secondary"
               >
               Reset Step
             </Button>
@@ -567,6 +611,7 @@ function App() {
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <CheckCircleOutline/> }
                 variant="contained"
+                color="secondary"
               >
               Confirm Step
             </Button>
@@ -574,7 +619,7 @@ function App() {
           </Tooltip>
         </Stack>
       </Paper>
-    </React.Fragment>
+    </ThemeProvider>
   )
 }
 
