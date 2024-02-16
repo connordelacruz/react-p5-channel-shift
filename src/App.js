@@ -2,6 +2,7 @@ import React from 'react';
 import { ReactP5Wrapper } from '@p5-wrapper/react'
 
 import { ChannelShiftSketch } from './ChannelShiftSketch'
+import { HelpDialog } from './HelpDialog'
 import {
   AppBar,
   Box, Button, Chip,
@@ -9,13 +10,13 @@ import {
   FormControl,
   FormControlLabel,
   FormLabel,
-  Grid,
+  Grid, IconButton,
   Paper,
   Radio,
   RadioGroup, Slider, Stack, styled, Tab, Tabs, ThemeProvider, Toolbar, Tooltip,
   Typography
 } from '@mui/material'
-import { CheckCircleOutline, FileUpload, RestartAlt, Save } from '@mui/icons-material'
+import { CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { blueGrey, teal } from '@mui/material/colors'
 
 
@@ -305,6 +306,13 @@ function App() {
   })
 
 
+  // --------------------------------------------------------------------------------
+  // Help Dialog
+  // --------------------------------------------------------------------------------
+  // Open/close state
+  const [helpOpen, setHelpOpen] = React.useState(false)
+
+
   // ================================================================================
   // Render
   // ================================================================================
@@ -348,6 +356,14 @@ function App() {
               justifyContent="space-evenly"
               spacing={ 2 }
             >
+              <Tooltip title="Help" placement="bottom">
+                <IconButton
+                  aria-label="help"
+                  onClick={() => {setHelpOpen(true)}}
+                >
+                  <HelpOutline/>
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Load a new image" placement="bottom">
                 <span>
                   <Button
@@ -619,6 +635,9 @@ function App() {
           </Tooltip>
         </Stack>
       </Paper>
+
+      {/*Help Modal*/}
+      <HelpDialog open={helpOpen} onClose={() => {setHelpOpen(false)}}/>
     </ThemeProvider>
   )
 }
