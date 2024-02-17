@@ -5,15 +5,35 @@ import { ChannelShiftSketch } from './ChannelShiftSketch'
 import { HelpDialog } from './HelpDialog'
 import {
   AppBar,
-  Box, Button, Chip,
-  Container, createTheme, CssBaseline, Divider,
+  Box,
+  Button,
+  Checkbox,
+  Chip,
+  Container,
+  createTheme,
+  CssBaseline,
+  Divider,
   FormControl,
   FormControlLabel,
   FormLabel,
-  Grid, IconButton,
+  Grid,
+  IconButton,
+  InputAdornment,
   Paper,
   Radio,
-  RadioGroup, Slider, Stack, styled, Tab, Tabs, ThemeProvider, Toolbar, Tooltip,
+  RadioGroup,
+  Slider,
+  Stack,
+  styled,
+  Tab, Table, TableBody,
+  TableCell,
+  TableContainer, TableHead,
+  TableRow,
+  Tabs,
+  TextField,
+  ThemeProvider,
+  Toolbar,
+  Tooltip,
   Typography
 } from '@mui/material'
 import { CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
@@ -28,6 +48,7 @@ function App() {
   const R_OFFSET = 0
   const G_OFFSET = 1
   const B_OFFSET = 2
+  // TODO: same thing for x/y coords
 
   // Display names for color channels indexed by above offsets
   const CHANNEL_DISPLAY_NAMES = []
@@ -42,7 +63,7 @@ function App() {
   CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
 
   // ================================================================================
-  // State and UI
+  // General
   // ================================================================================
 
   // --------------------------------------------------------------------------------
@@ -51,6 +72,10 @@ function App() {
   // Image dimensions (sketch sets these after image is loaded)
   const [imageWidth, setImageWidth] = React.useState(0)
   const [imageHeight, setImageHeight] = React.useState(0)
+
+  // ================================================================================
+  // Save/Load
+  // ================================================================================
 
   // --------------------------------------------------------------------------------
   // Load Image Button
@@ -106,12 +131,13 @@ function App() {
     setShouldSaveResult(true)
   }
 
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // Tool Tabs
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // Constants for tab values
   const SHIFT_TAB_VALUE = 'shift'
   const SWAP_TAB_VALUE = 'swap'
+  const RANDOMIZE_TAB_VALUE = 'randomize'
   // Currently selected tool tab
   const [selectedToolTab, setSelectedToolTab] = React.useState(SHIFT_TAB_VALUE)
 
@@ -120,9 +146,9 @@ function App() {
     setSelectedToolTab(newValue)
   }
 
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // Channel Swap
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // Source and target channels
   const [sourceChannel, setSourceChannel] = React.useState(R_OFFSET)
   const [targetChannel, setTargetChannel] = React.useState(R_OFFSET)
@@ -161,9 +187,9 @@ function App() {
     }
   }
 
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // Channel Shift
-  // --------------------------------------------------------------------------------
+  // ================================================================================
   // x/y shift current channel selection
   const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(R_OFFSET)
 
@@ -225,37 +251,9 @@ function App() {
     )
   }
 
-  // --------------------------------------------------------------------------------
-  // Change Detection Helpers
-  // --------------------------------------------------------------------------------
-
-  /**
-   * Returns true if channels were swapped during this step.
-   *
-   * @return {boolean}
-   */
-  const swapModifiedDuringStep = () => {
-    return parseInt(sourceChannel) !== parseInt(targetChannel)
-  }
-
-  /**
-   * Returns true if channels were shifted during this step.
-   *
-   * @return {boolean}
-   */
-  const shiftModifiedDuringStep = () => {
-    let channelShiftValuesDefault = getChannelShiftValuesDefault()
-    return JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
-  }
-
-  /**
-   * Returns true if any changes were made during this step.
-   *
-   * @return {boolean}
-   */
-  const imageModifiedDuringStep = () => {
-    return swapModifiedDuringStep() || shiftModifiedDuringStep()
-  }
+  // ================================================================================
+  // Reset/Confirm Step
+  // ================================================================================
 
   // --------------------------------------------------------------------------------
   // Reset Button
@@ -293,6 +291,113 @@ function App() {
     setShouldConfirmResult(false)
   }
 
+  // ================================================================================
+  // Randomize
+  // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // Randomize Shift
+  // --------------------------------------------------------------------------------
+  // TODO: doc
+  const randomizeShiftChannelsDefault = () => {
+    const randomizeShiftChannelsDefault = []
+    randomizeShiftChannelsDefault[R_OFFSET] = [true, true]
+    randomizeShiftChannelsDefault[G_OFFSET] = [true, true]
+    randomizeShiftChannelsDefault[B_OFFSET] = [true, true]
+    return randomizeShiftChannelsDefault
+  }
+  // State to keep track of which channels and which dimensions for those channels to randomize
+  const [randomizeShiftChannels, setRandomizeShiftChannels] = React.useState(randomizeShiftChannelsDefault())
+
+  // TODO: doc
+  const randomizeShiftMaxPercentsDefault = () => {
+    const randomizeShiftMaxPercentsDefault = []
+    randomizeShiftMaxPercentsDefault[R_OFFSET] = [100, 100]
+    randomizeShiftMaxPercentsDefault[G_OFFSET] = [100, 100]
+    randomizeShiftMaxPercentsDefault[B_OFFSET] = [100, 100]
+    return randomizeShiftMaxPercentsDefault
+  }
+  // State to keep track of max percent to shift each channel/dimension by
+  const [randomizeShiftMaxPercent, setRandomizeShiftMaxPercent] = React.useState(randomizeShiftMaxPercentsDefault())
+
+  // Table row component to use for randomize shift form table
+  const RandomizeShiftTableRow = ({channelOffset}) => {
+    // TODO: add handlers and sanitization n stuff
+    // TODO: Make channel labels prettier and use respective colors
+    return (
+      <TableRow>
+        <TableCell>{CHANNEL_DISPLAY_NAMES[channelOffset]}</TableCell>
+        <TableCell align="center">
+          <Checkbox
+            checked={randomizeShiftChannels[channelOffset][0]}
+            color={CHANNEL_MUI_COLORS[channelOffset]}
+          />
+        </TableCell>
+        <TableCell>
+          <TextField
+            value={randomizeShiftMaxPercent[channelOffset][0]}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            }}
+            color={CHANNEL_MUI_COLORS[channelOffset]}
+            size="small"
+            />
+        </TableCell>
+        <TableCell align="center">
+          <Checkbox
+            checked={randomizeShiftChannels[channelOffset][1]}
+            color={CHANNEL_MUI_COLORS[channelOffset]}
+          />
+        </TableCell>
+        <TableCell>
+          <TextField
+            value={randomizeShiftMaxPercent[channelOffset][0]}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+            }}
+            color={CHANNEL_MUI_COLORS[channelOffset]}
+            size="small"
+          />
+        </TableCell>
+      </TableRow>
+    )
+  }
+
+  // ================================================================================
+  // Helper Functions
+  // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // Change Detection Helpers
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Returns true if channels were swapped during this step.
+   *
+   * @return {boolean}
+   */
+  const swapModifiedDuringStep = () => {
+    return parseInt(sourceChannel) !== parseInt(targetChannel)
+  }
+
+  /**
+   * Returns true if channels were shifted during this step.
+   *
+   * @return {boolean}
+   */
+  const shiftModifiedDuringStep = () => {
+    let channelShiftValuesDefault = getChannelShiftValuesDefault()
+    return JSON.stringify(channelShiftValuesDefault) !== JSON.stringify(channelShiftValues)
+  }
+
+  /**
+   * Returns true if any changes were made during this step.
+   *
+   * @return {boolean}
+   */
+  const imageModifiedDuringStep = () => {
+    return swapModifiedDuringStep() || shiftModifiedDuringStep()
+  }
 
   // ================================================================================
   // Theme
@@ -431,6 +536,11 @@ function App() {
             <Tab
               value={SWAP_TAB_VALUE}
               label={`Swap Channels${swapModifiedDuringStep() ? '*' : ''}`}
+              sx={{fontWeight: 'bold'}}
+            />
+            <Tab
+              value={RANDOMIZE_TAB_VALUE}
+              label="Randomize"
               sx={{fontWeight: 'bold'}}
             />
           </Tabs>
@@ -585,6 +695,41 @@ function App() {
                 </Paper>
               </Grid>
             </Grid>
+          </Paper>
+        </Box>
+
+        {/*Randomize*/}
+        <Box hidden={selectedToolTab !== RANDOMIZE_TAB_VALUE}>
+          <Paper
+            sx={ { p: 2 } }
+            variant="outlined"
+            >
+
+            {/*Randomize Shift*/}
+            <Paper
+              sx={ { p: 2 } }
+              variant="outlined"
+              >
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Channel</TableCell>
+                      <TableCell>Randomize X Shift?</TableCell>
+                      <TableCell>X Shift Max %</TableCell>
+                      <TableCell>Randomize Y Shift?</TableCell>
+                      <TableCell>Y Shift Max %</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <RandomizeShiftTableRow channelOffset={R_OFFSET}/>
+                    <RandomizeShiftTableRow channelOffset={G_OFFSET}/>
+                    <RandomizeShiftTableRow channelOffset={B_OFFSET}/>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+            </Paper>
           </Paper>
         </Box>
 
