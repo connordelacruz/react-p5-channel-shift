@@ -298,7 +298,12 @@ function App() {
   // --------------------------------------------------------------------------------
   // Randomize Shift
   // --------------------------------------------------------------------------------
-  // TODO: doc
+
+  /**
+   * Returns default values for randomizeShiftChannels state.
+   *
+   * @return {*[]}
+   */
   const randomizeShiftChannelsDefault = () => {
     const randomizeShiftChannelsDefault = []
     randomizeShiftChannelsDefault[R_OFFSET] = [true, true]
@@ -306,10 +311,41 @@ function App() {
     randomizeShiftChannelsDefault[B_OFFSET] = [true, true]
     return randomizeShiftChannelsDefault
   }
+
   // State to keep track of which channels and which dimensions for those channels to randomize
   const [randomizeShiftChannels, setRandomizeShiftChannels] = React.useState(randomizeShiftChannelsDefault())
 
-  // TODO: doc
+  /**
+   * Helper for updating randomizeShiftChannels for a specific channel/dimension.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @param newValue
+   */
+  const setRandomizeShiftChannel = (channelOffset, dimensionIndex, newValue) => {
+    const newRandomizeShiftChannels = [...randomizeShiftChannels]
+    newRandomizeShiftChannels[channelOffset][dimensionIndex] = newValue
+    setRandomizeShiftChannels(newRandomizeShiftChannels)
+  }
+
+  /**
+   * Returns an onChange handler for a randomize channel/dimension checkbox.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @return {(function(*): void)|*}
+   */
+  const randomizeShiftChannelCheckboxOnChangeHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      setRandomizeShiftChannel(channelOffset, dimensionIndex, event.target.checked)
+    }
+  }
+
+  /**
+   * Returns default values for randomizeShiftMaxPercents state.
+   *
+   * @return {*[]}
+   */
   const randomizeShiftMaxPercentsDefault = () => {
     const randomizeShiftMaxPercentsDefault = []
     randomizeShiftMaxPercentsDefault[R_OFFSET] = [100, 100]
@@ -317,8 +353,30 @@ function App() {
     randomizeShiftMaxPercentsDefault[B_OFFSET] = [100, 100]
     return randomizeShiftMaxPercentsDefault
   }
+
   // State to keep track of max percent to shift each channel/dimension by
-  const [randomizeShiftMaxPercent, setRandomizeShiftMaxPercent] = React.useState(randomizeShiftMaxPercentsDefault())
+  const [randomizeShiftMaxPercents, setRandomizeShiftMaxPercents] = React.useState(randomizeShiftMaxPercentsDefault())
+
+  /**
+   * Helper for updating randomizeShiftMaxPercents for a specific channel/dimension.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @param newValue
+   */
+  const setRandomizeShiftMaxPercent = (channelOffset, dimensionIndex, newValue) => {
+    const newRandomizeShiftMaxPercents = [...randomizeShiftMaxPercents]
+    newRandomizeShiftMaxPercents[channelOffset][dimensionIndex] = newValue
+    setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
+  }
+
+  // TODO: doc n implement; NUMERIC INPUT CHANGE HANDLER W/ VALIDATION
+  const randomizeShiftMaxPercentInputOnChangeHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      // TODO: validate numeric input between 0 and 100
+      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, event.target.value)
+    }
+  }
 
   // Table row component to use for randomize shift form table
   const RandomizeShiftTableRow = ({channelOffset}) => {
@@ -330,12 +388,13 @@ function App() {
         <TableCell align="center">
           <Checkbox
             checked={randomizeShiftChannels[channelOffset][0]}
+            onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 0)}
             color={CHANNEL_MUI_COLORS[channelOffset]}
           />
         </TableCell>
         <TableCell>
           <TextField
-            value={randomizeShiftMaxPercent[channelOffset][0]}
+            value={randomizeShiftMaxPercents[channelOffset][0]}
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
@@ -346,12 +405,13 @@ function App() {
         <TableCell align="center">
           <Checkbox
             checked={randomizeShiftChannels[channelOffset][1]}
+            onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 1)}
             color={CHANNEL_MUI_COLORS[channelOffset]}
           />
         </TableCell>
         <TableCell>
           <TextField
-            value={randomizeShiftMaxPercent[channelOffset][0]}
+            value={randomizeShiftMaxPercents[channelOffset][0]}
             InputProps={{
               endAdornment: <InputAdornment position="end">%</InputAdornment>,
             }}
