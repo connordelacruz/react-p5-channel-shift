@@ -36,31 +36,155 @@ import {
   Tooltip,
   Typography
 } from '@mui/material'
-import { CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
+import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { blueGrey, teal } from '@mui/material/colors'
 
 
+// ================================================================================
+// General Constants
+// ================================================================================
+// Indexes into RGB arrays + values of radio buttons
+const R_OFFSET = 0
+const G_OFFSET = 1
+const B_OFFSET = 2
+// TODO: same thing for x/y coords
+
+// Array of above constants, for mapping components
+const CHANNEL_OFFSETS = [R_OFFSET, G_OFFSET, B_OFFSET]
+
+// Display names for color channels indexed by above offsets
+const CHANNEL_DISPLAY_NAMES = []
+CHANNEL_DISPLAY_NAMES[R_OFFSET] = 'Red'
+CHANNEL_DISPLAY_NAMES[G_OFFSET] = 'Green'
+CHANNEL_DISPLAY_NAMES[B_OFFSET] = 'Blue'
+
+// MUI theme color names to use for color channels indexed by above offsets
+const CHANNEL_MUI_COLORS = []
+CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
+CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
+CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
+
+
+// ================================================================================
+// Randomize Options Component
+// ================================================================================
+// TODO: extract to file?
+
+// --------------------------------------------------------------------------------
+// Randomize Shift
+// --------------------------------------------------------------------------------
+
+// TODO: doc n implement, do the same for checkboxes; also think about how to support the "all channels" version
+//  const RandomizeShiftPercentInput = ({channelOffset, dimensionIndex}) => {
+//    return (
+//    )
+//  }
+
+// Table Row Component
+// TODO: re-work to reuse this for the "All Channels" row
+const RandomizeShiftTableRow = ({
+                                  channelOffset,
+                                  // State props
+                                  randomizeShiftChannels, randomizeShiftMaxPercents,
+                                  // Handlers
+                                  randomizeShiftChannelCheckboxOnChangeHandler,
+                                  randomizeShiftMaxPercentInputOnChangeHandler, randomizeShiftMaxPercentInputOnBlurHandler
+                                }) => {
+  // TODO: add handlers and sanitization n stuff
+  // TODO: Make channel labels prettier and use respective colors
+  return (
+    <TableRow>
+      <TableCell>{CHANNEL_DISPLAY_NAMES[channelOffset]}</TableCell>
+      <TableCell align="center">
+        <Checkbox
+          checked={randomizeShiftChannels[channelOffset][0]}
+          onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 0)}
+          color={CHANNEL_MUI_COLORS[channelOffset]}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          value={randomizeShiftMaxPercents[channelOffset][0]}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+          color={CHANNEL_MUI_COLORS[channelOffset]}
+          disabled={!randomizeShiftChannels[channelOffset][0]}
+          onChange={randomizeShiftMaxPercentInputOnChangeHandler(channelOffset, 0)}
+          onBlur={randomizeShiftMaxPercentInputOnBlurHandler(channelOffset, 0)}
+          size="small"
+        />
+      </TableCell>
+      <TableCell align="center">
+        <Checkbox
+          checked={randomizeShiftChannels[channelOffset][1]}
+          onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 1)}
+          color={CHANNEL_MUI_COLORS[channelOffset]}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          value={randomizeShiftMaxPercents[channelOffset][1]}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">%</InputAdornment>,
+          }}
+          color={CHANNEL_MUI_COLORS[channelOffset]}
+          disabled={!randomizeShiftChannels[channelOffset][1]}
+          onChange={randomizeShiftMaxPercentInputOnChangeHandler(channelOffset, 1)}
+          onBlur={randomizeShiftMaxPercentInputOnBlurHandler(channelOffset, 1)}
+          size="small"
+        />
+      </TableCell>
+    </TableRow>
+  )
+}
+
+// Randomize Shift Table
+const RandomizeShiftTable = ({
+                               // State props
+                               randomizeShiftChannels, randomizeShiftMaxPercents,
+                               // Handlers TODO: take state setter methods instead, define handlers in this class
+                               randomizeShiftChannelCheckboxOnChangeHandler,
+                               randomizeShiftMaxPercentInputOnChangeHandler, randomizeShiftMaxPercentInputOnBlurHandler
+                             }) => {
+  // Table rows
+  const tableRows = CHANNEL_OFFSETS.map((channelOffset) =>
+    <RandomizeShiftTableRow
+      key={ channelOffset.toString() }
+      channelOffset={ channelOffset }
+      randomizeShiftChannels={ randomizeShiftChannels }
+      randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+      randomizeShiftChannelCheckboxOnChangeHandler={ randomizeShiftChannelCheckboxOnChangeHandler }
+      randomizeShiftMaxPercentInputOnChangeHandler={ randomizeShiftMaxPercentInputOnChangeHandler }
+      randomizeShiftMaxPercentInputOnBlurHandler={ randomizeShiftMaxPercentInputOnBlurHandler }
+    />
+  )
+
+  return (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Channel</TableCell>
+            <TableCell>Randomize X Shift?</TableCell>
+            <TableCell>X Shift Max %</TableCell>
+            <TableCell>Randomize Y Shift?</TableCell>
+            <TableCell>Y Shift Max %</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {tableRows}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
+
+
+// ================================================================================
+// App Component
+// ================================================================================
 function App() {
-  // ================================================================================
-  // General Constants
-  // ================================================================================
-  // Indexes into RGB arrays + values of radio buttons
-  const R_OFFSET = 0
-  const G_OFFSET = 1
-  const B_OFFSET = 2
-  // TODO: same thing for x/y coords
-
-  // Display names for color channels indexed by above offsets
-  const CHANNEL_DISPLAY_NAMES = []
-  CHANNEL_DISPLAY_NAMES[R_OFFSET] = 'Red'
-  CHANNEL_DISPLAY_NAMES[G_OFFSET] = 'Green'
-  CHANNEL_DISPLAY_NAMES[B_OFFSET] = 'Blue'
-
-  // MUI colors to use for color channels indexed by above offsets
-  const CHANNEL_MUI_COLORS = []
-  CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
-  CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
-  CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
 
   // ================================================================================
   // General
@@ -298,6 +422,7 @@ function App() {
   // --------------------------------------------------------------------------------
   // Randomize Shift
   // --------------------------------------------------------------------------------
+  // TODO: extract non-state stuff to RandomizeShiftTable component
 
   /**
    * Returns default values for randomizeShiftChannels state.
@@ -370,57 +495,81 @@ function App() {
     setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
   }
 
-  // TODO: doc n implement; NUMERIC INPUT CHANGE HANDLER W/ VALIDATION
+  // TODO: this works BUT loses focus each character you type..
+  // TODO: doc n implement
   const randomizeShiftMaxPercentInputOnChangeHandler = (channelOffset, dimensionIndex) => {
     return (event) => {
-      // TODO: validate numeric input between 0 and 100
-      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, event.target.value)
+      let parsedInputValue = parseInt(event.target.value)
+      if (isNaN(parsedInputValue)) {
+        parsedInputValue = ''
+      }
+      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, parsedInputValue)
     }
   }
 
-  // Table row component to use for randomize shift form table
-  const RandomizeShiftTableRow = ({channelOffset}) => {
-    // TODO: add handlers and sanitization n stuff
-    // TODO: Make channel labels prettier and use respective colors
-    return (
-      <TableRow>
-        <TableCell>{CHANNEL_DISPLAY_NAMES[channelOffset]}</TableCell>
-        <TableCell align="center">
-          <Checkbox
-            checked={randomizeShiftChannels[channelOffset][0]}
-            onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 0)}
-            color={CHANNEL_MUI_COLORS[channelOffset]}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            value={randomizeShiftMaxPercents[channelOffset][0]}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
-            }}
-            color={CHANNEL_MUI_COLORS[channelOffset]}
-            size="small"
-            />
-        </TableCell>
-        <TableCell align="center">
-          <Checkbox
-            checked={randomizeShiftChannels[channelOffset][1]}
-            onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 1)}
-            color={CHANNEL_MUI_COLORS[channelOffset]}
-          />
-        </TableCell>
-        <TableCell>
-          <TextField
-            value={randomizeShiftMaxPercents[channelOffset][0]}
-            InputProps={{
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
-            }}
-            color={CHANNEL_MUI_COLORS[channelOffset]}
-            size="small"
-          />
-        </TableCell>
-      </TableRow>
-    )
+  // TODO: doc n implement
+  const randomizeShiftMaxPercentInputOnBlurHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
+      // If value is not an integer or less than 0, set to 0
+      if (!Number.isInteger(currentValue) || currentValue < 0) {
+        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 0)
+      }
+      // If value exceeds 100, set to 100
+      else if (currentValue > 100) {
+        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 100)
+      }
+    }
+  }
+
+
+  /**
+   * Returns a random amount of pixels to shift based on configured max shift percent and the corresponding image dimension.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   *
+   * @return {number}
+   */
+  const generateRandomShiftValue = (channelOffset, dimensionIndex) => {
+    // Get corresponding image dimension size to use as a max value
+    const dimensionPixels = dimensionIndex === 0 ? imageWidth : imageHeight
+    // Get max shift percent
+    const maxShiftPercent = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
+    // Calculate maximum amount of pixels to shift by
+    const maxShiftPixels = Math.floor(dimensionPixels * (maxShiftPercent / 100))
+    // Generate random shift value (+1 so it's inclusive)
+    return Math.floor(Math.random() * (maxShiftPixels + 1))
+  }
+
+  /**
+   * Randomize shift values based on randomizeShiftChannels and randomizeShiftMaxPercents.
+   */
+  const randomizeShiftValues = () => {
+    const newChannelShiftValues = []
+    randomizeShiftChannels.forEach((randomizeDimensions, channelOffset) => {
+      // TODO: ensure each val is an integer between 0 and 100 first, update state accordingly if not
+      // Set default (copy from current state)
+      newChannelShiftValues[channelOffset] = [...channelShiftValues[channelOffset]]
+      // X shift
+      if (randomizeDimensions[0]) {
+        newChannelShiftValues[channelOffset][0] = generateRandomShiftValue(channelOffset, 0)
+      }
+      // Y shift
+      if (randomizeDimensions[1]) {
+        newChannelShiftValues[channelOffset][1] = generateRandomShiftValue(channelOffset, 1)
+      }
+    })
+    // Update state
+    setChannelShiftValues(newChannelShiftValues)
+  }
+
+  /**
+   * OnClick handler for randomize button.
+   */
+  const randomizeButtonOnClickHandler = () => {
+    // TODO: validate input fields / state first
+    randomizeShiftValues()
   }
 
   // ================================================================================
@@ -462,8 +611,10 @@ function App() {
   // ================================================================================
   // Theme
   // ================================================================================
+  // TODO: custom color names?
   const theme = createTheme({
     palette: {
+      // Non-color channel UI colors
       secondary: {
         main: teal[500]
       },
@@ -600,7 +751,7 @@ function App() {
             />
             <Tab
               value={RANDOMIZE_TAB_VALUE}
-              label="Randomize"
+              label="Randomization Options"
               sx={{fontWeight: 'bold'}}
             />
           </Tabs>
@@ -770,24 +921,13 @@ function App() {
               sx={ { p: 2 } }
               variant="outlined"
               >
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Channel</TableCell>
-                      <TableCell>Randomize X Shift?</TableCell>
-                      <TableCell>X Shift Max %</TableCell>
-                      <TableCell>Randomize Y Shift?</TableCell>
-                      <TableCell>Y Shift Max %</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    <RandomizeShiftTableRow channelOffset={R_OFFSET}/>
-                    <RandomizeShiftTableRow channelOffset={G_OFFSET}/>
-                    <RandomizeShiftTableRow channelOffset={B_OFFSET}/>
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <RandomizeShiftTable
+                randomizeShiftChannels={ randomizeShiftChannels }
+                randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+                randomizeShiftChannelCheckboxOnChangeHandler={ randomizeShiftChannelCheckboxOnChangeHandler }
+                randomizeShiftMaxPercentInputOnChangeHandler={ randomizeShiftMaxPercentInputOnChangeHandler }
+                randomizeShiftMaxPercentInputOnBlurHandler={ randomizeShiftMaxPercentInputOnBlurHandler }
+                />
 
             </Paper>
           </Paper>
@@ -822,6 +962,18 @@ function App() {
                 color="secondary"
               >
               Reset Step
+            </Button>
+            </span>
+          </Tooltip>
+          <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab' placement="top">
+            <span>
+              <Button
+                onClick={ randomizeButtonOnClickHandler }
+                startIcon={ <Casino/> }
+                variant="contained"
+                color="secondary"
+              >
+                Randomize
             </Button>
             </span>
           </Tooltip>
