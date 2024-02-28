@@ -143,10 +143,64 @@ const RandomizeShiftTableRow = ({
 const RandomizeShiftTable = ({
                                // State props
                                randomizeShiftChannels, randomizeShiftMaxPercents,
-                               // Handlers TODO: take state setter methods instead, define handlers in this class
-                               randomizeShiftChannelCheckboxOnChangeHandler,
-                               randomizeShiftMaxPercentInputOnChangeHandler, randomizeShiftMaxPercentInputOnBlurHandler
+                               // State setter functions
+                               setRandomizeShiftChannel, setRandomizeShiftMaxPercent,
                              }) => {
+  /**
+   * Returns an onChange handler for a randomize channel/dimension checkbox.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @return {(function(*): void)|*}
+   */
+  const randomizeShiftChannelCheckboxOnChangeHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      setRandomizeShiftChannel(channelOffset, dimensionIndex, event.target.checked)
+    }
+  }
+
+  /**
+   * Returns an onChange handler for a randomize channel/dimension max % input.
+   *
+   * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @return {(function(*): void)|*}
+   */
+  const randomizeShiftMaxPercentInputOnChangeHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      let parsedInputValue = parseInt(event.target.value)
+      if (isNaN(parsedInputValue)) {
+        parsedInputValue = ''
+      }
+      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, parsedInputValue)
+    }
+  }
+
+  /**
+   * Returns an onBlur handler for a randomize channel/dimension max % input.
+   *
+   * Validates the corresponding state value, ensuring it's an integer between 0 and 100.
+   *
+   * @param channelOffset
+   * @param dimensionIndex
+   * @return {(function(*): void)|*}
+   */
+  const randomizeShiftMaxPercentInputOnBlurHandler = (channelOffset, dimensionIndex) => {
+    return (event) => {
+      const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
+      // If value is not an integer or less than 0, set to 0
+      if (!Number.isInteger(currentValue) || currentValue < 0) {
+        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 0)
+      }
+      // If value exceeds 100, set to 100
+      else if (currentValue > 100) {
+        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 100)
+      }
+    }
+  }
+
   // Table rows
   const tableRows = CHANNEL_OFFSETS.map((channelOffset) =>
     <RandomizeShiftTableRow
@@ -422,7 +476,6 @@ function App() {
   // --------------------------------------------------------------------------------
   // Randomize Shift
   // --------------------------------------------------------------------------------
-  // TODO: extract non-state stuff to RandomizeShiftTable component
 
   /**
    * Returns default values for randomizeShiftChannels state.
@@ -454,19 +507,6 @@ function App() {
   }
 
   /**
-   * Returns an onChange handler for a randomize channel/dimension checkbox.
-   *
-   * @param channelOffset
-   * @param dimensionIndex
-   * @return {(function(*): void)|*}
-   */
-  const randomizeShiftChannelCheckboxOnChangeHandler = (channelOffset, dimensionIndex) => {
-    return (event) => {
-      setRandomizeShiftChannel(channelOffset, dimensionIndex, event.target.checked)
-    }
-  }
-
-  /**
    * Returns default values for randomizeShiftMaxPercents state.
    *
    * @return {*[]}
@@ -495,33 +535,6 @@ function App() {
     setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
   }
 
-  // TODO: this works BUT loses focus each character you type..
-  // TODO: doc n implement
-  const randomizeShiftMaxPercentInputOnChangeHandler = (channelOffset, dimensionIndex) => {
-    return (event) => {
-      let parsedInputValue = parseInt(event.target.value)
-      if (isNaN(parsedInputValue)) {
-        parsedInputValue = ''
-      }
-      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, parsedInputValue)
-    }
-  }
-
-  // TODO: doc n implement
-  const randomizeShiftMaxPercentInputOnBlurHandler = (channelOffset, dimensionIndex) => {
-    return (event) => {
-      const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
-      // If value is not an integer or less than 0, set to 0
-      if (!Number.isInteger(currentValue) || currentValue < 0) {
-        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 0)
-      }
-      // If value exceeds 100, set to 100
-      else if (currentValue > 100) {
-        setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 100)
-      }
-    }
-  }
-
 
   /**
    * Returns a random amount of pixels to shift based on configured max shift percent and the corresponding image dimension.
@@ -548,7 +561,6 @@ function App() {
   const randomizeShiftValues = () => {
     const newChannelShiftValues = []
     randomizeShiftChannels.forEach((randomizeDimensions, channelOffset) => {
-      // TODO: ensure each val is an integer between 0 and 100 first, update state accordingly if not
       // Set default (copy from current state)
       newChannelShiftValues[channelOffset] = [...channelShiftValues[channelOffset]]
       // X shift
@@ -568,7 +580,7 @@ function App() {
    * OnClick handler for randomize button.
    */
   const randomizeButtonOnClickHandler = () => {
-    // TODO: validate input fields / state first
+    // TODO: validate input fields / state first? might not be necessary tbh
     randomizeShiftValues()
   }
 
@@ -923,13 +935,12 @@ function App() {
               >
               <RandomizeShiftTable
                 randomizeShiftChannels={ randomizeShiftChannels }
+                setRandomizeShiftChannel={ setRandomizeShiftChannel }
                 randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
-                randomizeShiftChannelCheckboxOnChangeHandler={ randomizeShiftChannelCheckboxOnChangeHandler }
-                randomizeShiftMaxPercentInputOnChangeHandler={ randomizeShiftMaxPercentInputOnChangeHandler }
-                randomizeShiftMaxPercentInputOnBlurHandler={ randomizeShiftMaxPercentInputOnBlurHandler }
+                setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
                 />
-
             </Paper>
+
           </Paper>
         </Box>
 
