@@ -1,3 +1,6 @@
+// ================================================================================
+// Color Channel Constants
+// ================================================================================
 // Indexes into RGB arrays + values of radio buttons
 export const R_OFFSET = 0
 export const G_OFFSET = 1
@@ -19,3 +22,8 @@ export const CHANNEL_MUI_COLORS = []
 CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
 CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
 CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
+
+// ================================================================================
+// TODO: UI Constants
+// ================================================================================
+// TODO: TOOL_UI_PAPER_SX / _PROPS
