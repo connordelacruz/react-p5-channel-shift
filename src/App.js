@@ -1,8 +1,13 @@
+// React
 import React from 'react';
 import { ReactP5Wrapper } from '@p5-wrapper/react'
-
+// Sketch
 import { ChannelShiftSketch } from './ChannelShiftSketch'
+// Constants
+import * as Constants from './Constants'
+// Components
 import { HelpDialog } from './HelpDialog'
+// MUI
 import {
   AppBar,
   Box,
@@ -37,32 +42,9 @@ import {
   Typography
 } from '@mui/material'
 import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
-import { blueGrey, teal } from '@mui/material/colors'
+import { blueGrey, teal, pink } from '@mui/material/colors'
 
 
-// ================================================================================
-// General Constants
-// ================================================================================
-// Indexes into RGB arrays + values of radio buttons
-const R_OFFSET = 0
-const G_OFFSET = 1
-const B_OFFSET = 2
-// TODO: same thing for x/y coords
-
-// Array of above constants, for mapping components
-const CHANNEL_OFFSETS = [R_OFFSET, G_OFFSET, B_OFFSET]
-
-// Display names for color channels indexed by above offsets
-const CHANNEL_DISPLAY_NAMES = []
-CHANNEL_DISPLAY_NAMES[R_OFFSET] = 'Red'
-CHANNEL_DISPLAY_NAMES[G_OFFSET] = 'Green'
-CHANNEL_DISPLAY_NAMES[B_OFFSET] = 'Blue'
-
-// MUI theme color names to use for color channels indexed by above offsets
-const CHANNEL_MUI_COLORS = []
-CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
-CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
-CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
 
 
 // ================================================================================
@@ -94,12 +76,12 @@ const RandomizeShiftTableRow = ({
   // TODO: Make channel labels prettier and use respective colors
   return (
     <TableRow>
-      <TableCell>{CHANNEL_DISPLAY_NAMES[channelOffset]}</TableCell>
+      <TableCell>{Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}</TableCell>
       <TableCell align="center">
         <Checkbox
           checked={randomizeShiftChannels[channelOffset][0]}
           onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 0)}
-          color={CHANNEL_MUI_COLORS[channelOffset]}
+          color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
         />
       </TableCell>
       <TableCell>
@@ -108,7 +90,7 @@ const RandomizeShiftTableRow = ({
           InputProps={{
             endAdornment: <InputAdornment position="end">%</InputAdornment>,
           }}
-          color={CHANNEL_MUI_COLORS[channelOffset]}
+          color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
           disabled={!randomizeShiftChannels[channelOffset][0]}
           onChange={randomizeShiftMaxPercentInputOnChangeHandler(channelOffset, 0)}
           onBlur={randomizeShiftMaxPercentInputOnBlurHandler(channelOffset, 0)}
@@ -119,7 +101,7 @@ const RandomizeShiftTableRow = ({
         <Checkbox
           checked={randomizeShiftChannels[channelOffset][1]}
           onChange={randomizeShiftChannelCheckboxOnChangeHandler(channelOffset, 1)}
-          color={CHANNEL_MUI_COLORS[channelOffset]}
+          color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
         />
       </TableCell>
       <TableCell>
@@ -128,7 +110,7 @@ const RandomizeShiftTableRow = ({
           InputProps={{
             endAdornment: <InputAdornment position="end">%</InputAdornment>,
           }}
-          color={CHANNEL_MUI_COLORS[channelOffset]}
+          color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
           disabled={!randomizeShiftChannels[channelOffset][1]}
           onChange={randomizeShiftMaxPercentInputOnChangeHandler(channelOffset, 1)}
           onBlur={randomizeShiftMaxPercentInputOnBlurHandler(channelOffset, 1)}
@@ -202,7 +184,7 @@ const RandomizeShiftTable = ({
   }
 
   // Table rows
-  const tableRows = CHANNEL_OFFSETS.map((channelOffset) =>
+  const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
     <RandomizeShiftTableRow
       key={ channelOffset.toString() }
       channelOffset={ channelOffset }
@@ -328,8 +310,8 @@ function App() {
   // Channel Swap
   // ================================================================================
   // Source and target channels
-  const [sourceChannel, setSourceChannel] = React.useState(R_OFFSET)
-  const [targetChannel, setTargetChannel] = React.useState(R_OFFSET)
+  const [sourceChannel, setSourceChannel] = React.useState(Constants.R_OFFSET)
+  const [targetChannel, setTargetChannel] = React.useState(Constants.R_OFFSET)
 
   // Since RGB radio elements are identical in source and target, use this method to generate common markup
   const ChannelRadioElements = () => {
@@ -337,19 +319,19 @@ function App() {
     return (
       <React.Fragment>
         <FormControlLabel
-          value={R_OFFSET}
+          value={Constants.R_OFFSET}
           label="Red"
           control={ <Radio color="error"/> }
           sx={{ color: 'error.main' }}
         />
         <FormControlLabel
-          value={G_OFFSET}
+          value={Constants.G_OFFSET}
           label="Green"
           control={ <Radio color="success"/> }
           sx={{ color: 'success.main' }}
         />
         <FormControlLabel
-          value={B_OFFSET}
+          value={Constants.B_OFFSET}
           label="Blue"
           control={ <Radio color="primary"/> }
           sx={{ color: 'primary.main' }}
@@ -369,7 +351,7 @@ function App() {
   // Channel Shift
   // ================================================================================
   // x/y shift current channel selection
-  const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(R_OFFSET)
+  const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(Constants.R_OFFSET)
 
   /**
    * Returns default value of all 0's for each channel
@@ -378,9 +360,9 @@ function App() {
    */
   const getChannelShiftValuesDefault = () => {
     const channelShiftValuesDefault = []
-    channelShiftValuesDefault[R_OFFSET] = [0, 0]
-    channelShiftValuesDefault[G_OFFSET] = [0, 0]
-    channelShiftValuesDefault[B_OFFSET] = [0, 0]
+    channelShiftValuesDefault[Constants.R_OFFSET] = [0, 0]
+    channelShiftValuesDefault[Constants.G_OFFSET] = [0, 0]
+    channelShiftValuesDefault[Constants.B_OFFSET] = [0, 0]
     return channelShiftValuesDefault
   }
 
@@ -419,11 +401,11 @@ function App() {
   const ShiftChannelSelectChip = (props) => {
     return (
       <Chip
-        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{CHANNEL_DISPLAY_NAMES[props.channelOffset]}</Typography>}
+        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{Constants.CHANNEL_DISPLAY_NAMES[props.channelOffset]}</Typography>}
         label={`x: ${channelShiftValues[props.channelOffset][0]}px / y: ${channelShiftValues[props.channelOffset][1]}px`}
         variant={parseInt(selectedShiftChannel) === props.channelOffset ? 'filled' : 'outlined'}
         onClick={() => {setSelectedShiftChannel(props.channelOffset)}}
-        color={CHANNEL_MUI_COLORS[props.channelOffset]}
+        color={Constants.CHANNEL_MUI_COLORS[props.channelOffset]}
         aria-labelledby="selected-shift-channel-label"
       />
     )
@@ -441,8 +423,8 @@ function App() {
    * Reset all shift/swap states
    */
   const resetShiftAndSwap = () => {
-    setSourceChannel(R_OFFSET)
-    setTargetChannel(R_OFFSET)
+    setSourceChannel(Constants.R_OFFSET)
+    setTargetChannel(Constants.R_OFFSET)
     setChannelShiftValues(getChannelShiftValuesDefault())
   }
 
@@ -484,9 +466,9 @@ function App() {
    */
   const randomizeShiftChannelsDefault = () => {
     const randomizeShiftChannelsDefault = []
-    randomizeShiftChannelsDefault[R_OFFSET] = [true, true]
-    randomizeShiftChannelsDefault[G_OFFSET] = [true, true]
-    randomizeShiftChannelsDefault[B_OFFSET] = [true, true]
+    randomizeShiftChannelsDefault[Constants.R_OFFSET] = [true, true]
+    randomizeShiftChannelsDefault[Constants.G_OFFSET] = [true, true]
+    randomizeShiftChannelsDefault[Constants.B_OFFSET] = [true, true]
     return randomizeShiftChannelsDefault
   }
 
@@ -513,9 +495,9 @@ function App() {
    */
   const randomizeShiftMaxPercentsDefault = () => {
     const randomizeShiftMaxPercentsDefault = []
-    randomizeShiftMaxPercentsDefault[R_OFFSET] = [100, 100]
-    randomizeShiftMaxPercentsDefault[G_OFFSET] = [100, 100]
-    randomizeShiftMaxPercentsDefault[B_OFFSET] = [100, 100]
+    randomizeShiftMaxPercentsDefault[Constants.R_OFFSET] = [100, 100]
+    randomizeShiftMaxPercentsDefault[Constants.G_OFFSET] = [100, 100]
+    randomizeShiftMaxPercentsDefault[Constants.B_OFFSET] = [100, 100]
     return randomizeShiftMaxPercentsDefault
   }
 
@@ -620,6 +602,13 @@ function App() {
     return swapModifiedDuringStep() || shiftModifiedDuringStep()
   }
 
+  // --------------------------------------------------------------------------------
+  // Help Dialog
+  // --------------------------------------------------------------------------------
+  // Open/close state
+  const [helpOpen, setHelpOpen] = React.useState(false)
+
+
   // ================================================================================
   // Theme
   // ================================================================================
@@ -630,15 +619,11 @@ function App() {
       secondary: {
         main: teal[500]
       },
+      info: {
+        main: pink[500]
+      },
     }
   })
-
-
-  // --------------------------------------------------------------------------------
-  // Help Dialog
-  // --------------------------------------------------------------------------------
-  // Open/close state
-  const [helpOpen, setHelpOpen] = React.useState(false)
 
 
   // ================================================================================
@@ -795,9 +780,9 @@ function App() {
               >
                 Selected Channel:
               </FormLabel>
-              <ShiftChannelSelectChip channelOffset={R_OFFSET}/>
-              <ShiftChannelSelectChip channelOffset={G_OFFSET}/>
-              <ShiftChannelSelectChip channelOffset={B_OFFSET}/>
+              <ShiftChannelSelectChip channelOffset={Constants.R_OFFSET}/>
+              <ShiftChannelSelectChip channelOffset={Constants.G_OFFSET}/>
+              <ShiftChannelSelectChip channelOffset={Constants.B_OFFSET}/>
             </Stack>
             <Paper
               sx={ {
@@ -822,7 +807,7 @@ function App() {
                     { value: imageWidth, label: `${ imageWidth }px` }
                   ] }
                   aria-labelledby="x-shift-slider-label"
-                  color={CHANNEL_MUI_COLORS[selectedShiftChannel]}
+                  color={Constants.CHANNEL_MUI_COLORS[selectedShiftChannel]}
                 />
               </Box>
             </Paper>
@@ -848,7 +833,7 @@ function App() {
                     { value: 0, label: '0px' },
                     { value: imageHeight, label: `${ imageHeight }px` }
                   ] }
-                  color={CHANNEL_MUI_COLORS[selectedShiftChannel]}
+                  color={Constants.CHANNEL_MUI_COLORS[selectedShiftChannel]}
                   aria-labelledby="y-shift-slider-label"
                 />
               </Box>
@@ -879,7 +864,7 @@ function App() {
                   <FormControl>
                     <FormLabel
                       id="source-channel-label"
-                      color={CHANNEL_MUI_COLORS[sourceChannel]}
+                      color={Constants.CHANNEL_MUI_COLORS[sourceChannel]}
                     >
                       Source Channel:
                     </FormLabel>
@@ -902,7 +887,7 @@ function App() {
                   <FormControl>
                     <FormLabel
                       id="target-channel-label"
-                      color={CHANNEL_MUI_COLORS[targetChannel]}
+                      color={Constants.CHANNEL_MUI_COLORS[targetChannel]}
                     >
                       Target Channel:
                     </FormLabel>
@@ -970,7 +955,7 @@ function App() {
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <RestartAlt/> }
                 variant="contained"
-                color="secondary"
+                color="warning"
               >
               Reset Step
             </Button>
@@ -982,7 +967,7 @@ function App() {
                 onClick={ randomizeButtonOnClickHandler }
                 startIcon={ <Casino/> }
                 variant="contained"
-                color="secondary"
+                color="info"
               >
                 Randomize
             </Button>
