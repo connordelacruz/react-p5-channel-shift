@@ -1,5 +1,3 @@
-// Table Row Component
-// TODO: re-work to reuse this for the "All Channels" row
 import {
   Checkbox,
   InputAdornment,
@@ -16,7 +14,7 @@ import * as Constants from './Constants'
 import React from 'react'
 
 // ================================================================================
-// Randomize Options Component
+// Randomization Options Tool UI
 // ================================================================================
 
 // --------------------------------------------------------------------------------
@@ -30,6 +28,7 @@ import React from 'react'
 //  }
 
 // Randomize Shift Table Row Component
+// TODO: re-work to reuse this for the "All Channels" row
 const RandomizeShiftTableRow = ({
                                   channelOffset,
                                   // State props

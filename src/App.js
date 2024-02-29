@@ -6,6 +6,7 @@ import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Constants
 import * as Constants from './Constants'
 // Tool UI Components
+import { SwapChannelsToolUI } from './SwapChannelsToolUI'
 import { RandomizeToolUI } from './RandomizeToolUI'
 // Misc Components
 import { HelpDialog } from './HelpDialog'
@@ -19,14 +20,9 @@ import {
   createTheme,
   CssBaseline,
   Divider,
-  FormControl,
-  FormControlLabel,
   FormLabel,
-  Grid,
   IconButton,
   Paper,
-  Radio,
-  RadioGroup,
   Slider,
   Stack,
   styled,
@@ -39,8 +35,6 @@ import {
 } from '@mui/material'
 import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { blueGrey, pink, teal } from '@mui/material/colors'
-
-
 
 
 // ================================================================================
@@ -139,39 +133,6 @@ function App() {
   const [sourceChannel, setSourceChannel] = React.useState(Constants.R_OFFSET)
   const [targetChannel, setTargetChannel] = React.useState(Constants.R_OFFSET)
 
-  // Since RGB radio elements are identical in source and target, use this method to generate common markup
-  const ChannelRadioElements = () => {
-    // TODO: make each radio generic like shift chips
-    return (
-      <React.Fragment>
-        <FormControlLabel
-          value={Constants.R_OFFSET}
-          label="Red"
-          control={ <Radio color="error"/> }
-          sx={{ color: 'error.main' }}
-        />
-        <FormControlLabel
-          value={Constants.G_OFFSET}
-          label="Green"
-          control={ <Radio color="success"/> }
-          sx={{ color: 'success.main' }}
-        />
-        <FormControlLabel
-          value={Constants.B_OFFSET}
-          label="Blue"
-          control={ <Radio color="primary"/> }
-          sx={{ color: 'primary.main' }}
-        />
-      </React.Fragment>
-    )
-  }
-
-  // onChange method for source/target channel radio groups
-  const channelRadioOnChangeHandler = setterFunction => {
-    return (event) => {
-      setterFunction(event.target.value)
-    }
-  }
 
   // ================================================================================
   // Channel Shift
@@ -224,14 +185,14 @@ function App() {
   /**
    * Component for channel shift select chips
    */
-  const ShiftChannelSelectChip = (props) => {
+  const ShiftChannelSelectChip = ({ channelOffset }) => {
     return (
       <Chip
-        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{Constants.CHANNEL_DISPLAY_NAMES[props.channelOffset]}</Typography>}
-        label={`x: ${channelShiftValues[props.channelOffset][0]}px / y: ${channelShiftValues[props.channelOffset][1]}px`}
-        variant={parseInt(selectedShiftChannel) === props.channelOffset ? 'filled' : 'outlined'}
-        onClick={() => {setSelectedShiftChannel(props.channelOffset)}}
-        color={Constants.CHANNEL_MUI_COLORS[props.channelOffset]}
+        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}</Typography>}
+        label={`x: ${channelShiftValues[channelOffset][0]}px / y: ${channelShiftValues[channelOffset][1]}px`}
+        variant={parseInt(selectedShiftChannel) === channelOffset ? 'filled' : 'outlined'}
+        onClick={() => {setSelectedShiftChannel(channelOffset)}}
+        color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
         aria-labelledby="selected-shift-channel-label"
       />
     )
@@ -669,67 +630,10 @@ function App() {
 
         {/*Swap Channels*/}
         <Box hidden={selectedToolTab !== SWAP_TAB_VALUE}>
-          <Paper
-            sx={ { p: 2 } }
-            variant="outlined"
-          >
-            <FormLabel
-              sx={{
-                display: 'block',
-                mb: 2,
-            }}
-            >
-              Select channels to swap:
-            </FormLabel>
-            <Grid container justifyContent="center" spacing={2}>
-              <Grid item xs={ 6 }>
-                <Paper
-                  sx={{ p: 2 }}
-                  variant="outlined"
-                >
-                  <FormControl>
-                    <FormLabel
-                      id="source-channel-label"
-                      color={Constants.CHANNEL_MUI_COLORS[sourceChannel]}
-                    >
-                      Source Channel:
-                    </FormLabel>
-                    <RadioGroup
-                      value={ sourceChannel }
-                      onChange={ channelRadioOnChangeHandler(setSourceChannel) }
-                      aria-labelledby="source-channel-label"
-                      name="source-channel-radio-group"
-                    >
-                      <ChannelRadioElements/>
-                    </RadioGroup>
-                  </FormControl>
-                </Paper>
-              </Grid>
-              <Grid item xs={ 6 }>
-                <Paper
-                  sx={{ p: 2 }}
-                  variant="outlined"
-                >
-                  <FormControl>
-                    <FormLabel
-                      id="target-channel-label"
-                      color={Constants.CHANNEL_MUI_COLORS[targetChannel]}
-                    >
-                      Target Channel:
-                    </FormLabel>
-                    <RadioGroup
-                      value={ targetChannel }
-                      onChange={ channelRadioOnChangeHandler(setTargetChannel) }
-                      aria-labelledby="target-channel-label"
-                      name="target-channel-radio-group"
-                    >
-                      <ChannelRadioElements/>
-                    </RadioGroup>
-                  </FormControl>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Paper>
+          <SwapChannelsToolUI
+            sourceChannel={sourceChannel} setSourceChannel={setSourceChannel}
+            targetChannel={targetChannel} setTargetChannel={setTargetChannel}
+            />
         </Box>
 
         {/*Randomize*/}
