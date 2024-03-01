@@ -6,6 +6,7 @@ import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Constants
 import * as Constants from './Constants'
 // Tool UI Components
+import { ShiftChannelsToolUI } from './ShiftChannelsToolUI'
 import { SwapChannelsToolUI } from './SwapChannelsToolUI'
 import { RandomizeToolUI } from './RandomizeToolUI'
 // Misc Components
@@ -15,15 +16,12 @@ import {
   AppBar,
   Box,
   Button,
-  Chip,
   Container,
   createTheme,
   CssBaseline,
   Divider,
-  FormLabel,
   IconButton,
   Paper,
-  Slider,
   Stack,
   styled,
   Tab,
@@ -167,35 +165,6 @@ function App() {
     // Update selected targetChannel
     newChannelShiftValues[selectedShiftChannel][coordinateIndex] = newValue
     setChannelShiftValues(newChannelShiftValues)
-  }
-
-  /**
-   * Returns onChange method for x/y shift sliders
-   *
-   * @param coordinateIndex 0 for x, 1 for y
-   *
-   * @return onChange handler function for x/y shift slider
-   */
-  const shiftSliderOnChangeHandler = coordinateIndex => {
-    return (event, newValue) => {
-      setChannelShiftValue(coordinateIndex, newValue)
-    }
-  }
-
-  /**
-   * Component for channel shift select chips
-   */
-  const ShiftChannelSelectChip = ({ channelOffset }) => {
-    return (
-      <Chip
-        icon={<Typography variant="button" sx={{fontWeight: 'bold'}}>{Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}</Typography>}
-        label={`x: ${channelShiftValues[channelOffset][0]}px / y: ${channelShiftValues[channelOffset][1]}px`}
-        variant={parseInt(selectedShiftChannel) === channelOffset ? 'filled' : 'outlined'}
-        onClick={() => {setSelectedShiftChannel(channelOffset)}}
-        color={Constants.CHANNEL_MUI_COLORS[channelOffset]}
-        aria-labelledby="selected-shift-channel-label"
-      />
-    )
   }
 
   // ================================================================================
@@ -540,92 +509,22 @@ function App() {
             />
           </Tabs>
         </Box>
-
       </Paper>
+      {/*END App Bar, Canvas, and Tool Tabs Container*/}
 
       {/*Tools UI*/}
       <Container maxWidth="md" sx={{ pb: 8, my: 2 }}>
 
         {/*Shift Channels*/}
         <Box hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
-          <Paper
-            sx={ { p: 2 } }
-            variant="outlined"
-          >
-            {/*Shift Channel Select Buttons*/}
-            <Stack
-              direction="row"
-              alignItems="center"
-              spacing={1}
-              sx={{
-                p: 2,
-              }}
-            >
-              <FormLabel
-                id="selected-shift-channel-label"
-                sx={{display: 'block'}}
-              >
-                Selected Channel:
-              </FormLabel>
-              <ShiftChannelSelectChip channelOffset={Constants.R_OFFSET}/>
-              <ShiftChannelSelectChip channelOffset={Constants.G_OFFSET}/>
-              <ShiftChannelSelectChip channelOffset={Constants.B_OFFSET}/>
-            </Stack>
-            <Paper
-              sx={ {
-                p: 2,
-                my: 2,
-              } }
-              variant="outlined"
-            >
-              {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
-              <Box
-                sx={ { px: 2 } }
-              >
-                <FormLabel id="x-shift-slider-label">X Shift:</FormLabel>
-                <Slider
-                  value={ channelShiftValues[selectedShiftChannel][0] }
-                  onChange={ shiftSliderOnChangeHandler(0) }
-                  min={ 0 }
-                  max={ imageWidth }
-                  valueLabelDisplay="auto"
-                  marks={ [
-                    { value: 0, label: '0px' },
-                    { value: imageWidth, label: `${ imageWidth }px` }
-                  ] }
-                  aria-labelledby="x-shift-slider-label"
-                  color={Constants.CHANNEL_MUI_COLORS[selectedShiftChannel]}
-                />
-              </Box>
-            </Paper>
-            <Paper
-              sx={ {
-                p: 2,
-                my: 2,
-              } }
-              variant="outlined"
-            >
-              {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
-              <Box
-                sx={ { px: 2 } }
-              >
-                <FormLabel id="y-shift-slider-label">Y Shift:</FormLabel>
-                <Slider
-                  value={ channelShiftValues[selectedShiftChannel][1] }
-                  onChange={ shiftSliderOnChangeHandler(1) }
-                  min={ 0 }
-                  max={ imageHeight }
-                  valueLabelDisplay="auto"
-                  marks={ [
-                    { value: 0, label: '0px' },
-                    { value: imageHeight, label: `${ imageHeight }px` }
-                  ] }
-                  color={Constants.CHANNEL_MUI_COLORS[selectedShiftChannel]}
-                  aria-labelledby="y-shift-slider-label"
-                />
-              </Box>
-            </Paper>
-          </Paper>
+          <ShiftChannelsToolUI
+            channelShiftValues={channelShiftValues}
+            setChannelShiftValue={setChannelShiftValue}
+            selectedShiftChannel={selectedShiftChannel}
+            setSelectedShiftChannel={setSelectedShiftChannel}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
+            />
         </Box>
 
         {/*Swap Channels*/}
@@ -647,8 +546,9 @@ function App() {
         </Box>
 
       </Container>
+      {/*END Tools UI*/}
 
-      {/*Reset/Confirm Buttons*/}
+      {/*Snackbar*/}
       <Paper
         elevation={ 3 }
         sx={ {
@@ -659,6 +559,7 @@ function App() {
           p: 2,
         } }
       >
+        {/*Reset/Randomize/Confirm Buttons*/}
         <Stack
           direction="row"
           divider={ <Divider orientation="vertical" flexItem/> }
@@ -705,6 +606,7 @@ function App() {
           </Tooltip>
         </Stack>
       </Paper>
+      {/*END Snackbar*/}
 
       {/*Help Modal*/}
       <HelpDialog open={helpOpen} onClose={() => {setHelpOpen(false)}}/>

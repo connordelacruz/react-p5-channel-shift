@@ -22,6 +22,7 @@ import React from 'react'
 // --------------------------------------------------------------------------------
 
 // TODO: doc n implement, do the same for checkboxes; also think about how to support the "all channels" version
+// TODO: also select all onFocus: https://stackoverflow.com/questions/4067469/selecting-all-text-in-html-text-input-when-clicked
 //  const RandomizeShiftPercentInput = ({channelOffset, dimensionIndex}) => {
 //    return (
 //    )
