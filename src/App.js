@@ -368,7 +368,6 @@ function App() {
   // ================================================================================
   // Theme
   // ================================================================================
-  // TODO: custom color names?
   const theme = createTheme({
     palette: {
       // Non-color channel UI colors

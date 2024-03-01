@@ -3,7 +3,7 @@ import * as Constants from './Constants'
 import React from 'react'
 
 // ================================================================================
-// Channel Swap Tool UI
+// Swap Channels Tool UI
 // ================================================================================
 // TODO: cleanup code, make comments consistent
 
