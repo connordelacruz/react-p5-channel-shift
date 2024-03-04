@@ -1,64 +1,21 @@
-import { FormControl, FormControlLabel, FormLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material'
-import * as Constants from './Constants'
+import { FormLabel, Grid, Paper } from '@mui/material'
 import React from 'react'
+import { ChannelRadioGroup } from './common/ChannelRadioGroup'
 
 // ================================================================================
 // Swap Channels Tool UI
 // ================================================================================
-// TODO: cleanup code, make comments consistent
 
-// Channel Swap Radio Component
-const ChannelRadio = ({ channelOffset }) => {
-  return (
-    <FormControlLabel
-      value={ channelOffset }
-      label={ Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
-      control={ <Radio color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }/> }
-      sx={ { color: `${ Constants.CHANNEL_MUI_COLORS[channelOffset] }.main` } }
-    />
-  )
-}
-
-// TODO: make more generic so it can be re-used in randomize swap
-// RGB Channel Radios Component
-const ChannelRadioGroup = ({
-                             labelText, labelId, radioGroupName,
-                             selectedChannelOffsetState, stateSetterFunction
-                           }) => {
-  // Radio elements
-  const channelRadios = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
-    <ChannelRadio
-      key={ channelOffset.toString() }
-      channelOffset={ channelOffset }
-    />
-  )
-
-  // Radio group on change listener
-  const channelRadioOnChange = (event) => {
-    stateSetterFunction(event.target.value)
-  }
-
-  return (
-    <FormControl>
-      <FormLabel
-        id={ labelId }
-        color={ Constants.CHANNEL_MUI_COLORS[selectedChannelOffsetState] }
-      >
-        { labelText }:
-      </FormLabel>
-      <RadioGroup
-        value={ selectedChannelOffsetState }
-        onChange={ channelRadioOnChange }
-        aria-labelledby={ labelId }
-        name={ radioGroupName }
-      >
-        { channelRadios }
-      </RadioGroup>
-    </FormControl>
-  )
-}
-
-// Swap Channels Tool UI Component
+/**
+ * Swap channels tool UI component.
+ *
+ * @param sourceChannel
+ * @param setSourceChannel
+ * @param targetChannel
+ * @param setTargetChannel
+ * @return {Element}
+ * @constructor
+ */
 export const SwapChannelsToolUI = ({
                                      sourceChannel, setSourceChannel,
                                      targetChannel, setTargetChannel

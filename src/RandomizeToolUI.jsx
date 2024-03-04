@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
+import { ChannelLabel } from './common/ChannelLabel'
 
 // ================================================================================
 // Randomization Options Tool UI
@@ -161,12 +162,7 @@ const RandomizeShiftTableRow = ({
   return (
     <TableRow>
       <TableCell>
-        <Typography
-          variant="button"
-          sx={ { color: `${ Constants.CHANNEL_MUI_COLORS[channelOffset] }.main` } }
-        >
-          { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
-        </Typography>
+        <ChannelLabel channelOffset={channelOffset} />
       </TableCell>
       <TableCell align="center">
         <RandomizeShiftDimensionCheckbox
