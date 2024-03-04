@@ -8,7 +8,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField
+  TextField, Typography
 } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
@@ -158,10 +158,16 @@ const RandomizeShiftTableRow = ({
                                   setRandomizeShiftChannel,
                                   setRandomizeShiftMaxPercents
                                 }) => {
-  // TODO: Make channel labels prettier and use respective colors
   return (
     <TableRow>
-      <TableCell>{ Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }</TableCell>
+      <TableCell>
+        <Typography
+          variant="button"
+          sx={ { color: `${ Constants.CHANNEL_MUI_COLORS[channelOffset] }.main` } }
+        >
+          { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
+        </Typography>
+      </TableCell>
       <TableCell align="center">
         <RandomizeShiftDimensionCheckbox
           channelOffset={ channelOffset }
@@ -237,11 +243,11 @@ const RandomizeShiftTable = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Channel</TableCell>
-            <TableCell>Randomize X Shift?</TableCell>
-            <TableCell>X Shift Max %</TableCell>
-            <TableCell>Randomize Y Shift?</TableCell>
-            <TableCell>Y Shift Max %</TableCell>
+            <TableCell align="center">Channel</TableCell>
+            <TableCell align="center">Randomize X?</TableCell>
+            <TableCell align="center">X Shift Max %</TableCell>
+            <TableCell align="center">Randomize Y?</TableCell>
+            <TableCell align="center">Y Shift Max %</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -19,6 +19,7 @@ const ChannelRadio = ({ channelOffset }) => {
   )
 }
 
+// TODO: make more generic so it can be re-used in randomize swap
 // RGB Channel Radios Component
 const ChannelRadioGroup = ({
                              labelText, labelId, radioGroupName,

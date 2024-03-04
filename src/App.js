@@ -124,6 +124,8 @@ function App() {
     setSelectedToolTab(newValue)
   }
 
+  // TODO: Style tool tabs to make it clearer that they're tabs
+
   // ================================================================================
   // Channel Swap
   // ================================================================================
@@ -165,46 +167,6 @@ function App() {
     // Update selected targetChannel
     newChannelShiftValues[selectedShiftChannel][coordinateIndex] = newValue
     setChannelShiftValues(newChannelShiftValues)
-  }
-
-  // ================================================================================
-  // Reset/Confirm Step
-  // ================================================================================
-
-  // --------------------------------------------------------------------------------
-  // Reset Button
-  // --------------------------------------------------------------------------------
-
-  /**
-   * Reset all shift/swap states
-   */
-  const resetShiftAndSwap = () => {
-    setSourceChannel(Constants.R_OFFSET)
-    setTargetChannel(Constants.R_OFFSET)
-    setChannelShiftValues(getChannelShiftValuesDefault())
-  }
-
-  // --------------------------------------------------------------------------------
-  // Confirm Button
-  // --------------------------------------------------------------------------------
-  // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
-  const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
-
-  /**
-   * Confirm button onClick handler
-   */
-  const confirmButtonOnClick = () => {
-    setShouldConfirmResult(true)
-  }
-
-  /**
-   * Post-confirm method, called from sketch after handling the confirmation.
-   *
-   * Resets shift/swap states and sets shouldConfirmResult state to false.
-   */
-  const postConfirmResult = () => {
-    resetShiftAndSwap()
-    setShouldConfirmResult(false)
   }
 
   // ================================================================================
@@ -314,12 +276,53 @@ function App() {
     setChannelShiftValues(newChannelShiftValues)
   }
 
+  // TODO: move to snackbar section
   /**
    * OnClick handler for randomize button.
    */
   const randomizeButtonOnClickHandler = () => {
     // TODO: validate input fields / state first? might not be necessary tbh
     randomizeShiftValues()
+  }
+
+  // ================================================================================
+  // Reset/Randomize/Confirm Snackbar Buttons
+  // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // Reset Button
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Reset all shift/swap states
+   */
+  const resetShiftAndSwap = () => {
+    setSourceChannel(Constants.R_OFFSET)
+    setTargetChannel(Constants.R_OFFSET)
+    setChannelShiftValues(getChannelShiftValuesDefault())
+  }
+
+  // --------------------------------------------------------------------------------
+  // Confirm Button
+  // --------------------------------------------------------------------------------
+  // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
+  const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
+
+  /**
+   * Confirm button onClick handler
+   */
+  const confirmButtonOnClick = () => {
+    setShouldConfirmResult(true)
+  }
+
+  /**
+   * Post-confirm method, called from sketch after handling the confirmation.
+   *
+   * Resets shift/swap states and sets shouldConfirmResult state to false.
+   */
+  const postConfirmResult = () => {
+    resetShiftAndSwap()
+    setShouldConfirmResult(false)
   }
 
   // ================================================================================
