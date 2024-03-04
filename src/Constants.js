@@ -5,6 +5,7 @@
 export const R_OFFSET = 0
 export const G_OFFSET = 1
 export const B_OFFSET = 2
+export const A_OFFSET = 3
 // TODO: same thing for x/y coords?
 
 // Array of above export constants, for mapping components

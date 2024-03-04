@@ -1,12 +1,7 @@
+import * as Constants from './Constants'
+
 
 export function ChannelShiftSketch(p5) {
-  // Offsets into p5.js pixels array for RGBA
-  // Also used as indexes into sourceChannels
-  const R_OFFSET = 0
-  const G_OFFSET = 1
-  const B_OFFSET = 2
-  const A_OFFSET = 3
-
   // Source image + RGB channel images
   // TODO rename to originalImage
   let sourceImage
@@ -164,9 +159,9 @@ export function ChannelShiftSketch(p5) {
       // Draw to previewGraphics
       previewGraphics.background(0)
       // Blend RGB channels
-      drawChannelToPreviewGraphics(R_OFFSET)
-      drawChannelToPreviewGraphics(G_OFFSET)
-      drawChannelToPreviewGraphics(B_OFFSET)
+      drawChannelToPreviewGraphics(Constants.R_OFFSET)
+      drawChannelToPreviewGraphics(Constants.G_OFFSET)
+      drawChannelToPreviewGraphics(Constants.B_OFFSET)
       // Render to screen
       p5.image(previewGraphics, 0, 0, p5.width, p5.height)
     }
@@ -203,30 +198,30 @@ export function ChannelShiftSketch(p5) {
    */
   function initializeRGBImages() {
     // Initialize to blank images
-    sourceChannels[R_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[R_OFFSET].loadPixels()
-    sourceChannels[G_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[G_OFFSET].loadPixels()
-    sourceChannels[B_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[B_OFFSET].loadPixels()
+    sourceChannels[Constants.R_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[Constants.R_OFFSET].loadPixels()
+    sourceChannels[Constants.G_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[Constants.G_OFFSET].loadPixels()
+    sourceChannels[Constants.B_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
+    sourceChannels[Constants.B_OFFSET].loadPixels()
     // Copy color channels from sourceImage.pixels
     // This is a 1D array that stores RGBA values. See docs for details:
     // https://p5js.org/reference/#/p5.Image/pixels
     sourceImage.loadPixels()
     for (let i = 0; i < sourceImage.pixels.length; i += 4) {
       // Red
-      sourceChannels[R_OFFSET].pixels[i + R_OFFSET] = sourceImage.pixels[i + R_OFFSET]
+      sourceChannels[Constants.R_OFFSET].pixels[i + Constants.R_OFFSET] = sourceImage.pixels[i + Constants.R_OFFSET]
       // Green
-      sourceChannels[G_OFFSET].pixels[i + G_OFFSET] = sourceImage.pixels[i + G_OFFSET]
+      sourceChannels[Constants.G_OFFSET].pixels[i + Constants.G_OFFSET] = sourceImage.pixels[i + Constants.G_OFFSET]
       // Blue
-      sourceChannels[B_OFFSET].pixels[i + B_OFFSET] = sourceImage.pixels[i + B_OFFSET]
+      sourceChannels[Constants.B_OFFSET].pixels[i + Constants.B_OFFSET] = sourceImage.pixels[i + Constants.B_OFFSET]
       // Alpha
-      sourceChannels[R_OFFSET].pixels[i + A_OFFSET] = sourceChannels[G_OFFSET].pixels[i + A_OFFSET] = sourceChannels[B_OFFSET].pixels[i + A_OFFSET] = 255
+      sourceChannels[Constants.R_OFFSET].pixels[i + Constants.A_OFFSET] = sourceChannels[Constants.G_OFFSET].pixels[i + Constants.A_OFFSET] = sourceChannels[Constants.B_OFFSET].pixels[i + Constants.A_OFFSET] = 255
     }
     // Load into sourceChannels and previewChannels
-    sourceChannels[R_OFFSET].updatePixels()
-    sourceChannels[G_OFFSET].updatePixels()
-    sourceChannels[B_OFFSET].updatePixels()
+    sourceChannels[Constants.R_OFFSET].updatePixels()
+    sourceChannels[Constants.G_OFFSET].updatePixels()
+    sourceChannels[Constants.B_OFFSET].updatePixels()
     resetPreviewChannels()
   }
 
@@ -235,9 +230,9 @@ export function ChannelShiftSketch(p5) {
    * Reset previewChannels to match sourceChannels.
    */
   function resetPreviewChannels() {
-    previewChannels[R_OFFSET] = sourceChannels[R_OFFSET].get(0, 0, sourceChannels[R_OFFSET].width, sourceChannels[R_OFFSET].height)
-    previewChannels[G_OFFSET] = sourceChannels[G_OFFSET].get(0, 0, sourceChannels[G_OFFSET].width, sourceChannels[G_OFFSET].height)
-    previewChannels[B_OFFSET] = sourceChannels[B_OFFSET].get(0, 0, sourceChannels[B_OFFSET].width, sourceChannels[B_OFFSET].height)
+    previewChannels[Constants.R_OFFSET] = sourceChannels[Constants.R_OFFSET].get(0, 0, sourceChannels[Constants.R_OFFSET].width, sourceChannels[Constants.R_OFFSET].height)
+    previewChannels[Constants.G_OFFSET] = sourceChannels[Constants.G_OFFSET].get(0, 0, sourceChannels[Constants.G_OFFSET].width, sourceChannels[Constants.G_OFFSET].height)
+    previewChannels[Constants.B_OFFSET] = sourceChannels[Constants.B_OFFSET].get(0, 0, sourceChannels[Constants.B_OFFSET].width, sourceChannels[Constants.B_OFFSET].height)
   }
 
 
@@ -405,10 +400,10 @@ export function ChannelShiftSketch(p5) {
     for (let i = 0; i < newSourceChannelImage.pixels.length; i += 4) {
       // Set new source channel pixel to value of target channel pixel
       newSourceChannelImage.pixels[i + sourceChannelOffset] = targetChannelImage.pixels[i + targetChannelOffset]
-      newSourceChannelImage.pixels[i + A_OFFSET] = 255
+      newSourceChannelImage.pixels[i + Constants.A_OFFSET] = 255
       // Set new target channel pixel to value of source channel pixel
       newTargetChannelImage.pixels[i + targetChannelOffset] = sourceChannelImage.pixels[i + sourceChannelOffset]
-      newTargetChannelImage.pixels[i + A_OFFSET] = 255
+      newTargetChannelImage.pixels[i + Constants.A_OFFSET] = 255
     }
     newSourceChannelImage.updatePixels()
     newTargetChannelImage.updatePixels()
