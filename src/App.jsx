@@ -280,7 +280,11 @@ function App() {
   // Randomize Swap
   // --------------------------------------------------------------------------------
 
-  // TODO: doc n implement
+  /**
+   * Returns default values for randomize source/target channels states.
+   *
+   * @return {*[]}
+   */
   const randomizeSwapChannelsDefault = () => {
     const randomizeSwapChannelsDefault = []
     randomizeSwapChannelsDefault[Constants.R_OFFSET] = true
@@ -293,7 +297,13 @@ function App() {
   const [randomizeSwapSourceChannels, setRandomizeSwapSourceChannels] = React.useState(randomizeSwapChannelsDefault())
   const [randomizeSwapTargetChannels, setRandomizeSwapTargetChannels] = React.useState(randomizeSwapChannelsDefault())
 
-  // TODO doc n implement
+  /**
+   * Returns a helper function to update source/target states at an individual channel offset.
+   *
+   * @param channelsState
+   * @param stateSetter
+   * @return {(function(*, *): void)|*}
+   */
   const setRandomizeChannelHelperGenerator = (channelsState, stateSetter) => {
     return (channelOffset, newValue) => {
       const newChannelsState = [...channelsState]
@@ -301,9 +311,50 @@ function App() {
       stateSetter(newChannelsState)
     }
   }
-  
+
+  /**
+   * Set the state of a channel in randomizeSwapSourceChannels at the given channel offset.
+   *
+   * @param channelOffset
+   * @param newValue
+   */
   const setRandomizeSwapSourceChannel = setRandomizeChannelHelperGenerator(randomizeSwapSourceChannels, setRandomizeSwapSourceChannels)
+
+  /**
+   * Set the state of a channel in randomizeSwapTargetChannels at the given channel offset.
+   *
+   * @param channelOffset
+   * @param newValue
+   */
   const setRandomizeSwapTargetChannel = setRandomizeChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
+
+  /**
+   * Randomize source/target channels based on randomizeSwapSourceChannels and randomizeSwapTargetChannels.
+   */
+  const randomizeSwaps = () => {
+    // TODO: Optionally try to enforce different source/target selections
+    const sourceOptions = []
+    randomizeSwapSourceChannels.forEach((checked, channelOffset) => {
+      if (checked) {
+        sourceOptions.push(channelOffset)
+      }
+    })
+    const targetOptions = []
+    randomizeSwapTargetChannels.forEach((checked, channelOffset) => {
+      if (checked) {
+        targetOptions.push(channelOffset)
+      }
+    })
+    // Pick random channels and update states
+    if (sourceOptions.length > 0) {
+      const randySource = sourceOptions[Math.floor(Math.random() * sourceOptions.length)]
+      setSourceChannel(randySource)
+    }
+    if (targetOptions.length > 0) {
+      const randyTarget = targetOptions[Math.floor(Math.random() * targetOptions.length)]
+      setTargetChannel(randyTarget)
+    }
+  }
 
   // ================================================================================
   // Reset/Randomize/Confirm Snackbar Buttons
@@ -329,10 +380,10 @@ function App() {
   /**
    * OnClick handler for randomize button.
    */
-  const randomizeButtonOnClickHandler = () => {
+  const randomizeButtonOnClick = () => {
     // TODO: consistency on naming these functions (handler suffix just for generators?)
-    // TODO: also randomize swap
     randomizeShiftValues()
+    randomizeSwaps()
   }
 
   // --------------------------------------------------------------------------------
@@ -621,7 +672,7 @@ function App() {
           <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab' placement="top">
             <span>
               <Button
-                onClick={ randomizeButtonOnClickHandler }
+                onClick={ randomizeButtonOnClick }
                 startIcon={ <Casino/> }
                 variant="contained"
                 color="info"

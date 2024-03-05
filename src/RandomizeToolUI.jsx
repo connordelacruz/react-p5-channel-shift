@@ -47,14 +47,14 @@ const RandomizeShiftDimensionCheckbox = ({
    *
    * @param event
    */
-  const randomizeShiftChannelCheckboxOnChangeHandler = (event) => {
+  const randomizeShiftChannelCheckboxOnChange = (event) => {
     setRandomizeShiftChannel(channelOffset, dimensionIndex, event.target.checked)
   }
 
   return (
     <Checkbox
       checked={ randomizeShiftChannels[channelOffset][dimensionIndex] }
-      onChange={ randomizeShiftChannelCheckboxOnChangeHandler }
+      onChange={ randomizeShiftChannelCheckboxOnChange }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
     />
   )
@@ -261,6 +261,40 @@ const RandomizeShiftTable = ({
 
 // TODO: DOCUMENT ALL:
 
+/**
+ * Randomize swap source/target checkbox component.
+ * 
+ * @param channelOffset
+ * @param randomizeSwapChannels State array for source/target swap channels.
+ * @param setRandomizeSwapChannel Corresponding state setter helper function for source/target.
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeSwapChannelCheckbox = ({
+                                        channelOffset,
+                                        // State props
+                                        randomizeSwapChannels,
+                                        // State setter props
+                                        setRandomizeSwapChannel
+                                      }) => {
+  /**
+   * Set state to match checkbox checked property.
+   *
+   * @param event
+   */
+  const randomizeSwapChannelCheckboxOnChange = (event) => {
+    setRandomizeSwapChannel(channelOffset, event.target.checked)
+  }
+  
+  return (
+    <Checkbox
+      checked={ randomizeSwapChannels[channelOffset] }
+      onChange={ randomizeSwapChannelCheckboxOnChange }
+      color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
+    />
+  )
+}
+
 const RandomizeSwapTableRow = ({
                                  channelOffset,
                                  // State props
@@ -276,10 +310,18 @@ const RandomizeSwapTableRow = ({
         <ChannelLabel channelOffset={ channelOffset }/>
       </TableCell>
       <TableCell align="center">
-        TODO: Source
+        <RandomizeSwapChannelCheckbox
+          channelOffset={ channelOffset }
+          randomizeSwapChannels={ randomizeSwapSourceChannels }
+          setRandomizeSwapChannel={ setRandomizeSwapSourceChannel }
+        />
       </TableCell>
       <TableCell align="center">
-        TODO: Target
+        <RandomizeSwapChannelCheckbox
+          channelOffset={ channelOffset }
+          randomizeSwapChannels={ randomizeSwapTargetChannels }
+          setRandomizeSwapChannel={ setRandomizeSwapTargetChannel }
+        />
       </TableCell>
     </TableRow>
   )
