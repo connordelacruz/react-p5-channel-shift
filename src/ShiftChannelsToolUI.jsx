@@ -25,7 +25,7 @@ const ShiftChannelSelectChip = ({
     <Chip
       icon={ <Typography variant="button"
                          sx={ { fontWeight: 'bold' } }>{ Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }</Typography> }
-      label={ `x: ${ channelShiftValues[channelOffset][0] }px / y: ${ channelShiftValues[channelOffset][1] }px` }
+      label={ `(${ channelShiftValues[channelOffset][0] }px, ${ channelShiftValues[channelOffset][1] }px)` }
       variant={ parseInt(selectedShiftChannel) === channelOffset ? 'filled' : 'outlined' }
       onClick={ () => {
         setSelectedShiftChannel(channelOffset)
@@ -116,12 +116,6 @@ export const ShiftChannelsToolUI = ({
           p: 2,
         } }
       >
-        <FormLabel
-          id="selected-shift-channel-label"
-          sx={ { display: 'block' } }
-        >
-          Selected Channel:
-        </FormLabel>
         {channelChips}
       </Stack>
 

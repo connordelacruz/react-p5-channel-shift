@@ -276,14 +276,34 @@ function App() {
     setChannelShiftValues(newChannelShiftValues)
   }
 
-  // TODO: move to snackbar section
-  /**
-   * OnClick handler for randomize button.
-   */
-  const randomizeButtonOnClickHandler = () => {
-    // TODO: validate input fields / state first? might not be necessary tbh
-    randomizeShiftValues()
+  // --------------------------------------------------------------------------------
+  // Randomize Swap
+  // --------------------------------------------------------------------------------
+
+  // TODO: doc n implement
+  const randomizeSwapChannelsDefault = () => {
+    const randomizeSwapChannelsDefault = []
+    randomizeSwapChannelsDefault[Constants.R_OFFSET] = true
+    randomizeSwapChannelsDefault[Constants.G_OFFSET] = true
+    randomizeSwapChannelsDefault[Constants.B_OFFSET] = true
+    return randomizeSwapChannelsDefault
   }
+
+  // States to keep track of which source/target channels should be picked when randomizing
+  const [randomizeSwapSourceChannels, setRandomizeSwapSourceChannels] = React.useState(randomizeSwapChannelsDefault())
+  const [randomizeSwapTargetChannels, setRandomizeSwapTargetChannels] = React.useState(randomizeSwapChannelsDefault())
+
+  // TODO doc n implement
+  const setRandomizeChannelHelperGenerator = (channelsState, stateSetter) => {
+    return (channelOffset, newValue) => {
+      const newChannelsState = [...channelsState]
+      newChannelsState[channelOffset] = newValue
+      stateSetter(newChannelsState)
+    }
+  }
+  
+  const setRandomizeSwapSourceChannel = setRandomizeChannelHelperGenerator(randomizeSwapSourceChannels, setRandomizeSwapSourceChannels)
+  const setRandomizeSwapTargetChannel = setRandomizeChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
 
   // ================================================================================
   // Reset/Randomize/Confirm Snackbar Buttons
@@ -300,6 +320,19 @@ function App() {
     setSourceChannel(Constants.R_OFFSET)
     setTargetChannel(Constants.R_OFFSET)
     setChannelShiftValues(getChannelShiftValuesDefault())
+  }
+
+  // --------------------------------------------------------------------------------
+  // Randomize Button
+  // --------------------------------------------------------------------------------
+
+  /**
+   * OnClick handler for randomize button.
+   */
+  const randomizeButtonOnClickHandler = () => {
+    // TODO: consistency on naming these functions (handler suffix just for generators?)
+    // TODO: also randomize swap
+    randomizeShiftValues()
   }
 
   // --------------------------------------------------------------------------------
@@ -544,6 +577,10 @@ function App() {
             setRandomizeShiftChannel={ setRandomizeShiftChannel }
             randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
             setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+            randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+            randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+            setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+            setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
           />
         </Box>
 

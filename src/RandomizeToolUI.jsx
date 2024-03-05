@@ -5,7 +5,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
+  TableContainer, TableFooter,
   TableHead,
   TableRow,
   TextField, Typography
@@ -23,6 +23,7 @@ import { ChannelLabel } from './common/ChannelLabel'
 // --------------------------------------------------------------------------------
 
 // TODO: Think about how to support the "all channels" version
+//       https://mui.com/material-ui/react-checkbox/#indeterminate
 /**
  * Randomize shift dimension checkbox component.
  *
@@ -160,9 +161,9 @@ const RandomizeShiftTableRow = ({
                                   setRandomizeShiftMaxPercents
                                 }) => {
   return (
-    <TableRow>
+    <TableRow hover>
       <TableCell>
-        <ChannelLabel channelOffset={channelOffset} />
+        <ChannelLabel channelOffset={ channelOffset }/>
       </TableCell>
       <TableCell align="center">
         <RandomizeShiftDimensionCheckbox
@@ -172,7 +173,7 @@ const RandomizeShiftTableRow = ({
           setRandomizeShiftChannel={ setRandomizeShiftChannel }
         />
       </TableCell>
-      <TableCell>
+      <TableCell align="center">
         <RandomizeShiftPercentInput
           channelOffset={ channelOffset }
           dimensionIndex={ 0 }
@@ -189,7 +190,7 @@ const RandomizeShiftTableRow = ({
           setRandomizeShiftChannel={ setRandomizeShiftChannel }
         />
       </TableCell>
-      <TableCell>
+      <TableCell align="center">
         <RandomizeShiftPercentInput
           channelOffset={ channelOffset }
           dimensionIndex={ 1 }
@@ -222,7 +223,7 @@ const RandomizeShiftTable = ({
                                setRandomizeShiftMaxPercent
                              }) => {
 
-  // Table rows
+  // Generate table rows
   const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
     <RandomizeShiftTableRow
       key={ channelOffset.toString() }
@@ -239,7 +240,7 @@ const RandomizeShiftTable = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell align="center">Channel</TableCell>
+            <TableCell>Channel</TableCell>
             <TableCell align="center">Randomize X?</TableCell>
             <TableCell align="center">X Shift Max %</TableCell>
             <TableCell align="center">Randomize Y?</TableCell>
@@ -257,7 +258,81 @@ const RandomizeShiftTable = ({
 // --------------------------------------------------------------------------------
 // Randomize Swap
 // --------------------------------------------------------------------------------
-// TODO
+
+// TODO: DOCUMENT ALL:
+
+const RandomizeSwapTableRow = ({
+                                 channelOffset,
+                                 // State props
+                                 randomizeSwapSourceChannels,
+                                 randomizeSwapTargetChannels,
+                                 // State setter functions
+                                 setRandomizeSwapSourceChannel,
+                                 setRandomizeSwapTargetChannel
+                               }) => {
+  return (
+    <TableRow hover>
+      <TableCell>
+        <ChannelLabel channelOffset={ channelOffset }/>
+      </TableCell>
+      <TableCell align="center">
+        TODO: Source
+      </TableCell>
+      <TableCell align="center">
+        TODO: Target
+      </TableCell>
+    </TableRow>
+  )
+}
+
+const RandomizeSwapTable = ({
+                              // State props
+                              randomizeSwapSourceChannels,
+                              randomizeSwapTargetChannels,
+                              // State setter functions
+                              setRandomizeSwapSourceChannel,
+                              setRandomizeSwapTargetChannel
+                            }) => {
+  // Generate table rows
+  const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
+    <RandomizeSwapTableRow
+      key={ channelOffset.toString() }
+      channelOffset={ channelOffset }
+      randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+      randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+      setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+      setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+    />
+  )
+
+  return (
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Channel</TableCell>
+            <TableCell align="center">Random Source Option?</TableCell>
+            <TableCell align="center">Random Target Option?</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          { tableRows }
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell
+              align="center"
+              colSpan={3}
+            >
+              TODO: Always pick different source and target channels when possible
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </TableContainer>
+  )
+}
+
 
 // --------------------------------------------------------------------------------
 // Randomize Tool UI Component
@@ -270,16 +345,26 @@ const RandomizeShiftTable = ({
  * @param randomizeShiftMaxPercents
  * @param setRandomizeShiftChannel
  * @param setRandomizeShiftMaxPercent
+ * @param randomizeSwapSourceChannels
+ * @param randomizeSwapTargetChannels
+ * @param setRandomizeSwapSourceChannel
+ * @param setRandomizeSwapTargetChannel
  * @return {Element}
  * @constructor
  */
 export const RandomizeToolUI = ({
-                                  // State props
+                                  // Shift state props
                                   randomizeShiftChannels,
                                   randomizeShiftMaxPercents,
-                                  // State setter functions
+                                  // Shift state setter functions
                                   setRandomizeShiftChannel,
-                                  setRandomizeShiftMaxPercent
+                                  setRandomizeShiftMaxPercent,
+                                  // Swap state props
+                                  randomizeSwapSourceChannels,
+                                  randomizeSwapTargetChannels,
+                                  // Swap state setter props
+                                  setRandomizeSwapSourceChannel,
+                                  setRandomizeSwapTargetChannel
                                 }) => {
   return (
     <Paper
@@ -287,8 +372,15 @@ export const RandomizeToolUI = ({
       variant="outlined"
     >
       {/*Randomize Shift*/ }
+      <Typography
+        variant="h6"
+        component="div"
+        gutterBottom
+      >
+        Channel Shift Randomization:
+      </Typography>
       <Paper
-        sx={ { p: 2 } }
+        sx={ { p: 2, mb: 2 } }
         variant="outlined"
       >
         <RandomizeShiftTable
@@ -300,7 +392,25 @@ export const RandomizeToolUI = ({
       </Paper>
 
       {/*Randomize Swap*/ }
-      {/*TODO*/ }
+      <Typography
+        variant="h6"
+        component="div"
+        gutterBottom
+      >
+        Channel Swap Randomization:
+      </Typography>
+      <Paper
+        sx={ { p: 2 } }
+        variant="outlined"
+      >
+        <RandomizeSwapTable
+          randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+          randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+          setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+          setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+          />
+      </Paper>
+
     </Paper>
   )
 }
