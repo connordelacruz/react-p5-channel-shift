@@ -631,10 +631,13 @@ function App() {
         {/*Randomize*/}
         <Box hidden={selectedToolTab !== RANDOMIZE_TAB_VALUE}>
           <RandomizeToolUI
+            /*TODO: comment on props for clarity*/
             randomizeShiftChannels={ randomizeShiftChannels }
             setRandomizeShiftChannel={ setRandomizeShiftChannel }
+            setRandomizeShiftChannels={ setRandomizeShiftChannels }
             randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
             setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+            setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }

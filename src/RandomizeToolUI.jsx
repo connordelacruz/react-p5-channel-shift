@@ -22,8 +22,6 @@ import { ChannelLabel } from './common/ChannelLabel'
 // Randomize Shift
 // --------------------------------------------------------------------------------
 
-// TODO: Think about how to support the "all channels" version
-//       https://mui.com/material-ui/react-checkbox/#indeterminate
 /**
  * Randomize shift dimension checkbox component.
  *
@@ -87,7 +85,7 @@ const RandomizeShiftPercentInput = ({
    *
    * @param event
    */
-  const randomizeShiftMaxPercentInputOnChangeHandler = (event) => {
+  const randomizeShiftMaxPercentInputOnChange = (event) => {
     let parsedInputValue = parseInt(event.target.value)
     if (isNaN(parsedInputValue)) {
       parsedInputValue = ''
@@ -100,7 +98,7 @@ const RandomizeShiftPercentInput = ({
    *
    * @param event
    */
-  const randomizeShiftMaxPercentInputOnBlurHandler = (event) => {
+  const randomizeShiftMaxPercentInputOnBlur = (event) => {
     const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
     // If value is not an integer or less than 0, set to 0
     if (!Number.isInteger(currentValue) || currentValue < 0) {
@@ -117,7 +115,7 @@ const RandomizeShiftPercentInput = ({
    *
    * @param event
    */
-  const randomizeShiftMaxPercentInputOnFocusHandler = (event) => {
+  const randomizeShiftMaxPercentInputOnFocus = (event) => {
     event.target.select()
   }
 
@@ -129,16 +127,15 @@ const RandomizeShiftPercentInput = ({
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       disabled={ !randomizeShiftChannels[channelOffset][dimensionIndex] }
-      onChange={ randomizeShiftMaxPercentInputOnChangeHandler }
-      onBlur={ randomizeShiftMaxPercentInputOnBlurHandler }
-      onFocus={ randomizeShiftMaxPercentInputOnFocusHandler }
+      onChange={ randomizeShiftMaxPercentInputOnChange }
+      onBlur={ randomizeShiftMaxPercentInputOnBlur }
+      onFocus={ randomizeShiftMaxPercentInputOnFocus }
       size="small"
     />
   )
 }
 
 
-// TODO: re-work to reuse this for the "All Channels" row
 /**
  * Randomize shift table row component.
  *
@@ -205,12 +202,99 @@ const RandomizeShiftTableRow = ({
 
 
 /**
+ * Select all checkbox component for randomize shift x/y.
+ *
+ * @param dimensionIndex
+ * @param randomizeShiftChannels
+ * @param setRandomizeShiftChannels
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeShiftSelectAllCheckbox = ({
+                                           dimensionIndex,
+                                           // State props
+                                           randomizeShiftChannels,
+                                           // State setter props
+                                           setRandomizeShiftChannels
+                                         }) => {
+  const selectAllOnChange = (event) => {
+    const newRandomizeShiftChannels = [...randomizeShiftChannels]
+    Constants.CHANNEL_OFFSETS.forEach(channelOffset => {
+      newRandomizeShiftChannels[channelOffset][dimensionIndex] = event.target.checked
+    })
+    setRandomizeShiftChannels(newRandomizeShiftChannels)
+  }
+
+  return (
+    <Checkbox
+      checked={ randomizeShiftChannels.every(channelArr => channelArr[dimensionIndex] === true) }
+      indeterminate={ !randomizeShiftChannels.every(channelArr => channelArr[dimensionIndex] === randomizeShiftChannels[0][dimensionIndex]) }
+      onChange={ selectAllOnChange }
+      color="neutral"
+    />
+  )
+}
+
+
+/**
+ * Randomize shift "all channels" table row component.
+ *
+ * @param randomizeShiftChannels
+ * @param randomizeShiftMaxPercents
+ * @param setRandomizeShiftChannels
+ * @param setRandomizeShiftMaxPercents
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeShiftSelectAllTableRow = ({
+                                           // State props
+                                           randomizeShiftChannels,
+                                           randomizeShiftMaxPercents,
+                                           // State setter props
+                                           setRandomizeShiftChannels,
+                                           setRandomizeShiftMaxPercents
+                                         }) => {
+  return (
+    <TableRow hover>
+      <TableCell>
+        <Typography variant="button">
+          All Channels
+        </Typography>
+      </TableCell>
+      <TableCell align="center">
+        <RandomizeShiftSelectAllCheckbox
+          dimensionIndex={ 0 }
+          randomizeShiftChannels={ randomizeShiftChannels }
+          setRandomizeShiftChannels={ setRandomizeShiftChannels }
+        />
+      </TableCell>
+      <TableCell align="center">
+        TODO: X Max %
+      </TableCell>
+      <TableCell align="center">
+        <RandomizeShiftSelectAllCheckbox
+          dimensionIndex={ 1 }
+          randomizeShiftChannels={ randomizeShiftChannels }
+          setRandomizeShiftChannels={ setRandomizeShiftChannels }
+        />
+      </TableCell>
+      <TableCell align="center">
+        TODO: Y Max %
+      </TableCell>
+    </TableRow>
+  )
+}
+
+
+/**
  * Randomize shift table component.
  *
  * @param randomizeShiftChannels
  * @param randomizeShiftMaxPercents
  * @param setRandomizeShiftChannel
+ * @param setRandomizeShiftChannels
  * @param setRandomizeShiftMaxPercent
+ * @param setRandomizeShiftMaxPercents
  * @return {Element}
  * @constructor
  */
@@ -220,7 +304,9 @@ const RandomizeShiftTable = ({
                                randomizeShiftMaxPercents,
                                // State setter functions
                                setRandomizeShiftChannel,
-                               setRandomizeShiftMaxPercent
+                               setRandomizeShiftChannels,
+                               setRandomizeShiftMaxPercent,
+                               setRandomizeShiftMaxPercents
                              }) => {
 
   // Generate table rows
@@ -249,6 +335,12 @@ const RandomizeShiftTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
+          <RandomizeShiftSelectAllTableRow
+            randomizeShiftChannels={ randomizeShiftChannels }
+            randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+            setRandomizeShiftChannels={ setRandomizeShiftChannels }
+            setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+          />
         </TableBody>
       </Table>
     </TableContainer>
@@ -350,12 +442,12 @@ const RandomizeSwapSelectAllCheckbox = ({
                                         }) => {
   const selectAllOnChange = (event) => {
     const newRandomizeSwapChannels = []
-    Constants.CHANNEL_OFFSETS.forEach((val, channelOffset) => {
+    Constants.CHANNEL_OFFSETS.forEach(channelOffset => {
       newRandomizeSwapChannels[channelOffset] = event.target.checked
     })
     setRandomizeSwapChannels(newRandomizeSwapChannels)
   }
-  
+
   return (
     <Checkbox
       checked={ randomizeSwapChannels.every(val => val === true) }
@@ -466,7 +558,7 @@ const RandomizeSwapTable = ({
               align="center"
               colSpan={ 3 }
             >
-              TODO: Always pick different source and target channels when possible
+              TODO: Pick different source and target channels when possible
             </TableCell>
           </TableRow>
         </TableFooter>
@@ -486,7 +578,9 @@ const RandomizeSwapTable = ({
  * @param randomizeShiftChannels
  * @param randomizeShiftMaxPercents
  * @param setRandomizeShiftChannel
+ * @param setRandomizeShiftChannels
  * @param setRandomizeShiftMaxPercent
+ * @param setRandomizeShiftMaxPercents
  * @param randomizeSwapSourceChannels
  * @param randomizeSwapTargetChannels
  * @param setRandomizeSwapSourceChannel
@@ -502,7 +596,9 @@ export const RandomizeToolUI = ({
                                   randomizeShiftMaxPercents,
                                   // Shift state setter functions
                                   setRandomizeShiftChannel,
+                                  setRandomizeShiftChannels,
                                   setRandomizeShiftMaxPercent,
+                                  setRandomizeShiftMaxPercents,
                                   // Swap state props
                                   randomizeSwapSourceChannels,
                                   randomizeSwapTargetChannels,
@@ -532,8 +628,10 @@ export const RandomizeToolUI = ({
         <RandomizeShiftTable
           randomizeShiftChannels={ randomizeShiftChannels }
           setRandomizeShiftChannel={ setRandomizeShiftChannel }
+          setRandomizeShiftChannels={ setRandomizeShiftChannels }
           randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
           setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+          setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
         />
       </Paper>
 
