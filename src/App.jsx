@@ -32,7 +32,7 @@ import {
   Typography
 } from '@mui/material'
 import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
-import { blueGrey, pink, teal } from '@mui/material/colors'
+import { blueGrey, grey, pink, teal } from '@mui/material/colors'
 
 
 // ================================================================================
@@ -234,6 +234,8 @@ function App() {
     newRandomizeShiftMaxPercents[channelOffset][dimensionIndex] = newValue
     setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
   }
+  
+  // TODO: resetRandomizeShift
 
 
   /**
@@ -279,7 +281,7 @@ function App() {
   // --------------------------------------------------------------------------------
   // Randomize Swap
   // --------------------------------------------------------------------------------
-
+  
   /**
    * Returns default values for randomize source/target channels states.
    *
@@ -300,15 +302,15 @@ function App() {
   /**
    * Returns a helper function to update source/target states at an individual channel offset.
    *
-   * @param channelsState
-   * @param stateSetter
+   * @param channelsState randomizeSwapSourceChannels or randomizeSwapTargetChannels.
+   * @param channelsStateSetter Corresponding state setter function.
    * @return {(function(*, *): void)|*}
    */
-  const setRandomizeChannelHelperGenerator = (channelsState, stateSetter) => {
+  const setRandomizeSwapChannelHelperGenerator = (channelsState, channelsStateSetter) => {
     return (channelOffset, newValue) => {
       const newChannelsState = [...channelsState]
       newChannelsState[channelOffset] = newValue
-      stateSetter(newChannelsState)
+      channelsStateSetter(newChannelsState)
     }
   }
 
@@ -318,7 +320,7 @@ function App() {
    * @param channelOffset
    * @param newValue
    */
-  const setRandomizeSwapSourceChannel = setRandomizeChannelHelperGenerator(randomizeSwapSourceChannels, setRandomizeSwapSourceChannels)
+  const setRandomizeSwapSourceChannel = setRandomizeSwapChannelHelperGenerator(randomizeSwapSourceChannels, setRandomizeSwapSourceChannels)
 
   /**
    * Set the state of a channel in randomizeSwapTargetChannels at the given channel offset.
@@ -326,7 +328,9 @@ function App() {
    * @param channelOffset
    * @param newValue
    */
-  const setRandomizeSwapTargetChannel = setRandomizeChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
+  const setRandomizeSwapTargetChannel = setRandomizeSwapChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
+
+  // TODO: resetRandomizeSwap()
 
   /**
    * Randomize source/target channels based on randomizeSwapSourceChannels and randomizeSwapTargetChannels.
@@ -464,6 +468,9 @@ function App() {
       info: {
         main: pink[500]
       },
+      neutral: {
+        main: grey[900]
+      }
     }
   })
 
@@ -631,7 +638,9 @@ function App() {
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+            setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
             setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+            setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
           />
         </Box>
 

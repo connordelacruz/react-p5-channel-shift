@@ -259,11 +259,9 @@ const RandomizeShiftTable = ({
 // Randomize Swap
 // --------------------------------------------------------------------------------
 
-// TODO: DOCUMENT ALL:
-
 /**
  * Randomize swap source/target checkbox component.
- * 
+ *
  * @param channelOffset
  * @param randomizeSwapChannels State array for source/target swap channels.
  * @param setRandomizeSwapChannel Corresponding state setter helper function for source/target.
@@ -285,7 +283,7 @@ const RandomizeSwapChannelCheckbox = ({
   const randomizeSwapChannelCheckboxOnChange = (event) => {
     setRandomizeSwapChannel(channelOffset, event.target.checked)
   }
-  
+
   return (
     <Checkbox
       checked={ randomizeSwapChannels[channelOffset] }
@@ -295,6 +293,17 @@ const RandomizeSwapChannelCheckbox = ({
   )
 }
 
+/**
+ * Randomize swap table row component.
+ *
+ * @param channelOffset
+ * @param randomizeSwapSourceChannels
+ * @param randomizeSwapTargetChannels
+ * @param setRandomizeSwapSourceChannel
+ * @param setRandomizeSwapTargetChannel
+ * @return {Element}
+ * @constructor
+ */
 const RandomizeSwapTableRow = ({
                                  channelOffset,
                                  // State props
@@ -327,13 +336,98 @@ const RandomizeSwapTableRow = ({
   )
 }
 
+/**
+ * Select all checkbox component for randomize swap source/target.
+ *
+ * @param randomizeSwapChannels
+ * @param setRandomizeSwapChannels
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeSwapSelectAllCheckbox = ({
+                                          randomizeSwapChannels,
+                                          setRandomizeSwapChannels
+                                        }) => {
+  const selectAllOnChange = (event) => {
+    const newRandomizeSwapChannels = []
+    Constants.CHANNEL_OFFSETS.forEach((val, channelOffset) => {
+      newRandomizeSwapChannels[channelOffset] = event.target.checked
+    })
+    setRandomizeSwapChannels(newRandomizeSwapChannels)
+  }
+  
+  return (
+    <Checkbox
+      checked={ randomizeSwapChannels.every(val => val === true) }
+      indeterminate={ !randomizeSwapChannels.every((val, i, arr) => val === arr[0]) }
+      onChange={ selectAllOnChange }
+      color="neutral"
+    />
+  )
+}
+
+/**
+ * Randomize swap "all channels" table row component.
+ *
+ * @param randomizeSwapSourceChannels
+ * @param randomizeSwapTargetChannels
+ * @param setRandomizeSwapSourceChannels
+ * @param setRandomizeSwapTargetChannels
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeSwapSelectAllTableRow = ({
+                                          // State props
+                                          randomizeSwapSourceChannels,
+                                          randomizeSwapTargetChannels,
+                                          // State setter functions
+                                          setRandomizeSwapSourceChannels,
+                                          setRandomizeSwapTargetChannels,
+
+                                        }) => {
+  return (
+    <TableRow hover>
+      <TableCell>
+        <Typography variant="button">
+          All Channels
+        </Typography>
+      </TableCell>
+      <TableCell align="center">
+        <RandomizeSwapSelectAllCheckbox
+          randomizeSwapChannels={ randomizeSwapSourceChannels }
+          setRandomizeSwapChannels={ setRandomizeSwapSourceChannels }
+        />
+      </TableCell>
+      <TableCell align="center">
+        <RandomizeSwapSelectAllCheckbox
+          randomizeSwapChannels={ randomizeSwapTargetChannels }
+          setRandomizeSwapChannels={ setRandomizeSwapTargetChannels }
+        />
+      </TableCell>
+    </TableRow>
+  )
+}
+
+/**
+ * Randomize swap table component.
+ *
+ * @param randomizeSwapSourceChannels
+ * @param randomizeSwapTargetChannels
+ * @param setRandomizeSwapSourceChannel
+ * @param setAllRandomizeSwapSourceChannels
+ * @param setRandomizeSwapTargetChannel
+ * @return {Element}
+ * @constructor
+ */
 const RandomizeSwapTable = ({
                               // State props
                               randomizeSwapSourceChannels,
                               randomizeSwapTargetChannels,
                               // State setter functions
                               setRandomizeSwapSourceChannel,
-                              setRandomizeSwapTargetChannel
+                              setRandomizeSwapSourceChannels,
+                              setRandomizeSwapTargetChannel,
+                              setRandomizeSwapTargetChannels
                             }) => {
   // Generate table rows
   const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
@@ -359,12 +453,18 @@ const RandomizeSwapTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
+          <RandomizeSwapSelectAllTableRow
+            randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+            setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
+            randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+            setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+          />
         </TableBody>
         <TableFooter>
           <TableRow>
             <TableCell
               align="center"
-              colSpan={3}
+              colSpan={ 3 }
             >
               TODO: Always pick different source and target channels when possible
             </TableCell>
@@ -390,7 +490,9 @@ const RandomizeSwapTable = ({
  * @param randomizeSwapSourceChannels
  * @param randomizeSwapTargetChannels
  * @param setRandomizeSwapSourceChannel
+ * @param setRandomizeSwapSourceChannels
  * @param setRandomizeSwapTargetChannel
+ * @param setRandomizeSwapTargetChannels
  * @return {Element}
  * @constructor
  */
@@ -406,7 +508,9 @@ export const RandomizeToolUI = ({
                                   randomizeSwapTargetChannels,
                                   // Swap state setter props
                                   setRandomizeSwapSourceChannel,
-                                  setRandomizeSwapTargetChannel
+                                  setRandomizeSwapSourceChannels,
+                                  setRandomizeSwapTargetChannel,
+                                  setRandomizeSwapTargetChannels
                                 }) => {
   return (
     <Paper
@@ -449,8 +553,10 @@ export const RandomizeToolUI = ({
           randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
           randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
           setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+          setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
           setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
-          />
+          setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+        />
       </Paper>
 
     </Paper>
