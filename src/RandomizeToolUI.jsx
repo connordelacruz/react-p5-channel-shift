@@ -262,8 +262,10 @@ const RandomizeShiftMaxPercentEditAllInput = ({
   // Default to empty. 
   const [editAllMaxPercent, setEditAllMaxPercent] = React.useState('')
 
-  // TODO: wasModified state, don't update anything on blur if false, set back to false on blur
-
+  // Keep track of whether there was anything typed into this field.
+  // Will not update other inputs at the end if no changes were made.
+  const [wasModified, setWasModified] = React.useState(false)
+  
   /**
    * Set state for all max percents with the same dimensionIndex to a value.
    *
@@ -293,6 +295,29 @@ const RandomizeShiftMaxPercentEditAllInput = ({
     setEditAllMaxPercent(parsedInputValue)
     // Update all inputs with the same dimensionIndex to match
     updateAllInputStates(parsedInputValue)
+    // Keep track of changes
+    if (!wasModified) {
+      setWasModified(true)
+    }
+  }
+  
+  // TODO: make generic for use w/ other fields
+  /**
+   * Validate percent value (int between 0 and 100).
+   *
+   * @param val
+   * @return {number}
+   */
+  const validatePercent = (val) => {
+    // If value is not an integer or less than 0, set to 0
+    if (!Number.isInteger(val) || val < 0) {
+      val = 0
+    }
+    // If value exceeds 100, set to 100
+    else if (val > 100) {
+      val = 100
+    }
+    return val
   }
 
   /**
@@ -301,29 +326,24 @@ const RandomizeShiftMaxPercentEditAllInput = ({
    * @param event
    */
   const editAllOnBlur = (event) => {
-    let validatedEditAllMaxPercent = editAllMaxPercent
-    // If value is not an integer or less than 0, set to 0
-    if (!Number.isInteger(validatedEditAllMaxPercent) || validatedEditAllMaxPercent < 0) {
-      validatedEditAllMaxPercent = 0
+    if (wasModified) {
+      let validatedEditAllMaxPercent = validatePercent(editAllMaxPercent)
+      // Update all input states to match
+      updateAllInputStates(validatedEditAllMaxPercent)
+      // Clear edit all input value
+      setEditAllMaxPercent('')
+      // Reset wasModified
+      setWasModified(false)
     }
-    // If value exceeds 100, set to 100
-    else if (validatedEditAllMaxPercent > 100) {
-      validatedEditAllMaxPercent = 100
-    }
-    // Update all input states to match
-    updateAllInputStates(validatedEditAllMaxPercent)
-    // Clear edit all input value
-    setEditAllMaxPercent('')
   }
 
   /**
-   * If the Enter key is pressed, trigger blur on input.
+   * If the Enter or Esc key is pressed, trigger blur on input.
    *
    * @param event
    */
   const editAllOnKeyDown = (event) => {
-    // If the enter key is hit, trigger blur
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' || event.key === 'Escape') {
       event.preventDefault()
       event.target.blur()
     }
@@ -338,6 +358,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
+      // TODO: autoComplete='off'
       color="neutral"
       size="small"
     />
