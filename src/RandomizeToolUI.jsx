@@ -1,5 +1,5 @@
 import {
-  Checkbox,
+  Checkbox, Divider,
   InputAdornment,
   Paper,
   Table,
@@ -59,7 +59,7 @@ const RandomizeShiftDimensionCheckbox = ({
 }
 
 
-// TODO: Think about how to support the "all channels" version
+// TODO: merge common stuff between this and RandomizeShiftMaxPercentEditAllInput
 /**
  * Randomize shift max percent text input component.
  *
@@ -71,15 +71,24 @@ const RandomizeShiftDimensionCheckbox = ({
  * @return {Element}
  * @constructor
  */
-const RandomizeShiftPercentInput = ({
-                                      channelOffset,
-                                      dimensionIndex,
-                                      // State props
-                                      randomizeShiftMaxPercents,
-                                      randomizeShiftChannels,
-                                      // State setter functions
-                                      setRandomizeShiftMaxPercent
-                                    }) => {
+const RandomizeShiftMaxPercentInput = ({
+                                         channelOffset,
+                                         dimensionIndex,
+                                         // State props
+                                         randomizeShiftMaxPercents,
+                                         randomizeShiftChannels,
+                                         // State setter functions
+                                         setRandomizeShiftMaxPercent
+                                       }) => {
+  /**
+   * Select all on focus.
+   *
+   * @param event
+   */
+  const randomizeShiftMaxPercentInputOnFocus = (event) => {
+    event.target.select()
+  }
+
   /**
    * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
    *
@@ -101,6 +110,7 @@ const RandomizeShiftPercentInput = ({
   const randomizeShiftMaxPercentInputOnBlur = (event) => {
     const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
     // If value is not an integer or less than 0, set to 0
+    // TODO: update currentValue, just set state once at the end
     if (!Number.isInteger(currentValue) || currentValue < 0) {
       setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 0)
     }
@@ -110,26 +120,17 @@ const RandomizeShiftPercentInput = ({
     }
   }
 
-  /**
-   * Select all on focus.
-   *
-   * @param event
-   */
-  const randomizeShiftMaxPercentInputOnFocus = (event) => {
-    event.target.select()
-  }
-
   return (
     <TextField
       value={ randomizeShiftMaxPercents[channelOffset][dimensionIndex] }
+      disabled={ !randomizeShiftChannels[channelOffset][dimensionIndex] }
+      onFocus={ randomizeShiftMaxPercentInputOnFocus }
+      onChange={ randomizeShiftMaxPercentInputOnChange }
+      onBlur={ randomizeShiftMaxPercentInputOnBlur }
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
-      disabled={ !randomizeShiftChannels[channelOffset][dimensionIndex] }
-      onChange={ randomizeShiftMaxPercentInputOnChange }
-      onBlur={ randomizeShiftMaxPercentInputOnBlur }
-      onFocus={ randomizeShiftMaxPercentInputOnFocus }
       size="small"
     />
   )
@@ -171,7 +172,7 @@ const RandomizeShiftTableRow = ({
         />
       </TableCell>
       <TableCell align="center">
-        <RandomizeShiftPercentInput
+        <RandomizeShiftMaxPercentInput
           channelOffset={ channelOffset }
           dimensionIndex={ 0 }
           randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
@@ -188,7 +189,7 @@ const RandomizeShiftTableRow = ({
         />
       </TableCell>
       <TableCell align="center">
-        <RandomizeShiftPercentInput
+        <RandomizeShiftMaxPercentInput
           channelOffset={ channelOffset }
           dimensionIndex={ 1 }
           randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
@@ -210,13 +211,18 @@ const RandomizeShiftTableRow = ({
  * @return {Element}
  * @constructor
  */
-const RandomizeShiftSelectAllCheckbox = ({
-                                           dimensionIndex,
-                                           // State props
-                                           randomizeShiftChannels,
-                                           // State setter props
-                                           setRandomizeShiftChannels
-                                         }) => {
+const RandomizeShiftDimensionSelectAllCheckbox = ({
+                                                    dimensionIndex,
+                                                    // State props
+                                                    randomizeShiftChannels,
+                                                    // State setter props
+                                                    setRandomizeShiftChannels
+                                                  }) => {
+  /**
+   * Update all checkboxes with the same dimensionIndex to match.
+   *
+   * @param event
+   */
   const selectAllOnChange = (event) => {
     const newRandomizeShiftChannels = [...randomizeShiftChannels]
     Constants.CHANNEL_OFFSETS.forEach(channelOffset => {
@@ -231,6 +237,109 @@ const RandomizeShiftSelectAllCheckbox = ({
       indeterminate={ !randomizeShiftChannels.every(channelArr => channelArr[dimensionIndex] === randomizeShiftChannels[0][dimensionIndex]) }
       onChange={ selectAllOnChange }
       color="neutral"
+    />
+  )
+}
+
+
+/**
+ * Edit all text input for randomize shift max percents.
+ *
+ * @param dimensionIndex
+ * @param randomizeShiftMaxPercents
+ * @param setRandomizeShiftMaxPercents
+ * @return {Element}
+ * @constructor
+ */
+const RandomizeShiftMaxPercentEditAllInput = ({
+                                                dimensionIndex,
+                                                // State props
+                                                randomizeShiftMaxPercents,
+                                                // State setter props
+                                                setRandomizeShiftMaxPercents
+                                              }) => {
+  // Keep track of value for this independent of individual input states.
+  // Default to empty. 
+  const [editAllMaxPercent, setEditAllMaxPercent] = React.useState('')
+
+  // TODO: wasModified state, don't update anything on blur if false, set back to false on blur
+
+  /**
+   * Set state for all max percents with the same dimensionIndex to a value.
+   *
+   * Assumes we've already validated the value.
+   *
+   * @param validatedNewValue
+   */
+  const updateAllInputStates = (validatedNewValue) => {
+    const newRandomizeShiftMaxPercents = [...randomizeShiftMaxPercents]
+    Constants.CHANNEL_OFFSETS.forEach((channelOffset) => {
+      newRandomizeShiftMaxPercents[channelOffset][dimensionIndex] = validatedNewValue
+    })
+    setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
+  }
+
+  /**
+   * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
+   *
+   * @param event
+   */
+  const editAllOnChange = (event) => {
+    let parsedInputValue = parseInt(event.target.value)
+    if (isNaN(parsedInputValue)) {
+      parsedInputValue = ''
+    }
+    // Update local state
+    setEditAllMaxPercent(parsedInputValue)
+    // Update all inputs with the same dimensionIndex to match
+    updateAllInputStates(parsedInputValue)
+  }
+
+  /**
+   * Validate value, ensure it's an integer between 0 and 100, then update all input states to match and reset local state.
+   *
+   * @param event
+   */
+  const editAllOnBlur = (event) => {
+    let validatedEditAllMaxPercent = editAllMaxPercent
+    // If value is not an integer or less than 0, set to 0
+    if (!Number.isInteger(validatedEditAllMaxPercent) || validatedEditAllMaxPercent < 0) {
+      validatedEditAllMaxPercent = 0
+    }
+    // If value exceeds 100, set to 100
+    else if (validatedEditAllMaxPercent > 100) {
+      validatedEditAllMaxPercent = 100
+    }
+    // Update all input states to match
+    updateAllInputStates(validatedEditAllMaxPercent)
+    // Clear edit all input value
+    setEditAllMaxPercent('')
+  }
+
+  /**
+   * If the Enter key is pressed, trigger blur on input.
+   *
+   * @param event
+   */
+  const editAllOnKeyDown = (event) => {
+    // If the enter key is hit, trigger blur
+    if (event.key === 'Enter') {
+      event.preventDefault()
+      event.target.blur()
+    }
+  }
+
+  return (
+    <TextField
+      value={ editAllMaxPercent }
+      onChange={ editAllOnChange }
+      onBlur={ editAllOnBlur }
+      onKeyDown={ editAllOnKeyDown }
+      InputProps={ {
+        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+      } }
+      color="neutral"
+      size="small"
     />
   )
 }
@@ -262,24 +371,32 @@ const RandomizeShiftSelectAllTableRow = ({
         </Typography>
       </TableCell>
       <TableCell align="center">
-        <RandomizeShiftSelectAllCheckbox
+        <RandomizeShiftDimensionSelectAllCheckbox
           dimensionIndex={ 0 }
           randomizeShiftChannels={ randomizeShiftChannels }
           setRandomizeShiftChannels={ setRandomizeShiftChannels }
         />
       </TableCell>
       <TableCell align="center">
-        TODO: X Max %
+        <RandomizeShiftMaxPercentEditAllInput
+          dimensionIndex={ 0 }
+          randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+          setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+        />
       </TableCell>
       <TableCell align="center">
-        <RandomizeShiftSelectAllCheckbox
+        <RandomizeShiftDimensionSelectAllCheckbox
           dimensionIndex={ 1 }
           randomizeShiftChannels={ randomizeShiftChannels }
           setRandomizeShiftChannels={ setRandomizeShiftChannels }
         />
       </TableCell>
       <TableCell align="center">
-        TODO: Y Max %
+        <RandomizeShiftMaxPercentEditAllInput
+          dimensionIndex={ 1 }
+          randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+          setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+        />
       </TableCell>
     </TableRow>
   )
@@ -622,7 +739,7 @@ export const RandomizeToolUI = ({
         Channel Shift Randomization:
       </Typography>
       <Paper
-        sx={ { p: 2, mb: 2 } }
+        sx={ { p: 2 } }
         variant="outlined"
       >
         <RandomizeShiftTable
@@ -634,6 +751,10 @@ export const RandomizeToolUI = ({
           setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
         />
       </Paper>
+
+      <Divider
+        sx={ { my: 4 } }
+      />
 
       {/*Randomize Swap*/ }
       <Typography
