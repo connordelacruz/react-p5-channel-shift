@@ -718,14 +718,18 @@ const RandomizeSwapTable = ({
 /**
  * Randomization Options tool UI component.
  *
+ * @param shouldRandomizeShift
  * @param randomizeShiftChannels
  * @param randomizeShiftMaxPercents
+ * @param setShouldRandomizeShift
  * @param setRandomizeShiftChannel
  * @param setRandomizeShiftChannels
  * @param setRandomizeShiftMaxPercent
  * @param setRandomizeShiftMaxPercents
+ * @param shouldRandomizeSwap
  * @param randomizeSwapSourceChannels
  * @param randomizeSwapTargetChannels
+ * @param setShouldRandomizeSwap
  * @param setRandomizeSwapSourceChannel
  * @param setRandomizeSwapSourceChannels
  * @param setRandomizeSwapTargetChannel
@@ -755,12 +759,20 @@ export const RandomizeToolUI = ({
                                   setRandomizeSwapTargetChannel,
                                   setRandomizeSwapTargetChannels
                                 }) => {
-  // TODO DOC
+  /**
+   * Randomize shift switch change handler.
+   *
+   * @param event
+   */
   const shouldRandomizeShiftSwitchOnChange = (event) => {
     setShouldRandomizeShift(event.target.checked)
   }
 
-  // TODO DOC
+  /**
+   * Randomize swap switch change handler.
+   *
+   * @param event
+   */
   const shouldRandomizeSwapSwitchOnChange = (event) => {
     setShouldRandomizeSwap(event.target.checked)
   }
