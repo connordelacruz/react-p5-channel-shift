@@ -238,9 +238,6 @@ function App() {
     setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
   }
 
-  // TODO: resetRandomizeShift?
-
-
   /**
    * Returns a random amount of pixels to shift based on configured max shift percent and the corresponding image dimension.
    *
@@ -340,13 +337,20 @@ function App() {
    */
   const setRandomizeSwapTargetChannel = setRandomizeSwapChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
 
-  // TODO: resetRandomizeSwap()?
+  /**
+   * Shorthand for picking a random value from an array
+   * @param arr
+   * @return {*}
+   */
+  const pickRandomArrayElement = (arr) => {
+    return arr[Math.floor(Math.random() * arr.length)]
+  }
 
   /**
    * Randomize source/target channels based on randomizeSwapSourceChannels and randomizeSwapTargetChannels.
    */
   const randomizeSwaps = () => {
-    // TODO: if (randomizeSwapPreferDifferentChannels), do it different idk lol
+    // Build options arrays
     const sourceOptions = []
     randomizeSwapSourceChannels.forEach((checked, channelOffset) => {
       if (checked) {
@@ -359,14 +363,57 @@ function App() {
         targetOptions.push(channelOffset)
       }
     })
-    // Pick random channels and update states
-    if (sourceOptions.length > 0) {
-      const randySource = sourceOptions[Math.floor(Math.random() * sourceOptions.length)]
+    
+    // Initialize randys
+    let randySource, randyTarget
+
+    // If "prefer different" is selected and the following conditions are met:
+    // - Both arrays have at least 1 element
+    // - At least 1 of the arrays has 2 or more elements
+    // Then, pick 2 different source/target channels and update states
+    if (randomizeSwapPreferDifferentChannels
+      && sourceOptions.length > 0
+      && targetOptions.length > 0
+      && (sourceOptions.length > 1 || targetOptions.length > 1)
+    ) {
+      // At this point, we have 1 array with 1+ elements and one with 2+ elements.
+      // Pick from smaller array first, remove that choice from the bigger one, then pick from that one.
+      // (Or if they're the same size then we'll arbitrarily pick from sourceOptions first)
+      if (targetOptions.length < sourceOptions.length) {
+        // Pick random target
+        randyTarget = pickRandomArrayElement(targetOptions)
+        // If randyTarget is in sourceOptions, remove it
+        const randyTargetIndexIntoSource = sourceOptions.indexOf(randyTarget)
+        if (randyTargetIndexIntoSource > -1) {
+          sourceOptions.splice(randyTargetIndexIntoSource, 1)
+        }
+        // Pick random source
+        randySource = pickRandomArrayElement(sourceOptions)
+      } else {
+        // Pick random source
+        randySource = pickRandomArrayElement(sourceOptions)
+        // If randySource is in targetOptions, remove it
+        const randySourceIndexIntoTarget = targetOptions.indexOf(randySource)
+        if (randySourceIndexIntoTarget > -1) {
+          targetOptions.splice(randySourceIndexIntoTarget, 1)
+        }
+        // Pick random target
+        randyTarget = pickRandomArrayElement(targetOptions)
+      }
+      // Update states
       setSourceChannel(randySource)
-    }
-    if (targetOptions.length > 0) {
-      const randyTarget = targetOptions[Math.floor(Math.random() * targetOptions.length)]
       setTargetChannel(randyTarget)
+    }
+    // Otherwise, just randomly pick and update states (as long as there's 1+ options)
+    else {
+      if (sourceOptions.length > 0) {
+        randySource = pickRandomArrayElement(sourceOptions)
+        setSourceChannel(randySource)
+      }
+      if (targetOptions.length > 0) {
+        randyTarget = pickRandomArrayElement(targetOptions)
+        setTargetChannel(randyTarget)
+      }
     }
   }
 
@@ -494,26 +541,26 @@ function App() {
   // ================================================================================
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={ theme }>
       <CssBaseline/>
-      {/*App Bar, Canvas, and Tool Tabs Container*/}
+      {/*App Bar, Canvas, and Tool Tabs Container*/ }
       <Paper
-        sx={{
+        sx={ {
           position: 'sticky',
           top: 0,
           left: 0,
           right: 0,
           bgcolor: blueGrey[900],
           zIndex: 999,
-        }}
+        } }
         square
-        elevation={3}
+        elevation={ 3 }
       >
-        {/*App Bar*/}
+        {/*App Bar*/ }
         <AppBar
           position="static"
           color="default"
-          elevation={0}
+          elevation={ 0 }
         >
           <Toolbar>
             <Typography
@@ -523,7 +570,7 @@ function App() {
               sx={ {
                 flexGrow: 1,
                 fontWeight: 'bold',
-            } }
+              } }
             >
               Channel Shift // Swap
             </Typography>
@@ -535,7 +582,9 @@ function App() {
               <Tooltip title="Help" placement="bottom">
                 <IconButton
                   aria-label="help"
-                  onClick={() => {setHelpOpen(true)}}
+                  onClick={ () => {
+                    setHelpOpen(true)
+                  } }
                 >
                   <HelpOutline/>
                 </IconButton>
@@ -573,77 +622,77 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        {/*Canvas*/}
+        {/*Canvas*/ }
         <ReactP5Wrapper
-        sketch={ ChannelShiftSketch }
-        setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
-        sourceChannel={ sourceChannel } targetChannel={ targetChannel }
-        channelShiftValues={ channelShiftValues }
-        newFileDataURL={newFileDataURL} setNewFileDataURL={setNewFileDataURL}
-        resetShiftAndSwap={ resetShiftAndSwap }
-        shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
-        shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
+          sketch={ ChannelShiftSketch }
+          setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
+          sourceChannel={ sourceChannel } targetChannel={ targetChannel }
+          channelShiftValues={ channelShiftValues }
+          newFileDataURL={ newFileDataURL } setNewFileDataURL={ setNewFileDataURL }
+          resetShiftAndSwap={ resetShiftAndSwap }
+          shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
+          shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
         />
 
-        {/*Tool Tabs*/}
+        {/*Tool Tabs*/ }
         <Box
-          sx={{
+          sx={ {
             width: '100%',
             bgcolor: 'background.default'
-          }}
+          } }
         >
           <Tabs
-            value={selectedToolTab}
-            onChange={toolTabsOnChangeHandler}
+            value={ selectedToolTab }
+            onChange={ toolTabsOnChangeHandler }
             variant="fullWidth"
             indicatorColor="secondary"
             textColor="secondary"
           >
             <Tab
-              value={SHIFT_TAB_VALUE}
-              label={`Shift Channels${shiftModifiedDuringStep() ? ' *' : ''}`}
-              sx={{fontWeight: 'bold'}}
+              value={ SHIFT_TAB_VALUE }
+              label={ `Shift Channels${ shiftModifiedDuringStep() ? ' *' : '' }` }
+              sx={ { fontWeight: 'bold' } }
             />
             <Tab
-              value={SWAP_TAB_VALUE}
-              label={`Swap Channels${swapModifiedDuringStep() ? ' *' : ''}`}
-              sx={{fontWeight: 'bold'}}
+              value={ SWAP_TAB_VALUE }
+              label={ `Swap Channels${ swapModifiedDuringStep() ? ' *' : '' }` }
+              sx={ { fontWeight: 'bold' } }
             />
             <Tab
-              value={RANDOMIZE_TAB_VALUE}
+              value={ RANDOMIZE_TAB_VALUE }
               label="Randomization Options"
-              sx={{fontWeight: 'bold'}}
+              sx={ { fontWeight: 'bold' } }
             />
           </Tabs>
         </Box>
       </Paper>
-      {/*END App Bar, Canvas, and Tool Tabs Container*/}
+      {/*END App Bar, Canvas, and Tool Tabs Container*/ }
 
-      {/*Tools UI*/}
-      <Container maxWidth="md" sx={{ pb: 8, my: 2 }}>
+      {/*Tools UI*/ }
+      <Container maxWidth="md" sx={ { pb: 8, my: 2 } }>
 
-        {/*Shift Channels*/}
-        <Box hidden={selectedToolTab !== SHIFT_TAB_VALUE}>
+        {/*Shift Channels*/ }
+        <Box hidden={ selectedToolTab !== SHIFT_TAB_VALUE }>
           <ShiftChannelsToolUI
-            channelShiftValues={channelShiftValues}
-            setChannelShiftValue={setChannelShiftValue}
-            selectedShiftChannel={selectedShiftChannel}
-            setSelectedShiftChannel={setSelectedShiftChannel}
-            imageWidth={imageWidth}
-            imageHeight={imageHeight}
-            />
+            channelShiftValues={ channelShiftValues }
+            setChannelShiftValue={ setChannelShiftValue }
+            selectedShiftChannel={ selectedShiftChannel }
+            setSelectedShiftChannel={ setSelectedShiftChannel }
+            imageWidth={ imageWidth }
+            imageHeight={ imageHeight }
+          />
         </Box>
 
-        {/*Swap Channels*/}
-        <Box hidden={selectedToolTab !== SWAP_TAB_VALUE}>
+        {/*Swap Channels*/ }
+        <Box hidden={ selectedToolTab !== SWAP_TAB_VALUE }>
           <SwapChannelsToolUI
-            sourceChannel={sourceChannel} setSourceChannel={setSourceChannel}
-            targetChannel={targetChannel} setTargetChannel={setTargetChannel}
-            />
+            sourceChannel={ sourceChannel } setSourceChannel={ setSourceChannel }
+            targetChannel={ targetChannel } setTargetChannel={ setTargetChannel }
+          />
         </Box>
 
-        {/*Randomize*/}
-        <Box hidden={selectedToolTab !== RANDOMIZE_TAB_VALUE}>
+        {/*Randomize*/ }
+        <Box hidden={ selectedToolTab !== RANDOMIZE_TAB_VALUE }>
           <RandomizeToolUI
             // Randomize Shift State Props
             shouldRandomizeShift={ shouldRandomizeShift }
@@ -671,9 +720,9 @@ function App() {
         </Box>
 
       </Container>
-      {/*END Tools UI*/}
+      {/*END Tools UI*/ }
 
-      {/*Snackbar*/}
+      {/*Snackbar*/ }
       <Paper
         elevation={ 3 }
         sx={ {
@@ -684,7 +733,7 @@ function App() {
           p: 2,
         } }
       >
-        {/*Reset/Randomize/Confirm Buttons*/}
+        {/*Reset/Randomize/Confirm Buttons*/ }
         <Stack
           direction="row"
           divider={ <Divider orientation="vertical" flexItem/> }
@@ -704,7 +753,8 @@ function App() {
             </Button>
             </span>
           </Tooltip>
-          <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab' placement="top">
+          <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab'
+                   placement="top">
             <span>
               <Button
                 onClick={ randomizeButtonOnClick }
@@ -732,10 +782,12 @@ function App() {
           </Tooltip>
         </Stack>
       </Paper>
-      {/*END Snackbar*/}
+      {/*END Snackbar*/ }
 
-      {/*Help Modal*/}
-      <HelpDialog open={helpOpen} onClose={() => {setHelpOpen(false)}}/>
+      {/*Help Modal*/ }
+      <HelpDialog open={ helpOpen } onClose={ () => {
+        setHelpOpen(false)
+      } }/>
     </ThemeProvider>
   )
 }

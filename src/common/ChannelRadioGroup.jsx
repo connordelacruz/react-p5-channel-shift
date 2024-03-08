@@ -3,6 +3,8 @@ import * as Constants from '../Constants'
 import React from 'react'
 import { ChannelLabel } from './ChannelLabel'
 
+// TODO: I guess this can be moved back to the swap component file
+
 /**
  * RGB channel radio component.
  *

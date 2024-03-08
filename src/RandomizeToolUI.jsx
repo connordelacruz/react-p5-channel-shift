@@ -720,7 +720,7 @@ const RandomizeSwapTable = ({
                     color="secondary"
                   />
                 }
-                label="Pick different source and target channels when possible"
+                label="Attempt to pick different source and target channels when possible"
               />
             </TableCell>
           </TableRow>
