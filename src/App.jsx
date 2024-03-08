@@ -177,6 +177,9 @@ function App() {
   // Randomize Shift
   // --------------------------------------------------------------------------------
 
+  // Whether or not to randomize shift when randomize button is clicked.
+  const [shouldRandomizeShift, setShouldRandomizeShift] = React.useState(true)
+
   /**
    * Returns default values for randomizeShiftChannels state.
    *
@@ -234,8 +237,8 @@ function App() {
     newRandomizeShiftMaxPercents[channelOffset][dimensionIndex] = newValue
     setRandomizeShiftMaxPercents(newRandomizeShiftMaxPercents)
   }
-  
-  // TODO: resetRandomizeShift
+
+  // TODO: resetRandomizeShift?
 
 
   /**
@@ -281,7 +284,10 @@ function App() {
   // --------------------------------------------------------------------------------
   // Randomize Swap
   // --------------------------------------------------------------------------------
-  
+
+  // Whether or not to randomize swap when randomize button is clicked.
+  const [shouldRandomizeSwap, setShouldRandomizeSwap] = React.useState(true)
+
   /**
    * Returns default values for randomize source/target channels states.
    *
@@ -298,6 +304,10 @@ function App() {
   // States to keep track of which source/target channels should be picked when randomizing
   const [randomizeSwapSourceChannels, setRandomizeSwapSourceChannels] = React.useState(randomizeSwapChannelsDefault())
   const [randomizeSwapTargetChannels, setRandomizeSwapTargetChannels] = React.useState(randomizeSwapChannelsDefault())
+
+  // State to keep track of source/target selection preference.
+  // If true, randomization will try its best to select 2 different channels.
+  // TODO: randomizeSwapPreferDifferentChannels or something like that
 
   /**
    * Returns a helper function to update source/target states at an individual channel offset.
@@ -330,7 +340,7 @@ function App() {
    */
   const setRandomizeSwapTargetChannel = setRandomizeSwapChannelHelperGenerator(randomizeSwapTargetChannels, setRandomizeSwapTargetChannels)
 
-  // TODO: resetRandomizeSwap()
+  // TODO: resetRandomizeSwap()?
 
   /**
    * Randomize source/target channels based on randomizeSwapSourceChannels and randomizeSwapTargetChannels.
@@ -385,9 +395,13 @@ function App() {
    * OnClick handler for randomize button.
    */
   const randomizeButtonOnClick = () => {
-    // TODO: consistency on naming these functions (handler suffix just for generators?)
-    randomizeShiftValues()
-    randomizeSwaps()
+    // TODO: consistent naming between these two funcs
+    if (shouldRandomizeShift) {
+      randomizeShiftValues()
+    }
+    if (shouldRandomizeSwap) {
+      randomizeSwaps()
+    }
   }
 
   // --------------------------------------------------------------------------------
@@ -587,12 +601,12 @@ function App() {
           >
             <Tab
               value={SHIFT_TAB_VALUE}
-              label={`Shift Channels${shiftModifiedDuringStep() ? '*' : ''}`}
+              label={`Shift Channels${shiftModifiedDuringStep() ? ' *' : ''}`}
               sx={{fontWeight: 'bold'}}
             />
             <Tab
               value={SWAP_TAB_VALUE}
-              label={`Swap Channels${swapModifiedDuringStep() ? '*' : ''}`}
+              label={`Swap Channels${swapModifiedDuringStep() ? ' *' : ''}`}
               sx={{fontWeight: 'bold'}}
             />
             <Tab
@@ -632,17 +646,21 @@ function App() {
         <Box hidden={selectedToolTab !== RANDOMIZE_TAB_VALUE}>
           <RandomizeToolUI
             // Randomize Shift State Props
+            shouldRandomizeShift={ shouldRandomizeShift }
             randomizeShiftChannels={ randomizeShiftChannels }
             randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
             // Randomize Shift State Setter Props
+            setShouldRandomizeShift={ setShouldRandomizeShift }
             setRandomizeShiftChannel={ setRandomizeShiftChannel }
             setRandomizeShiftChannels={ setRandomizeShiftChannels }
             setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
             setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
             // Randomize Swap State Props
+            shouldRandomizeSwap={ shouldRandomizeSwap }
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             // Randomize Swap State Setter Props
+            setShouldRandomizeSwap={ setShouldRandomizeSwap }
             setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
             setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
             setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
@@ -688,6 +706,7 @@ function App() {
             <span>
               <Button
                 onClick={ randomizeButtonOnClick }
+                disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
                 startIcon={ <Casino/> }
                 variant="contained"
                 color="info"

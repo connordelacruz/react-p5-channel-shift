@@ -1,7 +1,7 @@
 import {
-  Checkbox, Divider,
+  Checkbox, Collapse, Divider, FormControlLabel,
   InputAdornment,
-  Paper,
+  Paper, Switch,
   Table,
   TableBody,
   TableCell,
@@ -130,6 +130,7 @@ const RandomizeShiftMaxPercentInput = ({
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
+      autoComplete="off"
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       size="small"
     />
@@ -265,7 +266,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
   // Keep track of whether there was anything typed into this field.
   // Will not update other inputs at the end if no changes were made.
   const [wasModified, setWasModified] = React.useState(false)
-  
+
   /**
    * Set state for all max percents with the same dimensionIndex to a value.
    *
@@ -300,7 +301,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
       setWasModified(true)
     }
   }
-  
+
   // TODO: make generic for use w/ other fields
   /**
    * Validate percent value (int between 0 and 100).
@@ -358,7 +359,9 @@ const RandomizeShiftMaxPercentEditAllInput = ({
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
-      // TODO: autoComplete='off'
+      helperText={ `Edit All Channels` }
+      placeholder="X Shift Max"
+      autoComplete="off"
       color="neutral"
       size="small"
     />
@@ -473,13 +476,15 @@ const RandomizeShiftTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
+        </TableBody>
+        <TableFooter>
           <RandomizeShiftSelectAllTableRow
             randomizeShiftChannels={ randomizeShiftChannels }
             randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
             setRandomizeShiftChannels={ setRandomizeShiftChannels }
             setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
           />
-        </TableBody>
+        </TableFooter>
       </Table>
     </TableContainer>
   )
@@ -683,14 +688,14 @@ const RandomizeSwapTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
+        </TableBody>
+        <TableFooter>
           <RandomizeSwapSelectAllTableRow
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
           />
-        </TableBody>
-        <TableFooter>
           <TableRow>
             <TableCell
               align="center"
@@ -730,74 +735,130 @@ const RandomizeSwapTable = ({
  */
 export const RandomizeToolUI = ({
                                   // Shift state props
+                                  shouldRandomizeShift,
                                   randomizeShiftChannels,
                                   randomizeShiftMaxPercents,
                                   // Shift state setter functions
+                                  setShouldRandomizeShift,
                                   setRandomizeShiftChannel,
                                   setRandomizeShiftChannels,
                                   setRandomizeShiftMaxPercent,
                                   setRandomizeShiftMaxPercents,
                                   // Swap state props
+                                  shouldRandomizeSwap,
                                   randomizeSwapSourceChannels,
                                   randomizeSwapTargetChannels,
                                   // Swap state setter props
+                                  setShouldRandomizeSwap,
                                   setRandomizeSwapSourceChannel,
                                   setRandomizeSwapSourceChannels,
                                   setRandomizeSwapTargetChannel,
                                   setRandomizeSwapTargetChannels
                                 }) => {
+  // TODO DOC
+  const shouldRandomizeShiftSwitchOnChange = (event) => {
+    setShouldRandomizeShift(event.target.checked)
+  }
+
+  // TODO DOC
+  const shouldRandomizeSwapSwitchOnChange = (event) => {
+    setShouldRandomizeSwap(event.target.checked)
+  }
+
   return (
     <Paper
       sx={ { p: 2 } }
       variant="outlined"
     >
       {/*Randomize Shift*/ }
-      <Typography
-        variant="h6"
-        component="div"
-        gutterBottom
-      >
-        Channel Shift Randomization:
-      </Typography>
-      <Paper
-        sx={ { p: 2 } }
-        variant="outlined"
-      >
-        <RandomizeShiftTable
-          randomizeShiftChannels={ randomizeShiftChannels }
-          setRandomizeShiftChannel={ setRandomizeShiftChannel }
-          setRandomizeShiftChannels={ setRandomizeShiftChannels }
-          randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
-          setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
-          setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
-        />
-      </Paper>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={ shouldRandomizeShift }
+            onChange={ shouldRandomizeShiftSwitchOnChange }
+            name="shouldRandomizeShift"
+          />
+        }
+        label={
+          <Typography
+            variant="h5"
+          >
+            Randomize Channel Shift
+          </Typography>
+        }
+      />
+      <Collapse in={ shouldRandomizeShift }>
+        <Paper
+          sx={ {
+            p: 2,
+            mt: 2,
+          } }
+          variant="outlined"
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            gutterBottom
+          >
+            Channel Shift Randomization Options:
+          </Typography>
+          <RandomizeShiftTable
+            randomizeShiftChannels={ randomizeShiftChannels }
+            setRandomizeShiftChannel={ setRandomizeShiftChannel }
+            setRandomizeShiftChannels={ setRandomizeShiftChannels }
+            randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+            setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+            setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+          />
+        </Paper>
+      </Collapse>
 
       <Divider
-        sx={ { my: 4 } }
+        sx={ { my: 3 } }
       />
 
       {/*Randomize Swap*/ }
-      <Typography
-        variant="h6"
-        component="div"
-        gutterBottom
-      >
-        Channel Swap Randomization:
-      </Typography>
-      <Paper
-        sx={ { p: 2 } }
-        variant="outlined"
-      >
-        <RandomizeSwapTable
-          randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
-          randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
-          setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
-          setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
-          setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
-          setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
-        />
-      </Paper>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={ shouldRandomizeSwap }
+            onChange={ shouldRandomizeSwapSwitchOnChange }
+            name="shouldRandomizeSwap"
+          />
+        }
+        label={
+          <Typography
+            variant="h5"
+          >
+            Randomize Channel Swap
+          </Typography>
+        }
+      />
+      <Collapse in={ shouldRandomizeSwap }>
+        <Paper
+          sx={ {
+            p: 2,
+            mt: 2,
+          } }
+          variant="outlined"
+        >
+          <Typography
+            variant="h6"
+            component="div"
+            gutterBottom
+          >
+            Channel Swap Randomization Options:
+          </Typography>
+          <RandomizeSwapTable
+            randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+            randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+            setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+            setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
+            setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+            setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+          />
+        </Paper>
+      </Collapse>
 
     </Paper>
   )
