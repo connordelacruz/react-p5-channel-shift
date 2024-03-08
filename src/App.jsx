@@ -260,7 +260,7 @@ function App() {
   /**
    * Randomize shift values based on randomizeShiftChannels and randomizeShiftMaxPercents.
    */
-  const randomizeShiftValues = () => {
+  const randomizeShifts = () => {
     const newChannelShiftValues = []
     randomizeShiftChannels.forEach((randomizeDimensions, channelOffset) => {
       // Set default (copy from current state)
@@ -442,9 +442,8 @@ function App() {
    * OnClick handler for randomize button.
    */
   const randomizeButtonOnClick = () => {
-    // TODO: consistent naming between these two funcs
     if (shouldRandomizeShift) {
-      randomizeShiftValues()
+      randomizeShifts()
     }
     if (shouldRandomizeSwap) {
       randomizeSwaps()
