@@ -658,11 +658,13 @@ const RandomizeSwapTable = ({
                               // State props
                               randomizeSwapSourceChannels,
                               randomizeSwapTargetChannels,
+                              randomizeSwapPreferDifferentChannels,
                               // State setter functions
                               setRandomizeSwapSourceChannel,
                               setRandomizeSwapSourceChannels,
                               setRandomizeSwapTargetChannel,
-                              setRandomizeSwapTargetChannels
+                              setRandomizeSwapTargetChannels,
+                              setRandomizeSwapPreferDifferentChannels
                             }) => {
   // Generate table rows
   const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
@@ -675,6 +677,15 @@ const RandomizeSwapTable = ({
       setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
     />
   )
+
+  /**
+   * "Prefer different channels" switch on change handler.
+   *
+   * @param event
+   */
+  const randomizeSwapPreferDifferentChannelsSwitchOnChange = (event) => {
+    setRandomizeSwapPreferDifferentChannels(event.target.checked)
+  }
 
   return (
     <TableContainer>
@@ -701,7 +712,16 @@ const RandomizeSwapTable = ({
               align="center"
               colSpan={ 3 }
             >
-              TODO: Pick different source and target channels when possible
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={ randomizeSwapPreferDifferentChannels }
+                    onChange={ randomizeSwapPreferDifferentChannelsSwitchOnChange }
+                    color="secondary"
+                  />
+                }
+                label="Pick different source and target channels when possible"
+              />
             </TableCell>
           </TableRow>
         </TableFooter>
@@ -729,11 +749,13 @@ const RandomizeSwapTable = ({
  * @param shouldRandomizeSwap
  * @param randomizeSwapSourceChannels
  * @param randomizeSwapTargetChannels
+ * @param randomizeSwapPreferDifferentChannels
  * @param setShouldRandomizeSwap
  * @param setRandomizeSwapSourceChannel
  * @param setRandomizeSwapSourceChannels
  * @param setRandomizeSwapTargetChannel
  * @param setRandomizeSwapTargetChannels
+ * @param setRandomizeSwapPreferDifferentChannels
  * @return {Element}
  * @constructor
  */
@@ -752,12 +774,14 @@ export const RandomizeToolUI = ({
                                   shouldRandomizeSwap,
                                   randomizeSwapSourceChannels,
                                   randomizeSwapTargetChannels,
+                                  randomizeSwapPreferDifferentChannels,
                                   // Swap state setter props
                                   setShouldRandomizeSwap,
                                   setRandomizeSwapSourceChannel,
                                   setRandomizeSwapSourceChannels,
                                   setRandomizeSwapTargetChannel,
-                                  setRandomizeSwapTargetChannels
+                                  setRandomizeSwapTargetChannels,
+                                  setRandomizeSwapPreferDifferentChannels
                                 }) => {
   /**
    * Randomize shift switch change handler.
@@ -788,7 +812,7 @@ export const RandomizeToolUI = ({
           <Switch
             checked={ shouldRandomizeShift }
             onChange={ shouldRandomizeShiftSwitchOnChange }
-            name="shouldRandomizeShift"
+            color="secondary"
           />
         }
         label={
@@ -835,7 +859,7 @@ export const RandomizeToolUI = ({
           <Switch
             checked={ shouldRandomizeSwap }
             onChange={ shouldRandomizeSwapSwitchOnChange }
-            name="shouldRandomizeSwap"
+            color="secondary"
           />
         }
         label={
@@ -864,10 +888,12 @@ export const RandomizeToolUI = ({
           <RandomizeSwapTable
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+            randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
             setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
             setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
             setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
             setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+            setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
           />
         </Paper>
       </Collapse>

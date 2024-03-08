@@ -307,7 +307,7 @@ function App() {
 
   // State to keep track of source/target selection preference.
   // If true, randomization will try its best to select 2 different channels.
-  // TODO: randomizeSwapPreferDifferentChannels or something like that
+  const [randomizeSwapPreferDifferentChannels, setRandomizeSwapPreferDifferentChannels] = React.useState(true)
 
   /**
    * Returns a helper function to update source/target states at an individual channel offset.
@@ -346,7 +346,7 @@ function App() {
    * Randomize source/target channels based on randomizeSwapSourceChannels and randomizeSwapTargetChannels.
    */
   const randomizeSwaps = () => {
-    // TODO: Optionally try to enforce different source/target selections
+    // TODO: if (randomizeSwapPreferDifferentChannels), do it different idk lol
     const sourceOptions = []
     randomizeSwapSourceChannels.forEach((checked, channelOffset) => {
       if (checked) {
@@ -659,12 +659,14 @@ function App() {
             shouldRandomizeSwap={ shouldRandomizeSwap }
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+            randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
             // Randomize Swap State Setter Props
             setShouldRandomizeSwap={ setShouldRandomizeSwap }
             setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
             setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
             setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
             setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+            setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
           />
         </Box>
 
