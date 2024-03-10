@@ -103,7 +103,12 @@ export const SwapChannelsToolUI = ({
           } }
           variant="outlined"
         >
-          <Typography gutterBottom>
+          <Typography
+            sx={{
+              textAlign: 'center'
+            }}
+            gutterBottom
+          >
             Source Channel:
           </Typography>
           <ChannelSelectButtonGroup
@@ -121,7 +126,12 @@ export const SwapChannelsToolUI = ({
           } }
           variant="outlined"
         >
-          <Typography gutterBottom>
+          <Typography
+            sx={{
+              textAlign: 'center'
+            }}
+            gutterBottom
+          >
             Target Channel:
           </Typography>
           <ChannelSelectButtonGroup
