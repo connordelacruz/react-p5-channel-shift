@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, FormLabel, Paper, Stack } from '@mui/material'
+import { Button, ButtonGroup, Paper, Stack, Typography } from '@mui/material'
 import React from 'react'
 import * as Constants from './Constants'
 import { SwapHorizontalCircle } from '@mui/icons-material'
@@ -90,14 +90,6 @@ export const SwapChannelsToolUI = ({
       sx={ { p: 2 } }
       variant="outlined"
     >
-      <FormLabel
-        sx={ {
-          display: 'block',
-          mb: 2,
-        } }
-      >
-        Select channels to swap:
-      </FormLabel>
       <Stack
         direction="row"
         justifyContent="space-evenly"
@@ -111,9 +103,9 @@ export const SwapChannelsToolUI = ({
           } }
           variant="outlined"
         >
-          <FormLabel>
+          <Typography gutterBottom>
             Source Channel:
-          </FormLabel>
+          </Typography>
           <ChannelSelectButtonGroup
             selectedChannelOffsetState={ sourceChannel }
             stateSetterFunction={ setSourceChannel }
@@ -129,9 +121,9 @@ export const SwapChannelsToolUI = ({
           } }
           variant="outlined"
         >
-          <FormLabel>
+          <Typography gutterBottom>
             Target Channel:
-          </FormLabel>
+          </Typography>
           <ChannelSelectButtonGroup
             selectedChannelOffsetState={ targetChannel }
             stateSetterFunction={ setTargetChannel }
