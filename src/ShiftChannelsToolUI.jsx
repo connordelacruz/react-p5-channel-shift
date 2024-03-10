@@ -120,6 +120,7 @@ export const ShiftChannelsToolUI = ({
       </Stack>
 
       { /*Shift Channel Sliders*/ }
+      {/* TODO: make min/max text + label non-selectable for these: */}
       <ShiftChannelSlider
         coordinateIndex={0}
         imageDimensionSize={imageWidth}

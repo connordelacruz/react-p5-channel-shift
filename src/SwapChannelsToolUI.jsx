@@ -1,10 +1,71 @@
-import { FormLabel, Grid, Paper } from '@mui/material'
+import { Button, ButtonGroup, FormLabel, Paper, Stack } from '@mui/material'
 import React from 'react'
-import { ChannelRadioGroup } from './common/ChannelRadioGroup'
+import * as Constants from './Constants'
+import { SwapHorizontalCircle } from '@mui/icons-material'
 
 // ================================================================================
 // Swap Channels Tool UI
 // ================================================================================
+
+/**
+ * Channel select button component.
+ *
+ * @param channelOffset
+ * @param selected
+ * @param stateSetterFunction
+ * @return {Element}
+ * @constructor
+ */
+const ChannelSelectButton = ({
+                               channelOffset,
+                               selected,
+                               stateSetterFunction
+                             }) => {
+  return (
+    <Button
+      onClick={ () => {
+        stateSetterFunction(channelOffset)
+      } }
+      variant={ selected ? 'contained' : 'outlined' }
+      color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
+      size="large"
+    >
+      { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
+    </Button>
+  )
+}
+
+/**
+ * RGB channel select button group component.
+ *
+ * @param selectedChannelOffsetState
+ * @param stateSetterFunction
+ * @return {Element}
+ * @constructor
+ */
+const ChannelSelectButtonGroup = ({
+                                    selectedChannelOffsetState,
+                                    stateSetterFunction
+                                  }) => {
+  // Button elements
+  const channelButtons = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
+    <ChannelSelectButton
+      key={ channelOffset.toString() }
+      channelOffset={ channelOffset }
+      selected={ selectedChannelOffsetState === channelOffset }
+      stateSetterFunction={ stateSetterFunction }
+    />
+  )
+
+  return (
+    <ButtonGroup
+      orientation="vertical"
+      fullWidth
+    >
+      { channelButtons }
+    </ButtonGroup>
+  )
+}
 
 /**
  * Swap channels tool UI component.
@@ -17,8 +78,12 @@ import { ChannelRadioGroup } from './common/ChannelRadioGroup'
  * @constructor
  */
 export const SwapChannelsToolUI = ({
-                                     sourceChannel, setSourceChannel,
-                                     targetChannel, setTargetChannel
+                                     // State props
+                                     sourceChannel,
+                                     targetChannel,
+                                     // State setter functions
+                                     setSourceChannel,
+                                     setTargetChannel
                                    }) => {
   return (
     <Paper
@@ -33,34 +98,46 @@ export const SwapChannelsToolUI = ({
       >
         Select channels to swap:
       </FormLabel>
-      <Grid container justifyContent="center" spacing={ 2 }>
-        <Grid item xs={ 6 }>
-          <Paper
-            sx={ { p: 2 } }
-            variant="outlined"
-          >
-            <ChannelRadioGroup
-              labelText="Source Channel" labelId="source-channel-label"
-              radioGroupName="source-channel-radio-group"
-              selectedChannelOffsetState={ sourceChannel }
-              stateSetterFunction={ setSourceChannel }
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={ 6 }>
-          <Paper
-            sx={ { p: 2 } }
-            variant="outlined"
-          >
-            <ChannelRadioGroup
-              labelText="Target Channel" labelId="target-channel-label"
-              radioGroupName="target-channel-radio-group"
-              selectedChannelOffsetState={ targetChannel }
-              stateSetterFunction={ setTargetChannel }
-            />
-          </Paper>
-        </Grid>
-      </Grid>
+      <Stack
+        direction="row"
+        justifyContent="space-evenly"
+        alignItems="center"
+        spacing={ 0 }
+      >
+        <Paper
+          sx={ {
+            p: 2,
+            width: '45%'
+          } }
+          variant="outlined"
+        >
+          <FormLabel>
+            Source Channel:
+          </FormLabel>
+          <ChannelSelectButtonGroup
+            selectedChannelOffsetState={ sourceChannel }
+            stateSetterFunction={ setSourceChannel }
+          />
+        </Paper>
+
+        <SwapHorizontalCircle/>
+
+        <Paper
+          sx={ {
+            p: 2,
+            width: '45%'
+          } }
+          variant="outlined"
+        >
+          <FormLabel>
+            Target Channel:
+          </FormLabel>
+          <ChannelSelectButtonGroup
+            selectedChannelOffsetState={ targetChannel }
+            stateSetterFunction={ setTargetChannel }
+          />
+        </Paper>
+      </Stack>
     </Paper>
   )
 }

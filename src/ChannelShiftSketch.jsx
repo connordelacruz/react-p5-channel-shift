@@ -246,6 +246,7 @@ export function ChannelShiftSketch(p5) {
    * @returns {number[]}
    */
   function calculateCanvasDimensions() {
+    // TODO: come up with better scale for laptop screens
     // First try to set height to 50% of window height and scale width accordingly
     let newHeight = 0.5 * p5.windowHeight
     let ratio = newHeight / sourceImage.height
