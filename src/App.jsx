@@ -640,6 +640,7 @@ function App() {
             bgcolor: 'background.default'
           } }
         >
+          {/*TODO: wrap tabs in another box, set max width of outer box*/}
           <Tabs
             value={ selectedToolTab }
             onChange={ toolTabsOnChangeHandler }
@@ -732,6 +733,7 @@ function App() {
           p: 2,
         } }
       >
+        {/*TODO: wrap snackbar in another box, set max width of outer box*/}
         {/*Reset/Randomize/Confirm Buttons*/ }
         <Stack
           direction="row"
