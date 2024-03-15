@@ -51,7 +51,7 @@ const ShiftChannelSelectChip = ({
 /**
  * Channel shift slider component.
  *
- * @param coordinateIndex
+ * @param dimensionIndex
  * @param imageDimensionSize
  * @param selectedShiftChannel
  * @param channelShiftValues
@@ -60,8 +60,7 @@ const ShiftChannelSelectChip = ({
  * @constructor
  */
 const ShiftChannelSlider = ({
-                              // TODO: rename dimensionIndex for consistency
-                              coordinateIndex,
+                              dimensionIndex,
                               imageDimensionSize,
                               // State props
                               selectedShiftChannel,
@@ -70,7 +69,7 @@ const ShiftChannelSlider = ({
                               setChannelShiftValue,
                             }) => {
   // For labels and ids
-  const dimension = coordinateIndex === 0 ? 'x' : 'y'
+  const dimension = dimensionIndex === 0 ? 'x' : 'y'
 
   /**
    * On change handler for slider. Sets channel shift value to match slider value.
@@ -79,7 +78,7 @@ const ShiftChannelSlider = ({
    * @param newValue
    */
   const shiftSliderOnChange = (event, newValue) => {
-    setChannelShiftValue(coordinateIndex, newValue)
+    setChannelShiftValue(dimensionIndex, newValue)
   }
 
   // TODO: min/max text keeps getting highlighted on drag
@@ -99,7 +98,7 @@ const ShiftChannelSlider = ({
         mb={ 1 }
       >
         {
-          coordinateIndex === 0 ?
+          dimensionIndex === 0 ?
             <SwapHorizontalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/> :
             <SwapVerticalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/>
         }
@@ -122,7 +121,7 @@ const ShiftChannelSlider = ({
         >
           <Grid item xs>
             <Slider
-              value={ channelShiftValues[selectedShiftChannel][coordinateIndex] }
+              value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
               onChange={ shiftSliderOnChange }
               min={ 0 }
               max={ imageDimensionSize }
@@ -142,11 +141,27 @@ const ShiftChannelSlider = ({
 }
 
 
-// TODO: doc consistently w/ others
+/**
+ * Shift channels tool UI component.
+ *
+ * @param channelShiftValues
+ * @param selectedShiftChannel
+ * @param imageWidth
+ * @param imageHeight
+ * @param setChannelShiftValue
+ * @param setSelectedShiftChannel
+ * @return {Element}
+ * @constructor
+ */
 export const ShiftChannelsToolUI = ({
-                                      channelShiftValues, setChannelShiftValue,
-                                      selectedShiftChannel, setSelectedShiftChannel,
-                                      imageWidth, imageHeight
+                                      // State props
+                                      channelShiftValues,
+                                      selectedShiftChannel,
+                                      imageWidth,
+                                      imageHeight,
+                                      // State setter props
+                                      setChannelShiftValue,
+                                      setSelectedShiftChannel,
                                     }) => {
 
   // Channel selection chips
@@ -178,16 +193,15 @@ export const ShiftChannelsToolUI = ({
       </Stack>
 
       { /*Shift Channel Sliders*/ }
-      {/* TODO: make min/max text + label non-selectable for these: */ }
       <ShiftChannelSlider
-        coordinateIndex={ 0 }
+        dimensionIndex={ 0 }
         imageDimensionSize={ imageWidth }
         selectedShiftChannel={ selectedShiftChannel }
         channelShiftValues={ channelShiftValues }
         setChannelShiftValue={ setChannelShiftValue }
       />
       <ShiftChannelSlider
-        coordinateIndex={ 1 }
+        dimensionIndex={ 1 }
         imageDimensionSize={ imageHeight }
         selectedShiftChannel={ selectedShiftChannel }
         channelShiftValues={ channelShiftValues }
