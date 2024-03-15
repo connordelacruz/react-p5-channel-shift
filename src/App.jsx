@@ -588,13 +588,25 @@ function App() {
                   <HelpOutline/>
                 </IconButton>
               </Tooltip>
+              <Tooltip title="Download current result as full-res PNG" placement="bottom">
+                <span>
+                  <Button
+                    onClick={ saveButtonOnClick }
+                    startIcon={ <Save/> }
+                    variant="contained"
+                    color="warning"
+                  >
+                  Save Image
+                </Button>
+                </span>
+              </Tooltip>
               <Tooltip title="Load a new image" placement="bottom">
                 <span>
                   <Button
                     startIcon={ <FileUpload/> }
                     component="label"
                     variant="contained"
-                    color="secondary"
+                    color="info"
                   >
                   Load Image
                   <VisuallyHiddenInput
@@ -603,18 +615,6 @@ function App() {
                     onChange={ loadImageFileInputOnChange }
                     id="load-image-file-input"/>
                   </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title="Download current result as full-res PNG" placement="bottom">
-                <span>
-                  <Button
-                    onClick={ saveButtonOnClick }
-                    startIcon={ <Save/> }
-                    variant="contained"
-                    color="secondary"
-                  >
-                  Save Image
-                </Button>
                 </span>
               </Tooltip>
             </Stack>
