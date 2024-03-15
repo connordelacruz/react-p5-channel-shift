@@ -360,7 +360,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
       helperText={ `Edit All Channels` }
-      placeholder="X Shift Max"
+      placeholder={ `${ dimensionIndex === 0 ? 'X' : 'Y' } Shift Max` }
       autoComplete="off"
       color="neutral"
       size="small"
