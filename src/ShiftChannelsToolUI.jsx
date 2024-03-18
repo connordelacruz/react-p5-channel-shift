@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Paper, Slider, Stack, Typography } from '@mui/material'
+import { Box, Chip, Grid, Paper, Slider, Stack, TextField, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
@@ -68,6 +68,9 @@ const ShiftChannelSlider = ({
                               // State setter props
                               setChannelShiftValue,
                             }) => {
+  // TODO: separate state for text input? Gotta make sure it's updated on reset / image upload
+  // TODO: text input state at top level?
+
   // For labels and ids
   const dimension = dimensionIndex === 0 ? 'x' : 'y'
 
@@ -79,9 +82,9 @@ const ShiftChannelSlider = ({
    */
   const shiftSliderOnChange = (event, newValue) => {
     setChannelShiftValue(dimensionIndex, newValue)
+    // TODO: also update text input state? Or if at top level, have setChannelShiftValue() do it?
   }
 
-  // TODO: min/max text keeps getting highlighted on drag
   return (
     <Paper
       sx={ {
@@ -106,20 +109,25 @@ const ShiftChannelSlider = ({
           id={ `${ dimension }-shift-slider-label` }
           variant="button"
           gutterBottom
+          sx={{
+            // Prevent accidental selection when dragging slider
+            userSelect: 'none'
+          }}
         >
           { dimension.toUpperCase() } Shift
         </Typography>
       </Stack>
-      {/*TODO https://mui.com/material-ui/react-slider/#slider-with-input-field*/ }
       <Box
         sx={ { px: 2 } }
       >
         <Grid
           container
-          alignItems="center"
+          alignItems="stretch"
+          justifyContent="space-around"
           spacing={ 2 }
         >
-          <Grid item xs>
+          {/* Slider */}
+          <Grid item xs={10}>
             <Slider
               value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
               onChange={ shiftSliderOnChange }
@@ -127,11 +135,45 @@ const ShiftChannelSlider = ({
               max={ imageDimensionSize }
               valueLabelDisplay="auto"
               marks={ [
-                { value: 0, label: '0px' },
-                { value: imageDimensionSize, label: `${ imageDimensionSize }px` }
+                { value: 0, label: '' },
+                { value: imageDimensionSize, label: '' }
               ] }
               aria-labelledby={ `${ dimension }-shift-slider-label` }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+            />
+            {/* Fix for min/max marks going out of bounds */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                // Prevent accidental selection when dragging slider
+                userSelect: 'none'
+              }}
+              >
+              <Typography
+                variant="body2"
+              >
+                0px
+              </Typography>
+              <Typography
+                variant="body2"
+                >
+                {imageDimensionSize}px
+              </Typography>
+            </Box>
+          </Grid>
+
+          {/* Text input */}
+          <Grid item xs={2}>
+            <TextField
+              /*TODO: have its own state*/
+              value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
+              InputProps={ {
+                endAdornment: 'px',
+              } }
+              autoComplete="off"
+              color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+              size="small"
             />
           </Grid>
         </Grid>
