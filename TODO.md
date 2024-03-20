@@ -11,12 +11,6 @@ Maybe see about packaging it as an Electron app and see if performance is better
 
 ## UI
 
-### Sliders
-
-- Make labels near slider non-selectable to avoid accidental highlighting
-- Add text input
-- Icons for horizontal/vertical
-
 ### Tabs
 
 - Figure out how to make it more obvious that these are tabs
