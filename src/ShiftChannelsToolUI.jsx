@@ -1,7 +1,8 @@
-import { Box, Chip, Grid, Paper, Slider, Stack, TextField, Typography } from '@mui/material'
+import { Box, Chip, Grid, Paper, Slider, Stack, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
+import { NumericTextInput } from './common/NumericTextInput'
 
 // ================================================================================
 // Shift Channels Tool UI
@@ -85,72 +86,24 @@ const ShiftChannelSlider = ({
     setSelectedChannelShiftValue(dimensionIndex, newValue)
   }
 
-  // TODO: maybe make text input stuff generic if there's a lot of overlap with randomize text inputs
-
   /**
-   * Select all on focus.
+   * Update state to parsed input value on change.
    *
-   * @param event
+   * @param parsedInputValue
    */
-  const shiftTextInputOnFocus = (event) => {
-    event.target.select()
-  }
-
-  /**
-   * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
-   *
-   * @param event
-   */
-  const shiftTextInputOnChange = (event) => {
-    // Sanitize numeric value
-    let parsedInputValue = parseInt(event.target.value)
-    if (isNaN(parsedInputValue)) {
-      parsedInputValue = ''
-    }
-    // Update state
+  const shiftTextInputOnChangeHandleValue = (parsedInputValue) => {
     setChannelShiftTextInputValue(dimensionIndex, parsedInputValue)
   }
 
   /**
-   * Validate shift text input value (between 0 and image dimension size).
+   * Update state to validated input value on blur.
    *
-   * @param val
-   * @return {number}
+   * @param validatedShiftTextInputValue
    */
-  const validateShiftTextInputValue = (val) => {
-    // If value is not an integer or less than 0, set to 0
-    if (!Number.isInteger(val) || val < 0) {
-      val = 0
-    }
-    // If value exceeds image dimension size, set to max
-    else if (val > imageDimensionSize) {
-      val = imageDimensionSize
-    }
-    return val
-  }
-
-  /**
-   * Validate value, then update corresponding channel shift value state.
-   *
-   * @param event
-   */
-  const shiftTextInputOnBlur = (event) => {
-    const validatedShiftTextInputValue = validateShiftTextInputValue(channelShiftTextInputValues[dimensionIndex])
+  const shiftTextInputOnBlurHandleValidatedValue = (validatedShiftTextInputValue) => {
     // Update shift value state
     // (useEffect() handles updating text input state if value was changed during validation)
     setSelectedChannelShiftValue(dimensionIndex, validatedShiftTextInputValue)
-  }
-
-  /**
-   * If the Enter or Esc key is pressed, trigger blur on input.
-   *
-   * @param event
-   */
-  const shiftTextInputOnKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === 'Escape') {
-      event.preventDefault()
-      event.target.blur()
-    }
   }
 
   return (
@@ -233,18 +186,16 @@ const ShiftChannelSlider = ({
 
           {/* Text input */ }
           <Grid item xs={ 2 }>
-            <TextField
-              value={ channelShiftTextInputValues[dimensionIndex] }
-              onFocus={ shiftTextInputOnFocus }
-              onChange={ shiftTextInputOnChange }
-              onBlur={ shiftTextInputOnBlur }
-              onKeyDown={ shiftTextInputOnKeyDown }
+            <NumericTextInput
+              valueState={ channelShiftTextInputValues[dimensionIndex] }
+              min={0}
+              max={imageDimensionSize}
+              onChangeHandleValue={shiftTextInputOnChangeHandleValue}
+              onBlurHandleValidatedValue={shiftTextInputOnBlurHandleValidatedValue}
               InputProps={ {
                 endAdornment: 'px',
               } }
-              autoComplete="off"
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
-              size="small"
             />
           </Grid>
         </Grid>

@@ -8,11 +8,12 @@ import {
   TableContainer, TableFooter,
   TableHead,
   TableRow,
-  TextField, Typography
+  Typography
 } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { ChannelLabel } from './common/ChannelLabel'
+import { NumericTextInput } from './common/NumericTextInput'
 
 // ================================================================================
 // Randomization Options Tool UI
@@ -59,7 +60,6 @@ const RandomizeShiftDimensionCheckbox = ({
 }
 
 
-// TODO: merge common stuff between this and RandomizeShiftMaxPercentEditAllInput
 /**
  * Randomize shift max percent text input component.
  *
@@ -81,60 +81,35 @@ const RandomizeShiftMaxPercentInput = ({
                                          setRandomizeShiftMaxPercent
                                        }) => {
   /**
-   * Select all on focus.
+   * Update state to parsed input value on change.
    *
-   * @param event
+   * @param parsedInputValue
    */
-  const randomizeShiftMaxPercentInputOnFocus = (event) => {
-    event.target.select()
-  }
-
-  /**
-   * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
-   *
-   * @param event
-   */
-  const randomizeShiftMaxPercentInputOnChange = (event) => {
-    let parsedInputValue = parseInt(event.target.value)
-    if (isNaN(parsedInputValue)) {
-      parsedInputValue = ''
-    }
+  const randomizeShiftMaxPercentInputOnChangeHandleValue = (parsedInputValue) => {
     setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, parsedInputValue)
   }
 
   /**
-   * Validates the corresponding state value, ensuring it's an integer between 0 and 100.
+   * Update state to validated input value on blur.
    *
-   * @param event
+   * @param validatedMaxPercent
    */
-  const randomizeShiftMaxPercentInputOnBlur = (event) => {
-    const currentValue = randomizeShiftMaxPercents[channelOffset][dimensionIndex]
-    // If value is not an integer or less than 0, set to 0
-    // TODO: update currentValue, just set state once at the end
-    if (!Number.isInteger(currentValue) || currentValue < 0) {
-      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 0)
-    }
-    // If value exceeds 100, set to 100
-    else if (currentValue > 100) {
-      setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, 100)
-    }
+  const randomizeShiftMaxPercentInputOnBlurHandleValidatedValue = (validatedMaxPercent) => {
+    setRandomizeShiftMaxPercent(channelOffset, dimensionIndex, validatedMaxPercent)
   }
 
-  // TODO: enter/esc trigger blur
-
   return (
-    <TextField
-      value={ randomizeShiftMaxPercents[channelOffset][dimensionIndex] }
+    <NumericTextInput
+      valueState={ randomizeShiftMaxPercents[channelOffset][dimensionIndex] }
+      min={ 0 }
+      max={ 100 }
+      onChangeHandleValue={ randomizeShiftMaxPercentInputOnChangeHandleValue }
+      onBlurHandleValidatedValue={ randomizeShiftMaxPercentInputOnBlurHandleValidatedValue }
       disabled={ !randomizeShiftChannels[channelOffset][dimensionIndex] }
-      onFocus={ randomizeShiftMaxPercentInputOnFocus }
-      onChange={ randomizeShiftMaxPercentInputOnChange }
-      onBlur={ randomizeShiftMaxPercentInputOnBlur }
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
-      autoComplete="off"
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
-      size="small"
     />
   )
 }
@@ -285,16 +260,11 @@ const RandomizeShiftMaxPercentEditAllInput = ({
   }
 
   /**
-   * Parse the value as an integer, set state to that integer value or '' if it could not be parsed.
+   * Update states to parsed input value on change.
    *
-   * @param event
+   * @param parsedInputValue
    */
-  const editAllOnChange = (event) => {
-    // Sanitize numeric value
-    let parsedInputValue = parseInt(event.target.value)
-    if (isNaN(parsedInputValue)) {
-      parsedInputValue = ''
-    }
+  const editAllOnChangeHandleValue = (parsedInputValue) => {
     // Update local state
     setEditAllMaxPercent(parsedInputValue)
     // Update all inputs with the same dimensionIndex to match
@@ -305,33 +275,13 @@ const RandomizeShiftMaxPercentEditAllInput = ({
     }
   }
 
-  // TODO: make generic for use w/ other fields (e.g. if percent switch gets implemented for slider input)
   /**
-   * Validate percent value (int between 0 and 100).
+   * If field was modified, update state to validated input value on blur and clear input value.
    *
-   * @param val
-   * @return {number}
+   * @param validatedEditAllMaxPercent
    */
-  const validatePercent = (val) => {
-    // If value is not an integer or less than 0, set to 0
-    if (!Number.isInteger(val) || val < 0) {
-      val = 0
-    }
-    // If value exceeds 100, set to 100
-    else if (val > 100) {
-      val = 100
-    }
-    return val
-  }
-
-  /**
-   * Validate value, ensure it's an integer between 0 and 100, then update all input states to match and reset local state.
-   *
-   * @param event
-   */
-  const editAllOnBlur = (event) => {
+  const editAllOnBlurHandleValidatedValue = (validatedEditAllMaxPercent) => {
     if (wasModified) {
-      const validatedEditAllMaxPercent = validatePercent(editAllMaxPercent)
       // Update all input states to match
       updateAllInputStates(validatedEditAllMaxPercent)
       // Clear edit all input value
@@ -341,32 +291,19 @@ const RandomizeShiftMaxPercentEditAllInput = ({
     }
   }
 
-  /**
-   * If the Enter or Esc key is pressed, trigger blur on input.
-   *
-   * @param event
-   */
-  const editAllOnKeyDown = (event) => {
-    if (event.key === 'Enter' || event.key === 'Escape') {
-      event.preventDefault()
-      event.target.blur()
-    }
-  }
-
   return (
-    <TextField
-      value={ editAllMaxPercent }
-      onChange={ editAllOnChange }
-      onBlur={ editAllOnBlur }
-      onKeyDown={ editAllOnKeyDown }
+    <NumericTextInput
+      valueState={ editAllMaxPercent }
+      min={ 0 }
+      max={ 100 }
+      onChangeHandleValue={ editAllOnChangeHandleValue }
+      onBlurHandleValidatedValue={ editAllOnBlurHandleValidatedValue }
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
       helperText={ `Edit All Channels` }
       placeholder={ `${ dimensionIndex === 0 ? 'X' : 'Y' } Shift Max` }
-      autoComplete="off"
       color="neutral"
-      size="small"
     />
   )
 }
