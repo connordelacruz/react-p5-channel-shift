@@ -633,8 +633,8 @@ function App() {
                   <Button
                     onClick={ saveButtonOnClick }
                     startIcon={ <Save/> }
-                    variant="contained"
-                    color="warning"
+                    variant="outlined"
+                    color="info"
                   >
                   Save Image
                 </Button>
@@ -645,7 +645,7 @@ function App() {
                   <Button
                     startIcon={ <FileUpload/> }
                     component="label"
-                    variant="contained"
+                    variant="outlined"
                     color="info"
                   >
                   Load Image
@@ -680,30 +680,31 @@ function App() {
             bgcolor: 'background.default'
           } }
         >
-          {/*TODO: wrap tabs in another box, set max width of outer box*/ }
-          <Tabs
-            value={ selectedToolTab }
-            onChange={ toolTabsOnChangeHandler }
-            variant="fullWidth"
-            indicatorColor="secondary"
-            textColor="secondary"
-          >
-            <Tab
-              value={ SHIFT_TAB_VALUE }
-              label={ `Shift Channels${ shiftModifiedDuringStep() ? ' *' : '' }` }
-              sx={ { fontWeight: 'bold' } }
-            />
-            <Tab
-              value={ SWAP_TAB_VALUE }
-              label={ `Swap Channels${ swapModifiedDuringStep() ? ' *' : '' }` }
-              sx={ { fontWeight: 'bold' } }
-            />
-            <Tab
-              value={ RANDOMIZE_TAB_VALUE }
-              label="Randomization Options"
-              sx={ { fontWeight: 'bold' } }
-            />
-          </Tabs>
+          <Container maxWidth="md">
+            <Tabs
+              value={ selectedToolTab }
+              onChange={ toolTabsOnChangeHandler }
+              variant="fullWidth"
+              indicatorColor="secondary"
+              textColor="secondary"
+            >
+              <Tab
+                value={ SHIFT_TAB_VALUE }
+                label={ `Shift Channels${ shiftModifiedDuringStep() ? ' *' : '' }` }
+                sx={ { fontWeight: 'bold' } }
+              />
+              <Tab
+                value={ SWAP_TAB_VALUE }
+                label={ `Swap Channels${ swapModifiedDuringStep() ? ' *' : '' }` }
+                sx={ { fontWeight: 'bold' } }
+              />
+              <Tab
+                value={ RANDOMIZE_TAB_VALUE }
+                label="Randomization Options"
+                sx={ { fontWeight: 'bold' } }
+              />
+            </Tabs>
+          </Container>
         </Box>
       </Paper>
       {/*END App Bar, Canvas, and Tool Tabs Container*/ }
@@ -777,15 +778,15 @@ function App() {
           p: 2,
         } }
       >
-        {/*TODO: wrap snackbar in another box, set max width of outer box*/ }
-        {/*Reset/Randomize/Confirm Buttons*/ }
-        <Stack
-          direction="row"
-          divider={ <Divider orientation="vertical" flexItem/> }
-          justifyContent="space-evenly"
-          spacing={ 2 }
-        >
-          <Tooltip title="Reset all shift and swap values" placement="top">
+        <Container maxWidth="md">
+          {/*Reset/Randomize/Confirm Buttons*/ }
+          <Stack
+            direction="row"
+            divider={ <Divider orientation="vertical" flexItem/> }
+            justifyContent="space-evenly"
+            spacing={ 2 }
+          >
+            <Tooltip title="Reset all shift and swap values" placement="top">
             <span>
               <Button
                 onClick={ resetShiftAndSwap }
@@ -797,9 +798,9 @@ function App() {
               Reset Step
             </Button>
             </span>
-          </Tooltip>
-          <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab'
-                   placement="top">
+            </Tooltip>
+            <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab'
+                     placement="top">
             <span>
               <Button
                 onClick={ randomizeButtonOnClick }
@@ -811,8 +812,8 @@ function App() {
                 Randomize
             </Button>
             </span>
-          </Tooltip>
-          <Tooltip title="Use current result as base image" placement="top">
+            </Tooltip>
+            <Tooltip title="Use current result as base image" placement="top">
             <span>
               <Button
                 onClick={ confirmButtonOnClick }
@@ -824,8 +825,9 @@ function App() {
               Confirm Step
             </Button>
             </span>
-          </Tooltip>
-        </Stack>
+            </Tooltip>
+          </Stack>
+        </Container>
       </Paper>
       {/*END Snackbar*/ }
 
