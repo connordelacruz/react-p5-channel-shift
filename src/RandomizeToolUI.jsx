@@ -120,6 +120,8 @@ const RandomizeShiftMaxPercentInput = ({
     }
   }
 
+  // TODO: enter/esc trigger blur
+
   return (
     <TextField
       value={ randomizeShiftMaxPercents[channelOffset][dimensionIndex] }
@@ -288,6 +290,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
    * @param event
    */
   const editAllOnChange = (event) => {
+    // Sanitize numeric value
     let parsedInputValue = parseInt(event.target.value)
     if (isNaN(parsedInputValue)) {
       parsedInputValue = ''
@@ -302,7 +305,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
     }
   }
 
-  // TODO: make generic for use w/ other fields
+  // TODO: make generic for use w/ other fields (e.g. if percent switch gets implemented for slider input)
   /**
    * Validate percent value (int between 0 and 100).
    *
@@ -328,7 +331,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
    */
   const editAllOnBlur = (event) => {
     if (wasModified) {
-      let validatedEditAllMaxPercent = validatePercent(editAllMaxPercent)
+      const validatedEditAllMaxPercent = validatePercent(editAllMaxPercent)
       // Update all input states to match
       updateAllInputStates(validatedEditAllMaxPercent)
       // Clear edit all input value

@@ -137,8 +137,16 @@ function App() {
   // ================================================================================
   // Channel Shift
   // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // Selected channel to shift
+  // --------------------------------------------------------------------------------
   // x/y shift current channel selection
   const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(Constants.R_OFFSET)
+
+  // --------------------------------------------------------------------------------
+  // Channel shift values
+  // --------------------------------------------------------------------------------
 
   /**
    * Returns default value of all 0's for each channel
@@ -157,17 +165,49 @@ function App() {
   const [channelShiftValues, setChannelShiftValues] = React.useState(getChannelShiftValuesDefault())
 
   /**
-   * Set a new shift value at the selected shift channel
+   * Set a new shift value at the selected shift channel.
    *
-   * @param coordinateIndex 0 for x, 1 for y
+   * @param dimensionIndex 0 for x, 1 for y
    * @param newValue New shift value to set
    */
-  const setChannelShiftValue = (coordinateIndex, newValue) => {
+  const setSelectedChannelShiftValue = (dimensionIndex, newValue) => {
     const newChannelShiftValues = [...channelShiftValues]
     // Update selected targetChannel
-    newChannelShiftValues[selectedShiftChannel][coordinateIndex] = newValue
+    newChannelShiftValues[selectedShiftChannel][dimensionIndex] = newValue
     setChannelShiftValues(newChannelShiftValues)
   }
+
+  // --------------------------------------------------------------------------------
+  // Channel shift text inputs
+  // --------------------------------------------------------------------------------
+
+  // States for x/y shift text fields
+  // (Separate to account for validation prior to updating channelShiftValues)
+  const [channelShiftTextInputValues, setChannelShiftTextInputValues] = React.useState([0, 0])
+
+  /**
+   * Helper for setting individual text field value state.
+   *
+   * @param dimensionIndex
+   * @param newValue
+   */
+  const setChannelShiftTextInputValue = (dimensionIndex, newValue) => {
+    const newChannelShiftTextInputValues = [...channelShiftTextInputValues]
+    newChannelShiftTextInputValues[dimensionIndex] = newValue
+    setChannelShiftTextInputValues(newChannelShiftTextInputValues)
+  }
+
+  /**
+   * If channelShiftValues or selectedShiftChannel states are updated,
+   * update text input states to match current channel selection / updated shift values.
+   */
+  React.useEffect(() => {
+    // Update text field state if it doesn't match corresponding channelShiftValues state
+    if (JSON.stringify(channelShiftValues[selectedShiftChannel]) !== JSON.stringify(channelShiftTextInputValues)) {
+      const newChannelShiftTextInputValues = [...channelShiftValues[selectedShiftChannel]]
+      setChannelShiftTextInputValues(newChannelShiftTextInputValues)
+    }
+  }, [channelShiftValues, selectedShiftChannel])
 
   // ================================================================================
   // Randomize
@@ -363,7 +403,7 @@ function App() {
         targetOptions.push(channelOffset)
       }
     })
-    
+
     // Initialize randys
     let randySource, randyTarget
 
@@ -640,7 +680,7 @@ function App() {
             bgcolor: 'background.default'
           } }
         >
-          {/*TODO: wrap tabs in another box, set max width of outer box*/}
+          {/*TODO: wrap tabs in another box, set max width of outer box*/ }
           <Tabs
             value={ selectedToolTab }
             onChange={ toolTabsOnChangeHandler }
@@ -674,12 +714,16 @@ function App() {
         {/*Shift Channels*/ }
         <Box hidden={ selectedToolTab !== SHIFT_TAB_VALUE }>
           <ShiftChannelsToolUI
+            // State props
             channelShiftValues={ channelShiftValues }
-            setChannelShiftValue={ setChannelShiftValue }
-            selectedShiftChannel={ selectedShiftChannel }
-            setSelectedShiftChannel={ setSelectedShiftChannel }
             imageWidth={ imageWidth }
             imageHeight={ imageHeight }
+            channelShiftTextInputValues={ channelShiftTextInputValues }
+            // State setter props
+            setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
+            selectedShiftChannel={ selectedShiftChannel }
+            setSelectedShiftChannel={ setSelectedShiftChannel }
+            setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
           />
         </Box>
 
@@ -733,7 +777,7 @@ function App() {
           p: 2,
         } }
       >
-        {/*TODO: wrap snackbar in another box, set max width of outer box*/}
+        {/*TODO: wrap snackbar in another box, set max width of outer box*/ }
         {/*Reset/Randomize/Confirm Buttons*/ }
         <Stack
           direction="row"
