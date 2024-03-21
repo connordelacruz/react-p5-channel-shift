@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Paper, Slider, Stack, Typography } from '@mui/material'
+import { Box, Chip, Grid, Paper, Slider, SliderThumb, Stack, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
@@ -46,6 +46,40 @@ const ShiftChannelSelectChip = ({
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
     />
+  )
+}
+
+/**
+ * Custom slider thumb component that displays an icon corresponding to whether this is horizontal or vertical shift.
+ *
+ * @param dimensionIndex
+ * @param selectedShiftChannel
+ * @param children
+ * @param props
+ * @return {Element}
+ * @constructor
+ */
+const ShiftChannelSliderThumb = ({
+                                   dimensionIndex,
+                                   selectedShiftChannel,
+                                   children,
+                                   ...props
+                                 }) => {
+
+  return (
+    <SliderThumb
+      sx={{
+        bgcolor: 'background.default'
+      }}
+      { ...props }
+    >
+      { children }
+      {
+        dimensionIndex === 0 ?
+          <SwapHorizontalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/> :
+          <SwapVerticalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/>
+      }
+    </SliderThumb>
   )
 }
 
@@ -121,11 +155,6 @@ const ShiftChannelSlider = ({
         spacing={ 1 }
         mb={ 1 }
       >
-        {
-          dimensionIndex === 0 ?
-            <SwapHorizontalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/> :
-            <SwapVerticalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/>
-        }
         <Typography
           id={ `${ dimension }-shift-slider-label` }
           variant="button"
@@ -159,8 +188,15 @@ const ShiftChannelSlider = ({
                 { value: 0, label: '' },
                 { value: imageDimensionSize, label: '' }
               ] }
-              aria-labelledby={ `${ dimension }-shift-slider-label` }
+              slots={ { thumb: ShiftChannelSliderThumb } }
+              slotProps={{
+                thumb: {
+                  dimensionIndex: dimensionIndex,
+                  selectedShiftChannel: selectedShiftChannel,
+                }
+              }}
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+              aria-labelledby={ `${ dimension }-shift-slider-label` }
             />
             {/* Fix for min/max marks going out of bounds */ }
             <Box
@@ -188,10 +224,10 @@ const ShiftChannelSlider = ({
           <Grid item xs={ 2 }>
             <NumericTextInput
               valueState={ channelShiftTextInputValues[dimensionIndex] }
-              min={0}
-              max={imageDimensionSize}
-              onChangeHandleValue={shiftTextInputOnChangeHandleValue}
-              onBlurHandleValidatedValue={shiftTextInputOnBlurHandleValidatedValue}
+              min={ 0 }
+              max={ imageDimensionSize }
+              onChangeHandleValue={ shiftTextInputOnChangeHandleValue }
+              onBlurHandleValidatedValue={ shiftTextInputOnBlurHandleValidatedValue }
               InputProps={ {
                 endAdornment: 'px',
               } }
