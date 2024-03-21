@@ -1,5 +1,10 @@
 # Do before beta
 
+## Better laptop layout
+
+- Maybe figure out how to put controls on the left and preview on the right in wide views?
+- Scale down snackbar and app bar (also helps with mobile)
+
 ## It works on mobile now! Make UI more responsive
 
 - Fix channel chips going out of bounds
@@ -12,14 +17,7 @@
 - Better app bar scaling
     * hide text on save/load?
 
-
-## Quality of life
-
-### README
-
-How to install and what it does and all that
-
-### Help message
+## Help message
 
 - Thoughtful concise writing
 - Screenshots and gifs
