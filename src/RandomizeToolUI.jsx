@@ -657,7 +657,7 @@ const RandomizeSwapTable = ({
                   <Switch
                     checked={ randomizeSwapPreferDifferentChannels }
                     onChange={ randomizeSwapPreferDifferentChannelsSwitchOnChange }
-                    color="secondary"
+                    color="info"
                   />
                 }
                 label="Attempt to pick different source and target channels when possible"
@@ -758,6 +758,7 @@ export const RandomizeToolUI = ({
         label={
           <Typography
             variant="h5"
+            color={shouldRandomizeShift ? 'secondary' : null}
           >
             Randomize Channel Shift
           </Typography>
@@ -805,6 +806,7 @@ export const RandomizeToolUI = ({
         label={
           <Typography
             variant="h5"
+            color={shouldRandomizeSwap ? 'secondary' : null}
           >
             Randomize Channel Swap
           </Typography>
