@@ -24,8 +24,6 @@ import {
   Paper,
   Stack,
   styled,
-  Tab,
-  Tabs,
   ThemeProvider,
   Toolbar,
   Tooltip,
@@ -33,7 +31,7 @@ import {
 } from '@mui/material'
 import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { blueGrey, grey, pink, teal } from '@mui/material/colors'
-
+import { ToolTabs } from './ToolTabs'
 
 // ================================================================================
 // App Component
@@ -112,17 +110,8 @@ function App() {
   // ================================================================================
   // Tool Tabs
   // ================================================================================
-  // Constants for tab values
-  const SHIFT_TAB_VALUE = 'shift'
-  const SWAP_TAB_VALUE = 'swap'
-  const RANDOMIZE_TAB_VALUE = 'randomize'
   // Currently selected tool tab
-  const [selectedToolTab, setSelectedToolTab] = React.useState(SHIFT_TAB_VALUE)
-
-  // onChange handler for tool tabs
-  const toolTabsOnChangeHandler = (event, newValue) => {
-    setSelectedToolTab(newValue)
-  }
+  const [selectedToolTab, setSelectedToolTab] = React.useState(Constants.SHIFT_TAB_VALUE)
 
   // ================================================================================
   // Channel Swap
@@ -672,38 +661,13 @@ function App() {
         />
 
         {/*Tool Tabs*/ }
-        <Box
-          sx={ {
-            width: '100%',
-            bgcolor: 'background.default'
-          } }
-        >
-          <Container maxWidth="md">
-            <Tabs
-              value={ selectedToolTab }
-              onChange={ toolTabsOnChangeHandler }
-              variant="fullWidth"
-              indicatorColor="secondary"
-              textColor="secondary"
-            >
-              <Tab
-                value={ SHIFT_TAB_VALUE }
-                label={ `Shift Channels${ shiftModifiedDuringStep() ? ' *' : '' }` }
-                sx={ { fontWeight: 'bold' } }
-              />
-              <Tab
-                value={ SWAP_TAB_VALUE }
-                label={ `Swap Channels${ swapModifiedDuringStep() ? ' *' : '' }` }
-                sx={ { fontWeight: 'bold' } }
-              />
-              <Tab
-                value={ RANDOMIZE_TAB_VALUE }
-                label="Randomization Options"
-                sx={ { fontWeight: 'bold' } }
-              />
-            </Tabs>
-          </Container>
-        </Box>
+        <ToolTabs
+          selectedToolTab={ selectedToolTab }
+          setSelectedToolTab={ setSelectedToolTab }
+          shiftModifiedDuringStep={ shiftModifiedDuringStep }
+          swapModifiedDuringStep={ swapModifiedDuringStep }
+        />
+
       </Paper>
       {/*END App Bar, Canvas, and Tool Tabs Container*/ }
 
@@ -711,7 +675,7 @@ function App() {
       <Container maxWidth="md" sx={ { pb: 8, my: 2 } }>
 
         {/*Shift Channels*/ }
-        <Box hidden={ selectedToolTab !== SHIFT_TAB_VALUE }>
+        <Box hidden={ selectedToolTab !== Constants.SHIFT_TAB_VALUE }>
           <ShiftChannelsToolUI
             // State props
             channelShiftValues={ channelShiftValues }
@@ -727,7 +691,7 @@ function App() {
         </Box>
 
         {/*Swap Channels*/ }
-        <Box hidden={ selectedToolTab !== SWAP_TAB_VALUE }>
+        <Box hidden={ selectedToolTab !== Constants.SWAP_TAB_VALUE }>
           <SwapChannelsToolUI
             // State props
             sourceChannel={ sourceChannel }
@@ -739,7 +703,7 @@ function App() {
         </Box>
 
         {/*Randomize*/ }
-        <Box hidden={ selectedToolTab !== RANDOMIZE_TAB_VALUE }>
+        <Box hidden={ selectedToolTab !== Constants.RANDOMIZE_TAB_VALUE }>
           <RandomizeToolUI
             // Randomize Shift State Props
             shouldRandomizeShift={ shouldRandomizeShift }

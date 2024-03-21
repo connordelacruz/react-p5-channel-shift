@@ -9,7 +9,6 @@ export const A_OFFSET = 3
 // TODO: same thing for x/y coords?
 
 // Array of above export constants, for mapping components
-// TODO: use this for mapping components to reduce code reuse
 export const CHANNEL_OFFSETS = [R_OFFSET, G_OFFSET, B_OFFSET]
 
 // Display names for color channels indexed by above offsets
@@ -25,6 +24,15 @@ CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
 CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
 
 // ================================================================================
-// TODO: UI Constants
+// UI Constants
 // ================================================================================
+
+// --------------------------------------------------------------------------------
+// Tool Tabs
+// --------------------------------------------------------------------------------
+// Constants for tab values
+export const SHIFT_TAB_VALUE = 'shift'
+export const SWAP_TAB_VALUE = 'swap'
+export const RANDOMIZE_TAB_VALUE = 'randomize'
+
 // TODO: TOOL_UI_PAPER_SX / _PROPS
