@@ -59,6 +59,11 @@ export function ChannelShiftSketch(p5) {
    * p5 setup
    */
   p5.setup = () => {
+    // Set pixel density to 1 (helps with performance on high-density displays)
+    p5.pixelDensity(1)
+    // Set frame rate to 30, we don't need crazy high FPS for this
+    p5.frameRate(30)
+
     // Match window width, scale height accordingly
     p5.createCanvas(...calculateCanvasDimensions())
 

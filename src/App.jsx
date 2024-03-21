@@ -124,8 +124,6 @@ function App() {
     setSelectedToolTab(newValue)
   }
 
-  // TODO: Style tool tabs to make it clearer that they're tabs
-
   // ================================================================================
   // Channel Swap
   // ================================================================================
@@ -618,16 +616,6 @@ function App() {
               justifyContent="space-evenly"
               spacing={ 2 }
             >
-              <Tooltip title="Help" placement="bottom">
-                <IconButton
-                  aria-label="help"
-                  onClick={ () => {
-                    setHelpOpen(true)
-                  } }
-                >
-                  <HelpOutline/>
-                </IconButton>
-              </Tooltip>
               <Tooltip title="Download current result as full-res PNG" placement="bottom">
                 <span>
                   <Button
@@ -656,6 +644,16 @@ function App() {
                     id="load-image-file-input"/>
                   </Button>
                 </span>
+              </Tooltip>
+              <Tooltip title="Help" placement="bottom">
+                <IconButton
+                  aria-label="help"
+                  onClick={ () => {
+                    setHelpOpen(true)
+                  } }
+                >
+                  <HelpOutline/>
+                </IconButton>
               </Tooltip>
             </Stack>
           </Toolbar>
@@ -731,8 +729,12 @@ function App() {
         {/*Swap Channels*/ }
         <Box hidden={ selectedToolTab !== SWAP_TAB_VALUE }>
           <SwapChannelsToolUI
-            sourceChannel={ sourceChannel } setSourceChannel={ setSourceChannel }
-            targetChannel={ targetChannel } setTargetChannel={ setTargetChannel }
+            // State props
+            sourceChannel={ sourceChannel }
+            targetChannel={ targetChannel }
+            // State setter props
+            setSourceChannel={ setSourceChannel }
+            setTargetChannel={ setTargetChannel }
           />
         </Box>
 
@@ -783,6 +785,7 @@ function App() {
           <Stack
             direction="row"
             divider={ <Divider orientation="vertical" flexItem/> }
+            alignItems="center"
             justifyContent="space-evenly"
             spacing={ 2 }
           >
@@ -794,6 +797,7 @@ function App() {
                 startIcon={ <RestartAlt/> }
                 variant="contained"
                 color="warning"
+                size="large"
               >
               Reset Step
             </Button>
@@ -808,6 +812,7 @@ function App() {
                 startIcon={ <Casino/> }
                 variant="contained"
                 color="info"
+                size="large"
               >
                 Randomize
             </Button>
@@ -821,6 +826,7 @@ function App() {
                 startIcon={ <CheckCircleOutline/> }
                 variant="contained"
                 color="secondary"
+                size="large"
               >
               Confirm Step
             </Button>

@@ -29,6 +29,7 @@ const ChannelSelectButton = ({
       variant={ selected ? 'contained' : 'outlined' }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       size="large"
+      disableElevation
     >
       { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
     </Button>
