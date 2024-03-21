@@ -4,7 +4,7 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 // Constants
 import * as Constants from './Constants'
 // App Bar Components
-import { AppBarButtons, ChannelShiftSwapAppBar } from './ChannelShiftSwapAppBar'
+import { ChannelShiftSwapAppBar } from './ChannelShiftSwapAppBar'
 // Sketch
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Tool Tabs Components
@@ -17,7 +17,6 @@ import { RandomizeToolUI } from './RandomizeToolUI'
 import { HelpDialog } from './HelpDialog'
 // MUI
 import {
-  AppBar,
   Box,
   Button,
   Container,
@@ -27,9 +26,7 @@ import {
   Paper,
   Stack,
   ThemeProvider,
-  Toolbar,
-  Tooltip,
-  Typography
+  Tooltip
 } from '@mui/material'
 import { Casino, CheckCircleOutline, RestartAlt } from '@mui/icons-material'
 import { blueGrey, grey, pink, teal } from '@mui/material/colors'
