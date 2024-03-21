@@ -1,19 +1,16 @@
 # Do before beta
 
-## URGENT: Test on weaker hardware!!
+## It works on mobile now! Make UI more responsive
 
-If it can't be run in-browser on a mid-range laptop then what's even the point??
-
-Maybe performance is better when running locally?
-
-Maybe see about packaging it as an Electron app and see if performance is better?
-
-
-## UI
-
-### Tabs
-
-- Figure out how to make it more obvious that these are tabs
+- Fix channel chips going out of bounds
+- Scale preview image better, it takes up too much space on mobile
+- Put text input on its own line on narrow viewports
+- Slider accessibility?
+- scrollable tabs?
+- Re-work randomization options tables to fit better??
+- shrink snackbar buttons
+- Better app bar scaling
+    * hide text on save/load?
 
 
 ## Quality of life
@@ -21,10 +18,6 @@ Maybe see about packaging it as an Electron app and see if performance is better
 ### README
 
 How to install and what it does and all that
-
-### Mobile warning message
-
-If you can't get it to play nice on mobile, show a fullscreen warning modal when being accessed from a mobile browser
 
 ### Help message
 
