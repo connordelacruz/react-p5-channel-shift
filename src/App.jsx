@@ -4,7 +4,7 @@ import { ReactP5Wrapper } from '@p5-wrapper/react'
 // Constants
 import * as Constants from './Constants'
 // App Bar Components
-import { AppBarButtons } from './AppBarButtons'
+import { AppBarButtons, ChannelShiftSwapAppBar } from './ChannelShiftSwapAppBar'
 // Sketch
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Tool Tabs Components
@@ -153,6 +153,7 @@ function App() {
       const newChannelShiftTextInputValues = [...channelShiftValues[selectedShiftChannel]]
       setChannelShiftTextInputValues(newChannelShiftTextInputValues)
     }
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channelShiftValues, selectedShiftChannel])
 
   // ================================================================================
@@ -542,30 +543,11 @@ function App() {
         elevation={ 3 }
       >
         {/*App Bar*/ }
-        <AppBar
-          position="static"
-          color="default"
-          elevation={ 0 }
-        >
-          <Toolbar>
-            <Typography
-              color="secondary"
-              variant="h6"
-              component="div"
-              sx={ {
-                flexGrow: 1,
-                fontWeight: 'bold',
-              } }
-            >
-              Channel Shift // Swap
-            </Typography>
-            <AppBarButtons
-              setShouldSaveResult={ setShouldSaveResult }
-              setNewFileDataURL={ setNewFileDataURL }
-              setHelpOpen={ setHelpOpen }
-            />
-          </Toolbar>
-        </AppBar>
+        <ChannelShiftSwapAppBar
+          setShouldSaveResult={ setShouldSaveResult }
+          setNewFileDataURL={ setNewFileDataURL }
+          setHelpOpen={ setHelpOpen }
+        />
 
         {/*Canvas*/ }
         <ReactP5Wrapper

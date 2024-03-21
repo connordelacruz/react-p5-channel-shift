@@ -1,4 +1,4 @@
-import { Button, IconButton, Stack, styled, Tooltip } from '@mui/material'
+import { AppBar, Button, IconButton, Stack, styled, Toolbar, Tooltip, Typography } from '@mui/material'
 import { FileUpload, HelpOutline, Save } from '@mui/icons-material'
 import React from 'react'
 
@@ -153,4 +153,48 @@ export const AppBarButtons = ({
       setHelpOpen={ setHelpOpen }
     />
   </Stack>
+}
+
+
+/**
+ * App bar with save/load/help buttons.
+ *
+ * @param setShouldSaveResult
+ * @param setNewFileDataURL
+ * @param setHelpOpen
+ * @return {Element}
+ * @constructor
+ */
+export const ChannelShiftSwapAppBar = ({
+                         setShouldSaveResult,
+                         setNewFileDataURL,
+                         setHelpOpen
+                       }) => {
+  // TODO: decouple sticky container from canvas + tabs, then update this to be sticky or whatev
+  return (
+    <AppBar
+      position="static"
+      color="default"
+      elevation={ 0 }
+    >
+      <Toolbar>
+        <Typography
+          variant="button"
+          component="div"
+          sx={ {
+            flexGrow: 1,
+            color: 'info.main',
+            fontWeight: 'bold'
+          } }
+        >
+          Channel Shift / Swap
+        </Typography>
+        <AppBarButtons
+          setShouldSaveResult={ setShouldSaveResult }
+          setNewFileDataURL={ setNewFileDataURL }
+          setHelpOpen={ setHelpOpen }
+        />
+      </Toolbar>
+    </AppBar>
+  )
 }
