@@ -1,10 +1,14 @@
 // React
 import React from 'react'
 import { ReactP5Wrapper } from '@p5-wrapper/react'
-// Sketch
-import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Constants
 import * as Constants from './Constants'
+// App Bar Components
+import { AppBarButtons } from './AppBarButtons'
+// Sketch
+import { ChannelShiftSketch } from './ChannelShiftSketch'
+// Tool Tabs Components
+import { ToolTabs } from './ToolTabs'
 // Tool UI Components
 import { ShiftChannelsToolUI } from './ShiftChannelsToolUI'
 import { SwapChannelsToolUI } from './SwapChannelsToolUI'
@@ -20,18 +24,15 @@ import {
   createTheme,
   CssBaseline,
   Divider,
-  IconButton,
   Paper,
   Stack,
-  styled,
   ThemeProvider,
   Toolbar,
   Tooltip,
   Typography
 } from '@mui/material'
-import { Casino, CheckCircleOutline, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
+import { Casino, CheckCircleOutline, RestartAlt } from '@mui/icons-material'
 import { blueGrey, grey, pink, teal } from '@mui/material/colors'
-import { ToolTabs } from './ToolTabs'
 
 // ================================================================================
 // App Component
@@ -54,58 +55,17 @@ function App() {
   // ================================================================================
 
   // --------------------------------------------------------------------------------
-  // Load Image Button
-  // --------------------------------------------------------------------------------
-  // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
-  // Sketch will load data as image and set to null again when complete
-  const [newFileDataURL, setNewFileDataURL] = React.useState(null)
-
-  // Styled hidden input element. Required to use button as file input with MUI
-  const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  })
-
-  /**
-   * onChange listener for file input.
-   *
-   * If there's a file selected and it's an image file, read it as a
-   * base64 data URL and set newFileDataURL to it.
-   */
-  const loadImageFileInputOnChange = (event) => {
-    if (event.target.files.length > 0) {
-      let file = event.target.files[0]
-      // Verify it's an image
-      if (file.type.split('/')[0] === 'image') {
-        // Read file as base64 data URL
-        let reader = new FileReader()
-        reader.readAsDataURL(file)
-        reader.onload = () => {
-          setNewFileDataURL(reader.result)
-        }
-      }
-    }
-  }
-
-  // --------------------------------------------------------------------------------
   // Save Image Button
   // --------------------------------------------------------------------------------
   // Set to true when save button is clicked, sketch will save image and set back to false when complete
   const [shouldSaveResult, setShouldSaveResult] = React.useState(false)
 
-  /**
-   * Save button onClick handler
-   */
-  const saveButtonOnClick = () => {
-    setShouldSaveResult(true)
-  }
+  // --------------------------------------------------------------------------------
+  // Load Image Button
+  // --------------------------------------------------------------------------------
+  // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
+  // Sketch will load data as image and set to null again when complete
+  const [newFileDataURL, setNewFileDataURL] = React.useState(null)
 
   // ================================================================================
   // Tool Tabs
@@ -119,7 +79,6 @@ function App() {
   // Source and target channels
   const [sourceChannel, setSourceChannel] = React.useState(Constants.R_OFFSET)
   const [targetChannel, setTargetChannel] = React.useState(Constants.R_OFFSET)
-
 
   // ================================================================================
   // Channel Shift
@@ -600,51 +559,11 @@ function App() {
             >
               Channel Shift // Swap
             </Typography>
-            <Stack
-              direction="row"
-              justifyContent="space-evenly"
-              spacing={ 2 }
-            >
-              <Tooltip title="Download current result as full-res PNG" placement="bottom">
-                <span>
-                  <Button
-                    onClick={ saveButtonOnClick }
-                    startIcon={ <Save/> }
-                    variant="outlined"
-                    color="info"
-                  >
-                  Save Image
-                </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title="Load a new image" placement="bottom">
-                <span>
-                  <Button
-                    startIcon={ <FileUpload/> }
-                    component="label"
-                    variant="outlined"
-                    color="info"
-                  >
-                  Load Image
-                  <VisuallyHiddenInput
-                    type="file"
-                    accept="image/*"
-                    onChange={ loadImageFileInputOnChange }
-                    id="load-image-file-input"/>
-                  </Button>
-                </span>
-              </Tooltip>
-              <Tooltip title="Help" placement="bottom">
-                <IconButton
-                  aria-label="help"
-                  onClick={ () => {
-                    setHelpOpen(true)
-                  } }
-                >
-                  <HelpOutline/>
-                </IconButton>
-              </Tooltip>
-            </Stack>
+            <AppBarButtons
+              setShouldSaveResult={ setShouldSaveResult }
+              setNewFileDataURL={ setNewFileDataURL }
+              setHelpOpen={ setHelpOpen }
+            />
           </Toolbar>
         </AppBar>
 

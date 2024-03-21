@@ -36,9 +36,9 @@ export function ChannelShiftSketch(p5) {
   let setImageHeight = null
   // Function to run after confirming a result
   let postConfirmResult = null
-  // Function to set newFileDataURL to null after load
+  // Function to set setNewFileDataURL to null after load
   let setNewFileDataURL = null
-  // Function to set shouldSaveResult state to false after completing a save
+  // Function to set setShouldSaveResult state to false after completing a save
   let setShouldSaveResult = null
   // Function to reset all shift and swap states
   let resetShiftAndSwap = null
@@ -274,7 +274,7 @@ export function ChannelShiftSketch(p5) {
    * Takes a base64 encoded data URL with the new image file and loads it.
    *
    * Once loaded, sets sourceImage to it, resets shift/swap states, re-initializes all,
-   * calls windowResized() to set canvas size to fit new image, then sets newFileDataURL
+   * calls windowResized() to set canvas size to fit new image, then sets setNewFileDataURL
    * state back to null.
    *
    * @param newFileDataURL
