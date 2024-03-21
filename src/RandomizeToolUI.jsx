@@ -302,7 +302,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
       helperText={ `Edit All Channels` }
-      placeholder={ `${ dimensionIndex === 0 ? 'X' : 'Y' } Shift Max` }
+      placeholder={ `Max ${ dimensionIndex === 0 ? 'X' : 'Y' } Shift` }
       color="neutral"
     />
   )
@@ -408,10 +408,10 @@ const RandomizeShiftTable = ({
         <TableHead>
           <TableRow>
             <TableCell>Channel</TableCell>
-            <TableCell align="center">Randomize X?</TableCell>
-            <TableCell align="center">X Shift Max %</TableCell>
-            <TableCell align="center">Randomize Y?</TableCell>
-            <TableCell align="center">Y Shift Max %</TableCell>
+            <TableCell align="center">Randomize X Shift?</TableCell>
+            <TableCell align="center"> Max X Shift %</TableCell>
+            <TableCell align="center">Randomize Y Shift?</TableCell>
+            <TableCell align="center">Max Y Shift %</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
