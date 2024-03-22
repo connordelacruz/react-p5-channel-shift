@@ -35,17 +35,17 @@ export const ToolTabs = ({
         >
           <Tab
             value={ Constants.SHIFT_TAB_VALUE }
-            label={ `Shift Channels${ shiftModifiedDuringStep() ? ' *' : '' }` }
+            label={ `Shift${ shiftModifiedDuringStep() ? ' *' : '' }` }
             sx={ { fontWeight: 'bold' } }
           />
           <Tab
             value={ Constants.SWAP_TAB_VALUE }
-            label={ `Swap Channels${ swapModifiedDuringStep() ? ' *' : '' }` }
+            label={ `Swap${ swapModifiedDuringStep() ? ' *' : '' }` }
             sx={ { fontWeight: 'bold' } }
           />
           <Tab
             value={ Constants.RANDOMIZE_TAB_VALUE }
-            label="Randomization Options"
+            label="Randomization"
             sx={ { fontWeight: 'bold' } }
           />
         </Tabs>

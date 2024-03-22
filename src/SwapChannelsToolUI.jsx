@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Paper, Stack, Typography } from '@mui/material'
+import { Box, Button, ButtonGroup, Paper, Stack, Typography } from '@mui/material'
 import React from 'react'
 import * as Constants from './Constants'
 import { SwapHoriz } from '@mui/icons-material'
@@ -97,53 +97,31 @@ export const SwapChannelsToolUI = ({
         alignItems="center"
         spacing={ 0 }
       >
-        <Paper
+        <Box
           sx={ {
             p: 2,
             width: '45%'
           } }
-          variant="outlined"
         >
-          <Typography
-            variant="button"
-            display="block"
-            sx={ {
-              textAlign: 'center'
-            } }
-            gutterBottom
-          >
-            Source Channel
-          </Typography>
           <ChannelSelectButtonGroup
             selectedChannelOffsetState={ sourceChannel }
             stateSetterFunction={ setSourceChannel }
           />
-        </Paper>
+        </Box>
 
         <SwapHoriz/>
 
-        <Paper
+        <Box
           sx={ {
             p: 2,
             width: '45%'
           } }
-          variant="outlined"
         >
-          <Typography
-            variant="button"
-            display="block"
-            sx={ {
-              textAlign: 'center'
-            } }
-            gutterBottom
-          >
-            Target Channel
-          </Typography>
           <ChannelSelectButtonGroup
             selectedChannelOffsetState={ targetChannel }
             stateSetterFunction={ setTargetChannel }
           />
-        </Paper>
+        </Box>
       </Stack>
     </Paper>
   )

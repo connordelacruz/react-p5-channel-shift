@@ -664,7 +664,8 @@ function App() {
             </Button>
             </span>
             </Tooltip>
-            <Tooltip title='Randomize shift/swap values. Can be configured in the "Randomization Options" tab'
+            {/*TODO: see Tooltip refernce to get this formatting better:*/}
+            <Tooltip title='Randomize shift and swap values (click "Randomization" tab for more options)'
                      placement="top">
             <span>
               <Button

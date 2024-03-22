@@ -56,7 +56,7 @@ const SaveButton = ({ setShouldSaveResult }) => {
         <Button
           onClick={ saveButtonOnClick }
           startIcon={ <Save/> }
-          color="info"
+          color="secondary"
           variant="contained"
           disableElevation
         >
@@ -117,7 +117,7 @@ const LoadButton = ({ setNewFileDataURL }) => {
         <Button
           startIcon={ <FileUpload/> }
           component="label"
-          color="info"
+          color="secondary"
           variant="contained"
           disableElevation
         >
@@ -172,6 +172,7 @@ export const AppBarButtons = ({
   return <Stack
     direction="row"
     justifyContent="space-evenly"
+    alignItems="center"
     spacing={ 2 }
   >
     <SaveButton
