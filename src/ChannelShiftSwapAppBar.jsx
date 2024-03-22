@@ -1,6 +1,35 @@
-import { AppBar, Button, IconButton, Stack, styled, Toolbar, Tooltip, Typography } from '@mui/material'
-import { FileUpload, HelpOutline, Save } from '@mui/icons-material'
+import { AppBar, Box, Button, IconButton, Stack, styled, Toolbar, Tooltip, Typography } from '@mui/material'
+import {
+  FileUpload,
+  HelpOutline,
+  Save,
+  SwapHoriz
+} from '@mui/icons-material'
 import React from 'react'
+
+/**
+ * App bar logo component.
+ *
+ * @return {Element}
+ * @constructor
+ */
+const ChannelShiftLogo = () => {
+  return (
+    <Box
+      component="div"
+      sx={ {
+        display: 'flex',
+        alignItems: 'center',
+        flexGrow: 1,
+        fontWeight: 'bold'
+      } }
+    >
+      <Typography variant="button" sx={ { fontWeight: 'bold' } } color="info.main">Channel</Typography>
+      <SwapHoriz fontSize="small" sx={ { mx: 0.5 } } color="secondary"/>
+      <Typography variant="button" sx={ { fontWeight: 'bold' } } color="info.main">Shift</Typography>
+    </Box>
+  )
+}
 
 /**
  * Save image button element.
@@ -27,8 +56,9 @@ const SaveButton = ({ setShouldSaveResult }) => {
         <Button
           onClick={ saveButtonOnClick }
           startIcon={ <Save/> }
-          variant="outlined"
           color="info"
+          variant="contained"
+          disableElevation
         >
         Save
       </Button>
@@ -87,8 +117,9 @@ const LoadButton = ({ setNewFileDataURL }) => {
         <Button
           startIcon={ <FileUpload/> }
           component="label"
-          variant="outlined"
           color="info"
+          variant="contained"
+          disableElevation
         >
         Load
         <VisuallyHiddenInput
@@ -118,7 +149,7 @@ const HelpButton = ({ setHelpOpen }) => {
           setHelpOpen(true)
         } }
       >
-        <HelpOutline/>
+        <HelpOutline color="info"/>
       </IconButton>
     </Tooltip>
   )
@@ -166,10 +197,10 @@ export const AppBarButtons = ({
  * @constructor
  */
 export const ChannelShiftSwapAppBar = ({
-                         setShouldSaveResult,
-                         setNewFileDataURL,
-                         setHelpOpen
-                       }) => {
+                                         setShouldSaveResult,
+                                         setNewFileDataURL,
+                                         setHelpOpen
+                                       }) => {
   // TODO: decouple sticky container from canvas + tabs, then update this to be sticky or whatev
   return (
     <AppBar
@@ -178,17 +209,7 @@ export const ChannelShiftSwapAppBar = ({
       elevation={ 0 }
     >
       <Toolbar>
-        <Typography
-          variant="button"
-          component="div"
-          sx={ {
-            flexGrow: 1,
-            color: 'info.main',
-            fontWeight: 'bold'
-          } }
-        >
-          Channel Shift / Swap
-        </Typography>
+        <ChannelShiftLogo/>
         <AppBarButtons
           setShouldSaveResult={ setShouldSaveResult }
           setNewFileDataURL={ setNewFileDataURL }

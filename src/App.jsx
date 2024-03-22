@@ -639,7 +639,7 @@ function App() {
           bottom: 0,
           left: 0,
           right: 0,
-          p: 2,
+          p: 1,
         } }
       >
         <Container maxWidth="md">
@@ -657,11 +657,10 @@ function App() {
                 onClick={ resetShiftAndSwap }
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <RestartAlt/> }
-                variant="contained"
-                color="warning"
-                size="large"
+                color="info"
+                variant="outlined"
               >
-              Reset Step
+              Reset
             </Button>
             </span>
             </Tooltip>
@@ -672,25 +671,25 @@ function App() {
                 onClick={ randomizeButtonOnClick }
                 disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
                 startIcon={ <Casino/> }
-                variant="contained"
                 color="info"
-                size="large"
+                variant="contained"
+                disableElevation
               >
                 Randomize
             </Button>
             </span>
             </Tooltip>
-            <Tooltip title="Use current result as base image" placement="top">
+            {/*TODO: come up with better phrasing:*/}
+            <Tooltip title="Use this modified result as base image" placement="top">
             <span>
               <Button
                 onClick={ confirmButtonOnClick }
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <CheckCircleOutline/> }
-                variant="contained"
-                color="secondary"
-                size="large"
+                color="info"
+                variant="outlined"
               >
-              Confirm Step
+                Confirm
             </Button>
             </span>
             </Tooltip>
