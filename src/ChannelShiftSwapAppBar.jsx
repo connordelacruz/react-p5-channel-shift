@@ -173,7 +173,7 @@ export const AppBarButtons = ({
     direction="row"
     justifyContent="space-evenly"
     alignItems="center"
-    spacing={ 2 }
+    spacing={{xs: 0.5, sm: 2}}
   >
     <SaveButton
       setShouldSaveResult={ setShouldSaveResult }
@@ -209,7 +209,12 @@ export const ChannelShiftSwapAppBar = ({
       color="default"
       elevation={ 0 }
     >
-      <Toolbar>
+      <Toolbar
+        sx={{
+          pl: {xs: 1.5, sm: 2},
+          pr: {xs: 0, sm: 2},
+        }}
+      >
         <ChannelShiftLogo/>
         <AppBarButtons
           setShouldSaveResult={ setShouldSaveResult }

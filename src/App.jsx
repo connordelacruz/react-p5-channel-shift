@@ -646,7 +646,15 @@ function App() {
           {/*Reset/Randomize/Confirm Buttons*/ }
           <Stack
             direction="row"
-            divider={ <Divider orientation="vertical" flexItem/> }
+            divider={
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{
+                  display: {xs: 'none', sm: 'block'}
+                }}
+              />
+            }
             alignItems="center"
             justifyContent="space-evenly"
             spacing={ 2 }

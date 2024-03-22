@@ -45,6 +45,9 @@ const ShiftChannelSelectChip = ({
         setSelectedShiftChannel(channelOffset)
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
+      sx={{
+        width: {xs: '100%', sm: 'auto'},
+      }}
     />
   )
 }
@@ -177,7 +180,7 @@ const ShiftChannelSlider = ({
           spacing={ 2 }
         >
           {/* Slider */ }
-          <Grid item xs={ 10 }>
+          <Grid item sm={ 10 } xs={ 12 }>
             <Slider
               value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
               onChange={ shiftSliderOnChange }
@@ -221,7 +224,7 @@ const ShiftChannelSlider = ({
           </Grid>
 
           {/* Text input */ }
-          <Grid item xs={ 2 }>
+          <Grid item sm={ 2 } xs={ 12 }>
             <NumericTextInput
               valueState={ channelShiftTextInputValues[dimensionIndex] }
               min={ 0 }
@@ -232,6 +235,7 @@ const ShiftChannelSlider = ({
                 endAdornment: 'px',
               } }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+              sx={{ width: '100%'}}
             />
           </Grid>
         </Grid>
@@ -286,7 +290,7 @@ export const ShiftChannelsToolUI = ({
     >
       {/*Shift Channel Select Buttons*/ }
       <Stack
-        direction="row"
+        direction={{ xs: 'column', sm: 'row' }}
         alignItems="center"
         spacing={ 1 }
         sx={ {
