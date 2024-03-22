@@ -69,6 +69,30 @@ const ChannelSelectButtonGroup = ({
 }
 
 /**
+ * Channel select buttons with container.
+ *
+ * @param selectedChannelOffsetState
+ * @param stateSetterFunction
+ * @return {Element}
+ * @constructor
+ */
+const ChannelSwapSelect = ({ selectedChannelOffsetState, stateSetterFunction }) => {
+  return (
+    <Box
+      sx={ {
+        p: 2,
+        width: '45%'
+      } }
+    >
+      <ChannelSelectButtonGroup
+        selectedChannelOffsetState={ selectedChannelOffsetState }
+        stateSetterFunction={ stateSetterFunction }
+      />
+    </Box>
+  )
+}
+
+/**
  * Swap channels tool UI component.
  *
  * @param sourceChannel
@@ -97,31 +121,17 @@ export const SwapChannelsToolUI = ({
         alignItems="center"
         spacing={ 0 }
       >
-        <Box
-          sx={ {
-            p: 2,
-            width: '45%'
-          } }
-        >
-          <ChannelSelectButtonGroup
-            selectedChannelOffsetState={ sourceChannel }
-            stateSetterFunction={ setSourceChannel }
-          />
-        </Box>
+        <ChannelSwapSelect
+          selectedChannelOffsetState={ sourceChannel }
+          stateSetterFunction={ setSourceChannel }
+        />
 
         <SwapHoriz/>
 
-        <Box
-          sx={ {
-            p: 2,
-            width: '45%'
-          } }
-        >
-          <ChannelSelectButtonGroup
-            selectedChannelOffsetState={ targetChannel }
-            stateSetterFunction={ setTargetChannel }
-          />
-        </Box>
+        <ChannelSwapSelect
+          selectedChannelOffsetState={ targetChannel }
+          stateSetterFunction={ setTargetChannel }
+        />
       </Stack>
     </Paper>
   )
