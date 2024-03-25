@@ -302,7 +302,7 @@ const RandomizeShiftMaxPercentEditAllInput = ({
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
-      helperText={ `Edit All Channels` }
+      helperText={ 'Edit All Channels' }
       placeholder={ `Max ${ dimensionIndex === 0 ? 'X' : 'Y' } Shift` }
       color="neutral"
     />

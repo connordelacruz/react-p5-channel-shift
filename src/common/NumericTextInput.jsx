@@ -110,6 +110,15 @@ export const NumericTextInput = ({
       label={ showLabelOnFocus && textInputIsFocused ? labelText : null }
       autoComplete="off"
       size="small"
+      inputProps={{
+        // Tell mobile browsers to use numeric keyboard
+        inputMode: 'numeric',
+        // Use enter key on mobile keyboard
+        enterkeyhint: 'enter',
+        style: {
+          textAlign: 'right',
+        }
+      }}
       { ...props }
     />
   )

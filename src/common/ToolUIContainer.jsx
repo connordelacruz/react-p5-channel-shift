@@ -11,7 +11,7 @@ import { Box } from '@mui/material'
 export const ToolUIContainer = ({ children, ...props }) => {
   return (
     <Box
-      py={ 2 }
+      py={ 0.5 }
       px={ { xs: 0, sm: 2 } }
       { ...props }
     >

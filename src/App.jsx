@@ -650,14 +650,15 @@ function App() {
               <Divider
                 orientation="vertical"
                 flexItem
-                sx={{
-                  display: {xs: 'none', sm: 'block'}
-                }}
+                sx={ {
+                  display: { xs: 'none', sm: 'block' }
+                } }
               />
             }
             alignItems="center"
             justifyContent="space-evenly"
             spacing={ 2 }
+            py={ 0.5 }
           >
             <Tooltip title="Reset all shift and swap values" placement="top">
             <span>

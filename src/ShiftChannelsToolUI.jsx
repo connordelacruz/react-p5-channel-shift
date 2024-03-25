@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Paper, Slider, SliderThumb, Stack, Typography } from '@mui/material'
+import { Box, Chip, Grid, InputAdornment, Paper, Slider, SliderThumb, Stack, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
@@ -48,6 +48,7 @@ const ShiftChannelSelectChip = ({
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       sx={ {
         width: { xs: '100%', sm: 'auto' },
+        py: {xs: 3, sm: 0},
       } }
     />
   )
@@ -152,25 +153,17 @@ const ShiftChannelSlider = ({
       } }
       variant="outlined"
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="flex-start"
-        spacing={ 1 }
-        mb={ 1 }
+      <Typography
+        id={ `${ dimension }-shift-slider-label` }
+        variant="button"
+        gutterBottom
+        sx={ {
+          // Prevent accidental selection when dragging slider
+          userSelect: 'none'
+        } }
       >
-        <Typography
-          id={ `${ dimension }-shift-slider-label` }
-          variant="button"
-          gutterBottom
-          sx={ {
-            // Prevent accidental selection when dragging slider
-            userSelect: 'none'
-          } }
-        >
-          { dimension.toUpperCase() } Shift
-        </Typography>
-      </Stack>
+        { dimension.toUpperCase() } Shift
+      </Typography>
       <Box
         sx={ { px: 2 } }
       >
@@ -181,7 +174,7 @@ const ShiftChannelSlider = ({
           spacing={ 2 }
         >
           {/* Slider */ }
-          <Grid item sm={ 10 } xs={ 12 }>
+          <Grid item sm={ 9 } xs={ 12 }>
             <Slider
               value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
               onChange={ shiftSliderOnChange }
@@ -225,7 +218,7 @@ const ShiftChannelSlider = ({
           </Grid>
 
           {/* Text input */ }
-          <Grid item sm={ 2 } xs={ 12 }>
+          <Grid item sm={ 3 } xs={ 12 }>
             <NumericTextInput
               valueState={ channelShiftTextInputValues[dimensionIndex] }
               min={ 0 }
@@ -233,7 +226,7 @@ const ShiftChannelSlider = ({
               onChangeHandleValue={ shiftTextInputOnChangeHandleValue }
               onBlurHandleValidatedValue={ shiftTextInputOnBlurHandleValidatedValue }
               InputProps={ {
-                endAdornment: 'px',
+                endAdornment: <InputAdornment position="end">px</InputAdornment>,
               } }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
               sx={ { width: '100%' } }
