@@ -3,6 +3,7 @@ import * as Constants from './Constants'
 import React from 'react'
 import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
 import { NumericTextInput } from './common/NumericTextInput'
+import { ToolUIContainer } from './common/ToolUIContainer'
 
 // ================================================================================
 // Shift Channels Tool UI
@@ -45,9 +46,9 @@ const ShiftChannelSelectChip = ({
         setSelectedShiftChannel(channelOffset)
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
-      sx={{
-        width: {xs: '100%', sm: 'auto'},
-      }}
+      sx={ {
+        width: { xs: '100%', sm: 'auto' },
+      } }
     />
   )
 }
@@ -71,9 +72,9 @@ const ShiftChannelSliderThumb = ({
 
   return (
     <SliderThumb
-      sx={{
+      sx={ {
         bgcolor: 'background.default'
-      }}
+      } }
       { ...props }
     >
       { children }
@@ -192,12 +193,12 @@ const ShiftChannelSlider = ({
                 { value: imageDimensionSize, label: '' }
               ] }
               slots={ { thumb: ShiftChannelSliderThumb } }
-              slotProps={{
+              slotProps={ {
                 thumb: {
                   dimensionIndex: dimensionIndex,
                   selectedShiftChannel: selectedShiftChannel,
                 }
-              }}
+              } }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
               aria-labelledby={ `${ dimension }-shift-slider-label` }
             />
@@ -235,7 +236,7 @@ const ShiftChannelSlider = ({
                 endAdornment: 'px',
               } }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
-              sx={{ width: '100%'}}
+              sx={ { width: '100%' } }
             />
           </Grid>
         </Grid>
@@ -284,13 +285,10 @@ export const ShiftChannelsToolUI = ({
   )
 
   return (
-    <Paper
-      sx={ { p: 2 } }
-      variant="outlined"
-    >
+    <ToolUIContainer>
       {/*Shift Channel Select Buttons*/ }
       <Stack
-        direction={{ xs: 'column', sm: 'row' }}
+        direction={ { xs: 'column', sm: 'row' } }
         alignItems="center"
         spacing={ 1 }
         sx={ {
@@ -319,6 +317,6 @@ export const ShiftChannelsToolUI = ({
         setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
         setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
       />
-    </Paper>
+    </ToolUIContainer>
   )
 }

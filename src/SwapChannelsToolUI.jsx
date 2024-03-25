@@ -1,7 +1,8 @@
-import { Box, Button, ButtonGroup, Paper, Stack } from '@mui/material'
+import { Box, Button, ButtonGroup, Stack } from '@mui/material'
 import React from 'react'
 import * as Constants from './Constants'
 import { SwapHoriz } from '@mui/icons-material'
+import { ToolUIContainer } from './common/ToolUIContainer'
 
 // ================================================================================
 // Swap Channels Tool UI
@@ -111,10 +112,7 @@ export const SwapChannelsToolUI = ({
                                      setTargetChannel
                                    }) => {
   return (
-    <Paper
-      sx={ { p: 2 } }
-      variant="outlined"
-    >
+    <ToolUIContainer>
       <Stack
         direction="row"
         justifyContent="space-evenly"
@@ -133,6 +131,6 @@ export const SwapChannelsToolUI = ({
           stateSetterFunction={ setTargetChannel }
         />
       </Stack>
-    </Paper>
+    </ToolUIContainer>
   )
 }

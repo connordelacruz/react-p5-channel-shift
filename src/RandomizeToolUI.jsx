@@ -14,6 +14,7 @@ import * as Constants from './Constants'
 import React from 'react'
 import { ChannelLabel } from './common/ChannelLabel'
 import { NumericTextInput } from './common/NumericTextInput'
+import { ToolUIContainer } from './common/ToolUIContainer'
 
 // ================================================================================
 // Randomization Options Tool UI
@@ -742,11 +743,8 @@ export const RandomizeToolUI = ({
   }
 
   return (
-    <Paper
-      sx={ { p: 2 } }
-      variant="outlined"
-    >
-      {/*Randomize Shift*/ }
+    <ToolUIContainer>
+      { /*Randomize Shift*/ }
       <FormControlLabel
         control={
           <Switch
@@ -758,7 +756,7 @@ export const RandomizeToolUI = ({
         label={
           <Typography
             variant="h5"
-            color={shouldRandomizeShift ? 'secondary' : null}
+            color={ shouldRandomizeShift ? 'secondary' : null }
           >
             Randomize Channel Shift
           </Typography>
@@ -794,7 +792,7 @@ export const RandomizeToolUI = ({
         sx={ { my: 3 } }
       />
 
-      {/*Randomize Swap*/ }
+      { /*Randomize Swap*/ }
       <FormControlLabel
         control={
           <Switch
@@ -806,7 +804,7 @@ export const RandomizeToolUI = ({
         label={
           <Typography
             variant="h5"
-            color={shouldRandomizeSwap ? 'secondary' : null}
+            color={ shouldRandomizeSwap ? 'secondary' : null }
           >
             Randomize Channel Swap
           </Typography>
@@ -840,6 +838,6 @@ export const RandomizeToolUI = ({
         </Paper>
       </Collapse>
 
-    </Paper>
+    </ToolUIContainer>
   )
 }
