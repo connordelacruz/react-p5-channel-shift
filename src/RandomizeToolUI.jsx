@@ -302,7 +302,6 @@ const RandomizeShiftMaxPercentEditAllInput = ({
       InputProps={ {
         endAdornment: <InputAdornment position="end">%</InputAdornment>,
       } }
-      helperText={ 'Edit All Channels' }
       placeholder={ `Max ${ dimensionIndex === 0 ? 'X' : 'Y' } Shift` }
       color="neutral"
     />
@@ -405,7 +404,12 @@ const RandomizeShiftTable = ({
 
   return (
     <TableContainer>
-      <Table>
+      <Table
+        size="small"
+        sx={ {
+          minWidth: 650,
+        } }
+      >
         <TableHead>
           <TableRow>
             <TableCell>Channel</TableCell>
@@ -630,7 +634,9 @@ const RandomizeSwapTable = ({
 
   return (
     <TableContainer>
-      <Table>
+      <Table
+        size="small"
+      >
         <TableHead>
           <TableRow>
             <TableCell>Channel</TableCell>
@@ -758,7 +764,7 @@ export const RandomizeToolUI = ({
             variant="h5"
             color={ shouldRandomizeShift ? 'secondary' : null }
           >
-            Randomize Channel Shift
+            Randomize Shift
           </Typography>
         }
       />
@@ -770,13 +776,6 @@ export const RandomizeToolUI = ({
           } }
           variant="outlined"
         >
-          <Typography
-            variant="h6"
-            component="div"
-            gutterBottom
-          >
-            Channel Shift Randomization Options:
-          </Typography>
           <RandomizeShiftTable
             randomizeShiftChannels={ randomizeShiftChannels }
             setRandomizeShiftChannel={ setRandomizeShiftChannel }
@@ -806,7 +805,7 @@ export const RandomizeToolUI = ({
             variant="h5"
             color={ shouldRandomizeSwap ? 'secondary' : null }
           >
-            Randomize Channel Swap
+            Randomize Swap
           </Typography>
         }
       />
@@ -818,13 +817,6 @@ export const RandomizeToolUI = ({
           } }
           variant="outlined"
         >
-          <Typography
-            variant="h6"
-            component="div"
-            gutterBottom
-          >
-            Channel Swap Randomization Options:
-          </Typography>
           <RandomizeSwapTable
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }

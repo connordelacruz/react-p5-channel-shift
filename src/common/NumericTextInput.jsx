@@ -24,6 +24,7 @@ export const NumericTextInput = ({
                                    onBlurHandleValidatedValue,
                                    showLabelOnFocus = true,
                                    labelText = '⏎ Enter to set',
+                                   sx = {},
                                    ...props
                                  }) => {
   // State keeping track of text input focus. Used to conditionally show help text on focus.
@@ -110,7 +111,7 @@ export const NumericTextInput = ({
       label={ showLabelOnFocus && textInputIsFocused ? labelText : null }
       autoComplete="off"
       size="small"
-      inputProps={{
+      inputProps={ {
         // Tell mobile browsers to use numeric keyboard
         inputMode: 'numeric',
         // Use enter key on mobile keyboard
@@ -118,6 +119,13 @@ export const NumericTextInput = ({
         style: {
           textAlign: 'right',
         }
+      } }
+      sx={{
+        '& input::placeholder': {
+          fontSize: '12px',
+          textAlign: 'center',
+        },
+        ...sx,
       }}
       { ...props }
     />
