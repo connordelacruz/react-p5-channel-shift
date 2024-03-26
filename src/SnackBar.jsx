@@ -126,7 +126,7 @@ export const SnackBar = ({
         bottom: 0,
         left: 0,
         right: 0,
-        p: 1,
+        py: 1,
       } }
     >
       <Container maxWidth="md">
@@ -143,8 +143,8 @@ export const SnackBar = ({
             />
           }
           alignItems="center"
-          justifyContent="space-evenly"
-          spacing={ 2 }
+          justifyContent={ { xs: 'space-between', sm: 'space-evenly' } }
+          spacing={ { xs: 1, sm: 2 } }
           py={ 0.5 }
         >
           <ResetButton
