@@ -16,20 +16,10 @@ import { RandomizeToolUI } from './RandomizeToolUI'
 // Misc Components
 import { HelpDialog } from './HelpDialog'
 // MUI
-import {
-  Box,
-  Button,
-  Container,
-  createTheme,
-  CssBaseline,
-  Divider,
-  Paper,
-  Stack,
-  ThemeProvider,
-  Tooltip
-} from '@mui/material'
-import { Casino, CheckCircleOutline, RestartAlt } from '@mui/icons-material'
+import { Box, Container, createTheme, CssBaseline, Paper, ThemeProvider } from '@mui/material'
 import { blueGrey, grey, pink, teal } from '@mui/material/colors'
+import { SnackBar } from './SnackBar'
+
 
 // ================================================================================
 // App Component
@@ -632,86 +622,20 @@ function App() {
       {/*END Tools UI*/ }
 
       {/*Snackbar*/ }
-      <Paper
-        elevation={ 3 }
-        sx={ {
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          p: 1,
-        } }
-      >
-        <Container maxWidth="md">
-          {/*Reset/Randomize/Confirm Buttons*/ }
-          <Stack
-            direction="row"
-            divider={
-              <Divider
-                orientation="vertical"
-                flexItem
-                sx={ {
-                  display: { xs: 'none', sm: 'block' }
-                } }
-              />
-            }
-            alignItems="center"
-            justifyContent="space-evenly"
-            spacing={ 2 }
-            py={ 0.5 }
-          >
-            <Tooltip title="Reset all shift and swap values" placement="top">
-            <span>
-              <Button
-                onClick={ resetShiftAndSwap }
-                disabled={ !imageModifiedDuringStep() }
-                startIcon={ <RestartAlt/> }
-                color="info"
-                variant="outlined"
-              >
-              Reset
-            </Button>
-            </span>
-            </Tooltip>
-            {/*TODO: see Tooltip refernce to get this formatting better:*/}
-            <Tooltip title='Randomize shift and swap values (click "Randomization" tab for more options)'
-                     placement="top">
-            <span>
-              <Button
-                onClick={ randomizeButtonOnClick }
-                disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
-                startIcon={ <Casino/> }
-                color="info"
-                variant="contained"
-                disableElevation
-              >
-                Randomize
-            </Button>
-            </span>
-            </Tooltip>
-            {/*TODO: come up with better phrasing:*/}
-            <Tooltip title="Use this modified result as base image" placement="top">
-            <span>
-              <Button
-                onClick={ confirmButtonOnClick }
-                disabled={ !imageModifiedDuringStep() }
-                startIcon={ <CheckCircleOutline/> }
-                color="info"
-                variant="outlined"
-              >
-                Confirm
-            </Button>
-            </span>
-            </Tooltip>
-          </Stack>
-        </Container>
-      </Paper>
-      {/*END Snackbar*/ }
+      <SnackBar
+        resetButtonOnClick={ resetShiftAndSwap }
+        randomizeButtonOnClick={ randomizeButtonOnClick }
+        confirmButtonOnClick={ confirmButtonOnClick }
+        shouldRandomizeShift={ shouldRandomizeShift }
+        shouldRandomizeSwap={ shouldRandomizeSwap }
+        imageModifiedDuringStep={ imageModifiedDuringStep }
+      />
 
       {/*Help Modal*/ }
       <HelpDialog open={ helpOpen } onClose={ () => {
         setHelpOpen(false)
       } }/>
+
     </ThemeProvider>
   )
 }
