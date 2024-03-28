@@ -3,23 +3,24 @@ import React from 'react'
 import { ReactP5Wrapper } from '@p5-wrapper/react'
 // Constants
 import * as Constants from './Constants'
-// App Bar Components
+// MUI Theme
+import { theme } from './Theme'
+// App Bar Component
 import { ChannelShiftSwapAppBar } from './ChannelShiftSwapAppBar'
 // Sketch
 import { ChannelShiftSketch } from './ChannelShiftSketch'
-// Tool Tabs Components
+// Tool Tabs Component
 import { ToolTabs } from './ToolTabs'
 // Tool UI Components
 import { ShiftChannelsToolUI } from './ShiftChannelsToolUI'
 import { SwapChannelsToolUI } from './SwapChannelsToolUI'
 import { RandomizeToolUI } from './RandomizeToolUI'
+// Snack Bar Component
+import { SnackBar } from './SnackBar'
 // Misc Components
 import { HelpDialog } from './HelpDialog'
 // MUI
-import { Box, Container, createTheme, CssBaseline, Paper, ThemeProvider } from '@mui/material'
-import { blueGrey, grey, pink, teal } from '@mui/material/colors'
-import { SnackBar } from './SnackBar'
-
+import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material'
 
 // ================================================================================
 // App Component
@@ -489,26 +490,6 @@ function App() {
   // Open/close state
   const [helpOpen, setHelpOpen] = React.useState(false)
 
-
-  // ================================================================================
-  // Theme
-  // ================================================================================
-  const theme = createTheme({
-    palette: {
-      // Non-color channel UI colors
-      secondary: {
-        main: teal[500]
-      },
-      info: {
-        main: pink[500]
-      },
-      neutral: {
-        main: grey[900]
-      }
-    }
-  })
-
-
   // ================================================================================
   // Render
   // ================================================================================
@@ -523,7 +504,7 @@ function App() {
           top: 0,
           left: 0,
           right: 0,
-          bgcolor: blueGrey[900],
+          bgcolor: 'preview.bg',
           zIndex: 999,
         } }
         square

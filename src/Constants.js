@@ -17,11 +17,15 @@ CHANNEL_DISPLAY_NAMES[R_OFFSET] = 'Red'
 CHANNEL_DISPLAY_NAMES[G_OFFSET] = 'Green'
 CHANNEL_DISPLAY_NAMES[B_OFFSET] = 'Blue'
 
+// MUI theme color names
+export const R_MUI_COLOR = 'error'
+export const G_MUI_COLOR = 'success'
+export const B_MUI_COLOR = 'primary'
 // MUI theme color names to use for color channels indexed by above offsets
 export const CHANNEL_MUI_COLORS = []
-CHANNEL_MUI_COLORS[R_OFFSET] = 'error'
-CHANNEL_MUI_COLORS[G_OFFSET] = 'success'
-CHANNEL_MUI_COLORS[B_OFFSET] = 'primary'
+CHANNEL_MUI_COLORS[R_OFFSET] = R_MUI_COLOR
+CHANNEL_MUI_COLORS[G_OFFSET] = G_MUI_COLOR
+CHANNEL_MUI_COLORS[B_OFFSET] = B_MUI_COLOR
 
 // ================================================================================
 // UI Constants

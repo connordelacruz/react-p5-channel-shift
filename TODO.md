@@ -1,5 +1,11 @@
 # Do before beta
 
+## Misc
+
+- Use Chicago skyline photo as default image
+- Color/branding pass
+  - Figure out how to get custom colors working nicely
+
 ## Better laptop layout
 
 - Maybe figure out how to put controls on the left and preview on the right in wide views?
@@ -7,13 +13,10 @@
 
 ## It works on mobile now! Make UI more responsive
 
-- Fix channel chips going out of bounds
 - Scale preview image better, it takes up too much space on mobile
-- Put text input on its own line on narrow viewports
 - Slider accessibility?
 - scrollable tabs?
 - Re-work randomization options tables to fit better??
-- shrink snackbar buttons
 - Better app bar scaling
     * hide text on save/load?
 
@@ -21,6 +24,14 @@
 
 - Thoughtful concise writing
 - Screenshots and gifs
+
+## Quality of Life
+
+- Drag n drop file upload
+  - https://www.npmjs.com/package/react-drag-drop-files
+- Keyboard shortcuts?
+  - 'R' to randomize
+  - 'S' to save
 
 
 --------------------------------------------------------------------------------
@@ -46,3 +57,6 @@ Some ideas for allowing resizing:
 
 Try to port over some of the cooler advanced shift types from your Processing version
 
+## State history / undo
+
+Figure out a way to roll back, maybe exclude recursion and just do for changes to the current step

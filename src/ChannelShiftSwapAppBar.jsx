@@ -1,4 +1,14 @@
-import { AppBar, Box, Button, IconButton, Stack, styled, Toolbar, Tooltip, Typography } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  styled,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import {
   FileUpload,
   HelpOutline,
@@ -24,9 +34,24 @@ const ChannelShiftLogo = () => {
         fontWeight: 'bold'
       } }
     >
-      <Typography variant="button" sx={ { fontWeight: 'bold' } } color="info.main">Channel</Typography>
-      <SwapHoriz fontSize="small" sx={ { mx: 0.5 } } color="secondary"/>
-      <Typography variant="button" sx={ { fontWeight: 'bold' } } color="info.main">Shift</Typography>
+      <Typography
+        variant="button"
+        sx={ { fontWeight: 'bold' } }
+        color="secondary"
+      >
+        Channel
+      </Typography>
+      <SwapHoriz
+        fontSize="small"
+        sx={ { mx: 0.5 } }
+      />
+      <Typography
+        variant="button"
+        sx={ { fontWeight: 'bold' } }
+        color="info.main"
+      >
+        Shift
+      </Typography>
     </Box>
   )
 }
@@ -39,7 +64,6 @@ const ChannelShiftLogo = () => {
  * @constructor
  */
 const SaveButton = ({ setShouldSaveResult }) => {
-
   /**
    * Save button onClick handler.
    */
@@ -60,7 +84,7 @@ const SaveButton = ({ setShouldSaveResult }) => {
           variant="contained"
           disableElevation
         >
-        Save
+          Save
       </Button>
       </span>
     </Tooltip>
@@ -173,7 +197,7 @@ export const AppBarButtons = ({
     direction="row"
     justifyContent="space-evenly"
     alignItems="center"
-    spacing={{xs: 0.5, sm: 2}}
+    spacing={ { xs: 0.5, sm: 2 } }
   >
     <SaveButton
       setShouldSaveResult={ setShouldSaveResult }
@@ -188,6 +212,7 @@ export const AppBarButtons = ({
 }
 
 
+// TODO: rename component/file to something less clunky
 /**
  * App bar with save/load/help buttons.
  *
@@ -210,10 +235,10 @@ export const ChannelShiftSwapAppBar = ({
       elevation={ 0 }
     >
       <Toolbar
-        sx={{
-          pl: {xs: 1.5, sm: 2},
-          pr: {xs: 0, sm: 2},
-        }}
+        sx={ {
+          pl: { xs: 1.5, sm: 2 },
+          pr: { xs: 0, sm: 2 },
+        } }
       >
         <ChannelShiftLogo/>
         <AppBarButtons
