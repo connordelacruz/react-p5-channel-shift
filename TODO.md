@@ -34,6 +34,15 @@
 
 --------------------------------------------------------------------------------
 
+# Next up
+
+## Figure out how to optimize p5 stuff
+
+Smarter handling of props with things like useEffect():
+https://github.com/P5-wrapper/react?tab=readme-ov-file#reacting-to-props
+
+--------------------------------------------------------------------------------
+
 # Nice to haves
 
 ## Preview card size

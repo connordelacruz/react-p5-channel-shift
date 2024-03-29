@@ -421,15 +421,13 @@ const RandomizeShiftTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
-        </TableBody>
-        <TableFooter>
           <RandomizeShiftSelectAllTableRow
             randomizeShiftChannels={ randomizeShiftChannels }
             randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
             setRandomizeShiftChannels={ setRandomizeShiftChannels }
             setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
           />
-        </TableFooter>
+        </TableBody>
       </Table>
     </TableContainer>
   )
@@ -646,8 +644,6 @@ const RandomizeSwapTable = ({
         </TableHead>
         <TableBody>
           { tableRows }
-        </TableBody>
-        <TableFooter>
           <RandomizeSwapSelectAllTableRow
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
@@ -671,7 +667,7 @@ const RandomizeSwapTable = ({
               />
             </TableCell>
           </TableRow>
-        </TableFooter>
+        </TableBody>
       </Table>
     </TableContainer>
   )

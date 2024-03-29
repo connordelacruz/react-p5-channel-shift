@@ -52,14 +52,17 @@ export const ToolTabs = ({
           <Tab
             value={ Constants.SHIFT_TAB_VALUE }
             label={ `Shift${ shiftModifiedDuringStep() ? ' *' : '' }` }
+            disableRipple
           />
           <Tab
             value={ Constants.SWAP_TAB_VALUE }
             label={ `Swap${ swapModifiedDuringStep() ? ' *' : '' }` }
+            disableRipple
           />
           <Tab
             value={ Constants.RANDOMIZE_TAB_VALUE }
             label="Randomization"
+            disableRipple
           />
         </Tabs>
       </Container>

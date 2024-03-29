@@ -5,7 +5,7 @@ export const theme = createTheme({
   palette: {
     // Non-color channel UI colors
     secondary: {
-      main: blue[800]
+      main: blue['A700']
     },
     info: {
       main: pink[500]
