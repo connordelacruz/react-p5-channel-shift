@@ -36,17 +36,19 @@ const ChannelShiftLogo = () => {
     >
       <Typography
         variant="button"
+        fontSize="medium"
         sx={ { fontWeight: 'bold' } }
         color="secondary"
       >
         Channel
       </Typography>
       <SwapHoriz
-        fontSize="small"
+        fontSize="medium"
         sx={ { mx: 0.5 } }
       />
       <Typography
         variant="button"
+        fontSize="medium"
         sx={ { fontWeight: 'bold' } }
         color="info.main"
       >
@@ -141,7 +143,7 @@ const LoadButton = ({ setNewFileDataURL }) => {
         <Button
           startIcon={ <FileUpload/> }
           component="label"
-          color="secondary"
+          color="info"
           variant="contained"
           disableElevation
         >
