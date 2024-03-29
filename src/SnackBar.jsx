@@ -22,8 +22,7 @@ const ResetButton = ({
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <RestartAlt/> }
                 color="secondary"
-                variant="contained"
-                disableElevation
+                variant="outlined"
               >
               Reset
             </Button>
@@ -87,8 +86,7 @@ const ConfirmButton = ({
                 disabled={ !imageModifiedDuringStep() }
                 startIcon={ <CheckCircleOutline/> }
                 color="secondary"
-                variant="contained"
-                disableElevation
+                variant="outlined"
               >
                 Confirm
             </Button>

@@ -205,9 +205,10 @@ export const AppBarButtons = ({
     <LoadButton
       setNewFileDataURL={ setNewFileDataURL }
     />
-    <HelpButton
-      setHelpOpen={ setHelpOpen }
-    />
+    {/*TODO: add when ready*/}
+    {/*<HelpButton*/}
+    {/*  setHelpOpen={ setHelpOpen }*/}
+    {/*/>*/}
   </Stack>
 }
 
@@ -236,8 +237,10 @@ export const ChannelShiftSwapAppBar = ({
     >
       <Toolbar
         sx={ {
-          pl: { xs: 1.5, sm: 2 },
-          pr: { xs: 0, sm: 2 },
+          // TODO: uncomment when help button is re-implemented
+//          pl: { xs: 1.5, sm: 2 },
+//          pr: { xs: 0, sm: 2 },
+          px: 2,
         } }
       >
         <ChannelShiftLogo/>
