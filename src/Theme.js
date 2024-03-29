@@ -1,11 +1,11 @@
 import { createTheme } from '@mui/material'
-import { blueGrey, grey, pink, teal } from '@mui/material/colors'
+import { blue, blueGrey, grey, pink } from '@mui/material/colors'
 
 export const theme = createTheme({
   palette: {
     // Non-color channel UI colors
     secondary: {
-      main: teal[500]
+      main: blue[800]
     },
     info: {
       main: pink[500]

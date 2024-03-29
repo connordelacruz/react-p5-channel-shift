@@ -31,22 +31,35 @@ export const ToolTabs = ({
           onChange={ toolTabsOnChange }
           variant="fullWidth"
           indicatorColor="secondary"
-          textColor="secondary"
+          sx={{
+            '& .MuiTabs-indicator': {
+              height: '100%',
+            },
+            '& .MuiTab-root': {
+              fontWeight: 'bold',
+              color: 'secondary.main',
+              // Make sure text appears above full-height tab indicator
+              zIndex: 1,
+              // Match transition of indicator span animations
+              transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+              '&.Mui-selected': {
+                // White text when indicator is behind selected tab
+                color: 'background.default',
+              },
+            },
+          }}
         >
           <Tab
             value={ Constants.SHIFT_TAB_VALUE }
             label={ `Shift${ shiftModifiedDuringStep() ? ' *' : '' }` }
-            sx={ { fontWeight: 'bold' } }
           />
           <Tab
             value={ Constants.SWAP_TAB_VALUE }
             label={ `Swap${ swapModifiedDuringStep() ? ' *' : '' }` }
-            sx={ { fontWeight: 'bold' } }
           />
           <Tab
             value={ Constants.RANDOMIZE_TAB_VALUE }
             label="Randomization"
-            sx={ { fontWeight: 'bold' } }
           />
         </Tabs>
       </Container>

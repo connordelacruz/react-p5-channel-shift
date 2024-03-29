@@ -2,7 +2,6 @@
 
 ## Misc
 
-- Use Chicago skyline photo as default image
 - Color/branding pass
   - Figure out how to get custom colors working nicely
 
@@ -16,7 +15,6 @@
 - Scale preview image better, it takes up too much space on mobile
 - Slider accessibility?
 - scrollable tabs?
-- Re-work randomization options tables to fit better??
 - Better app bar scaling
     * hide text on save/load?
 
