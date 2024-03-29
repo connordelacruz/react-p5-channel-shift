@@ -5,8 +5,7 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer, TableFooter,
-  TableHead,
+  TableContainer, TableHead,
   TableRow,
   Typography
 } from '@mui/material'
