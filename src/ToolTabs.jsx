@@ -25,13 +25,18 @@ export const ToolTabs = ({
         bgcolor: 'background.default'
       } }
     >
-      <Container maxWidth="md">
+      <Container
+        maxWidth="md"
+        sx={ {
+          px: { xs: 0, sm: 3 },
+        } }
+      >
         <Tabs
           value={ selectedToolTab }
           onChange={ toolTabsOnChange }
           variant="fullWidth"
           indicatorColor="secondary"
-          sx={{
+          sx={ {
             '& .MuiTabs-indicator': {
               height: '100%',
             },
@@ -47,7 +52,7 @@ export const ToolTabs = ({
                 color: 'background.default',
               },
             },
-          }}
+          } }
         >
           <Tab
             value={ Constants.SHIFT_TAB_VALUE }
@@ -61,7 +66,7 @@ export const ToolTabs = ({
           />
           <Tab
             value={ Constants.RANDOMIZE_TAB_VALUE }
-            label="Randomization"
+            label="Randomize"
             disableRipple
           />
         </Tabs>
