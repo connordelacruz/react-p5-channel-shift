@@ -11,7 +11,7 @@ Add `"homepage"` back to `package.json` (omitting this during development becaus
 Then run the following command to deploy it to GitHub pages with a commit message:
 
 ```
-$ npm run deploy -- -m "<MESSAGE HERE>"
+npm run deploy -- -m "<MESSAGE HERE>"
 ```
 
 Wait patiently for load balancers to update, then you should be all set.
