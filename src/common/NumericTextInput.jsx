@@ -115,7 +115,7 @@ export const NumericTextInput = ({
         // Tell mobile browsers to use numeric keyboard
         inputMode: 'numeric',
         // Use enter key on mobile keyboard
-        enterkeyhint: 'enter',
+        enterKeyHint: 'enter',
         style: {
           textAlign: 'right',
         }
