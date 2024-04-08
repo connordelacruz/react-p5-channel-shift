@@ -215,7 +215,6 @@ export const AppBarButtons = ({
 }
 
 
-// TODO: rename component/file to something less clunky
 /**
  * App bar with save/load/help buttons.
  *
@@ -225,7 +224,7 @@ export const AppBarButtons = ({
  * @return {Element}
  * @constructor
  */
-export const ChannelShiftSwapAppBar = ({
+export const ChannelShiftAppBar = ({
                                          setShouldSaveResult,
                                          setNewFileDataURL,
                                          setHelpOpen

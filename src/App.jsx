@@ -6,7 +6,7 @@ import * as Constants from './Constants'
 // MUI Theme
 import { theme } from './Theme'
 // App Bar Component
-import { ChannelShiftSwapAppBar } from './ChannelShiftSwapAppBar'
+import { ChannelShiftAppBar } from './ChannelShiftAppBar'
 // Sketch
 import { ChannelShiftSketch } from './ChannelShiftSketch'
 // Tool Tabs Component
@@ -511,7 +511,7 @@ function App() {
         elevation={ 3 }
       >
         {/*App Bar*/ }
-        <ChannelShiftSwapAppBar
+        <ChannelShiftAppBar
           setShouldSaveResult={ setShouldSaveResult }
           setNewFileDataURL={ setNewFileDataURL }
           setHelpOpen={ setHelpOpen }
