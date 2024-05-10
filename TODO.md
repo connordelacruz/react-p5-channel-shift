@@ -1,27 +1,37 @@
-# Do before beta
+# Do before (real) beta
 
-## Misc
+## Help Text?
 
-- Color/branding pass
-  - Figure out how to get custom colors working nicely
+Maybe use a landing page? not a lot of space in the app bar..
 
-## Better laptop layout
+- Thoughtful concise writing (see text sent to friends as a base)
+- Screenshots and gifs
+  - Can these be lazy loaded?
+  - Use RGB venn diagram from wikipedia as a sample image
+
+## Optimization
+
+- Smarter handling of props with things like useEffect():
+    * https://github.com/P5-wrapper/react?tab=readme-ov-file#reacting-to-props
+- Maybe material UI is the problem:
+    * https://dev.to/gaelferrand/why-you-should-not-use-material-ui-21nn
+    * Might get free performance bumps by replacing `<Box>` with `<div>` and any unnecessary `<Typography>` elements
+
+## Sample Gallery!
+
+(Maybe on another page or something so images don't bog down load time of app)
+
+https://mui.com/material-ui/react-image-list/
+
+## Widescreen UI
 
 - Maybe figure out how to put controls on the left and preview on the right in wide views?
 - Scale down snackbar and app bar (also helps with mobile)
 
-## It works on mobile now! Make UI more responsive
+## Mobile UI
 
 - Scale preview image better, it takes up too much space on mobile
 - Slider accessibility?
-- scrollable tabs?
-- Better app bar scaling
-    * hide text on save/load?
-
-## Help message
-
-- Thoughtful concise writing
-- Screenshots and gifs
 
 ## Quality of Life
 
@@ -30,31 +40,15 @@
 - Keyboard shortcuts?
   - 'R' to randomize
   - 'S' to save
-
-
---------------------------------------------------------------------------------
-
-# Next up
-
-## Figure out how to optimize p5 stuff
-
-Smarter handling of props with things like useEffect():
-https://github.com/P5-wrapper/react?tab=readme-ov-file#reacting-to-props
+- Loading screen?
 
 --------------------------------------------------------------------------------
 
 # Nice to haves
 
-## Preview card size
+## Favicon
 
-Some ideas for allowing resizing:
-
-- Probably easy: Add a "Theater Mode" toggle:
-    * When off, determine canvas height by 50% the window height
-    * When on, determine canvas height by 100% the window width
-    * Bonus: Add easing into that size, use frame count to animate
-- Probably harder: drag bottom of card to resize
-
+Figure out some design software you can use
 
 --------------------------------------------------------------------------------
 
@@ -67,3 +61,21 @@ Try to port over some of the cooler advanced shift types from your Processing ve
 ## State history / undo
 
 Figure out a way to roll back, maybe exclude recursion and just do for changes to the current step
+
+## Preview card size
+
+Some ideas for allowing resizing:
+
+- Probably easy: Add a "Theater Mode" toggle:
+  * When off, determine canvas height by 50% the window height
+  * When on, determine canvas height by 100% the window width
+  * Bonus: Add easing into that size, use frame count to animate
+- Probably harder: drag bottom of card to resize
+
+## Settings?
+
+Ideas:
+
+- Maybe add an option to increase pixel density of preview at cost of performance
+
+Also, maybe implement local storage for state of these settings so they aren't lost on reload

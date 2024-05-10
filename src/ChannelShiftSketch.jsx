@@ -59,6 +59,8 @@ export function ChannelShiftSketch(p5) {
    * p5 setup
    */
   p5.setup = () => {
+    // Disable FES (theoretically improves performance, but tbh I don't know if it's enabled for this react wrapper)
+    p5.disableFriendlyErrors = true
     // Set pixel density to 1 (helps with performance on high-density displays)
     p5.pixelDensity(1)
     // Set frame rate to 30, we don't need crazy high FPS for this

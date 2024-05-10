@@ -83,7 +83,7 @@ function App() {
   // --------------------------------------------------------------------------------
 
   /**
-   * Returns default value of all 0's for each channel
+   * Returns default value of all 0's for each channel.
    *
    * @return array
    */
