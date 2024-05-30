@@ -1,7 +1,10 @@
 import { Box, Chip, Grid, InputAdornment, Paper, Slider, SliderThumb, Stack, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
-import { SwapHorizontalCircle, SwapVerticalCircle } from '@mui/icons-material'
+import {
+  SwapHoriz,
+  SwapVert
+} from '@mui/icons-material'
 import { NumericTextInput } from './common/NumericTextInput'
 import { ToolUIContainer } from './common/ToolUIContainer'
 
@@ -75,15 +78,22 @@ const ShiftChannelSliderThumb = ({
   return (
     <SliderThumb
       sx={ {
-        bgcolor: 'background.default'
+        bgColor: Constants.CHANNEL_MUI_COLORS[selectedShiftChannel],
+        outline: 2,
+        outlineColor: 'background.default',
+        width: 24,
+        height: 24,
+        '&::before': {
+          boxShadow: 'none',
+        },
       } }
       { ...props }
     >
       { children }
       {
         dimensionIndex === 0 ?
-          <SwapHorizontalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/> :
-          <SwapVerticalCircle color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }/>
+          <SwapHoriz sx={ { color: 'background.default' } }/> :
+          <SwapVert sx={ { color: 'background.default' } }/>
       }
     </SliderThumb>
   )
@@ -194,6 +204,17 @@ const ShiftChannelSlider = ({
                 }
               } }
               color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+              sx={{
+                '& .MuiSlider-rail': {
+                  height: 12,
+                },
+                '& .MuiSlider-track': {
+                  height: 12,
+                },
+                '& .MuiSlider-mark': {
+                  display: 'none',
+                },
+              }}
               aria-labelledby={ `${ dimension }-shift-slider-label` }
             />
             {/* Fix for min/max marks going out of bounds */ }
