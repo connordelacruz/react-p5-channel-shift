@@ -47,8 +47,9 @@ const ShiftChannelSelectChip = ({
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       sx={ {
-        width: { xs: '100%', sm: 'auto' },
-        py: {xs: 3, sm: 0},
+        width: '100%',
+        py: 3,
+        outline: 1,
       } }
     />
   )
@@ -283,9 +284,10 @@ export const ShiftChannelsToolUI = ({
       <Stack
         direction={ { xs: 'column', sm: 'row' } }
         alignItems="center"
+        justifyContent="space-between"
         spacing={ 1 }
         sx={ {
-          p: 2,
+          py: 1,
         } }
       >
         { channelChips }
