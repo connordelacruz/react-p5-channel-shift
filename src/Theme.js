@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material'
-import { blue, blueGrey, grey, pink } from '@mui/material/colors'
+import { blue, blueGrey, grey, pink, teal } from '@mui/material/colors'
 
 export const theme = createTheme({
   palette: {
@@ -9,6 +9,9 @@ export const theme = createTheme({
     },
     info: {
       main: pink[500]
+    },
+    warning: {
+      main: teal[500]
     },
     // "All channels" UI colors
     neutral: {

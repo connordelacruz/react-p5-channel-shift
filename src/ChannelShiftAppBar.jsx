@@ -59,6 +59,30 @@ const ChannelShiftLogo = () => {
 }
 
 /**
+ * Component to use in app bar IconButtons. Hidden on xs viewports.
+ *
+ * @param color
+ * @param children
+ * @return {React.JSX.Element}
+ * @constructor
+ */
+const IconButtonResponsiveLabel = ({ color, children }) => (
+  <Typography
+    variant="button"
+    color={ color }
+    ml={ 1 }
+    sx={ {
+      display: {
+        xs: 'none',
+        sm: 'block',
+      },
+    } }
+  >
+    { children }
+  </Typography>
+)
+
+/**
  * Save image button element.
  *
  * @param setShouldSaveResult
@@ -78,17 +102,16 @@ const SaveButton = ({ setShouldSaveResult }) => {
       title="Download current result as full-res PNG"
       placement="bottom"
     >
-      <span>
-        <Button
-          onClick={ saveButtonOnClick }
-          startIcon={ <Save/> }
-          color="secondary"
-          variant="contained"
-          disableElevation
-        >
+      <IconButton
+        onClick={ saveButtonOnClick }
+        aria-label="save"
+        color="secondary"
+      >
+        <Save/>
+        <IconButtonResponsiveLabel>
           Save
-      </Button>
-      </span>
+        </IconButtonResponsiveLabel>
+      </IconButton>
     </Tooltip>
   )
 }
@@ -139,22 +162,21 @@ const LoadButton = ({ setNewFileDataURL }) => {
       title="Load a new image"
       placement="bottom"
     >
-      <span>
-        <Button
-          startIcon={ <FileUpload/> }
-          component="label"
-          color="info"
-          variant="contained"
-          disableElevation
-        >
-        Load
+      <IconButton
+        component="label"
+        aria-label="load"
+        color="info"
+      >
+        <FileUpload/>
+        <IconButtonResponsiveLabel>
+          Load
+        </IconButtonResponsiveLabel>
         <VisuallyHiddenInput
           type="file"
           accept="image/*"
           onChange={ loadImageFileInputOnChange }
           id="load-image-file-input"/>
-        </Button>
-      </span>
+      </IconButton>
     </Tooltip>
   )
 }
@@ -175,7 +197,12 @@ const HelpButton = ({ setHelpOpen }) => {
           setHelpOpen(true)
         } }
       >
-        <HelpOutline color="info"/>
+        <HelpOutline color="warning" />
+        <IconButtonResponsiveLabel
+          color="warning.main"
+        >
+          Help
+        </IconButtonResponsiveLabel>
       </IconButton>
     </Tooltip>
   )
@@ -199,7 +226,7 @@ export const AppBarButtons = ({
     direction="row"
     justifyContent="space-evenly"
     alignItems="center"
-    spacing={ { xs: 0.5, sm: 2 } }
+    spacing={ { xs: 1, sm: 0.5 } }
   >
     <SaveButton
       setShouldSaveResult={ setShouldSaveResult }
@@ -207,10 +234,9 @@ export const AppBarButtons = ({
     <LoadButton
       setNewFileDataURL={ setNewFileDataURL }
     />
-    {/*TODO: add when ready*/}
-    {/*<HelpButton*/}
-    {/*  setHelpOpen={ setHelpOpen }*/}
-    {/*/>*/}
+    <HelpButton
+      setHelpOpen={ setHelpOpen }
+    />
   </Stack>
 }
 
