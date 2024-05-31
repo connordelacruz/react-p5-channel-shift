@@ -505,6 +505,16 @@ function App() {
           left: 0,
           right: 0,
           bgcolor: 'preview.bg',
+          // Checkboard bg courtesy of https://gist.github.com/dfrankland/f6fed3e3ccc42e3de482b324126f9542
+          backgroundImage: `
+            linear-gradient(45deg, #37474f 25%, transparent 25%), 
+            linear-gradient(135deg, #37474f 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #37474f 75%),
+            linear-gradient(135deg, transparent 75%, #37474f 75%)
+          `,
+          backgroundSize: '24px 24px',
+          backgroundPosition: '0 0, 12px 0, 12px -12px, 0px 12px',
+          // Make sure this appears over UI elements
           zIndex: 999,
         } }
         square
