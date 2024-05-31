@@ -16,17 +16,17 @@ const ResetButton = ({
                      }) => {
   return (
     <Tooltip title="Reset all shift and swap values" placement="top">
-      <span>
-              <Button
-                onClick={ resetButtonOnClick }
-                disabled={ !imageModifiedDuringStep() }
-                startIcon={ <RestartAlt/> }
-                color="secondary"
-                variant="outlined"
-              >
-              Reset
-            </Button>
-    </span>
+      <Button
+        onClick={ resetButtonOnClick }
+        disabled={ !imageModifiedDuringStep() }
+        startIcon={ <RestartAlt/> }
+        color="warning"
+        variant="contained"
+        disableElevation
+        fullWidth
+      >
+        Reset
+      </Button>
     </Tooltip>
   )
 }
@@ -49,22 +49,22 @@ const RandomizeButton = ({
   return (
     <Tooltip title='Randomize shift and swap values (click "Randomization" tab for more options)'
              placement="top">
-            <span>
-              <Button
-                onClick={ randomizeButtonOnClick }
-                disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
-                startIcon={ <Casino/> }
-                color="info"
-                variant="contained"
-                disableElevation
-              >
-                Randomize
-            </Button>
-            </span>
+      <Button
+        onClick={ randomizeButtonOnClick }
+        disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
+        startIcon={ <Casino/> }
+        color="info"
+        variant="contained"
+        disableElevation
+        fullWidth
+      >
+        Randomize
+      </Button>
     </Tooltip>
   )
 }
 
+// TODO: remove, get rid of onClick? (or comment out in case you wanna add it back later)
 /**
  * Confirm step button.
  *
@@ -73,27 +73,27 @@ const RandomizeButton = ({
  * @return {Element}
  * @constructor
  */
-const ConfirmButton = ({
-                         confirmButtonOnClick,
-                         imageModifiedDuringStep
-                       }) => {
-  // TODO: come up with better tooltip phrasing:
-  return (
-    <Tooltip title="Use this modified result as base image" placement="top">
-            <span>
-              <Button
-                onClick={ confirmButtonOnClick }
-                disabled={ !imageModifiedDuringStep() }
-                startIcon={ <CheckCircleOutline/> }
-                color="secondary"
-                variant="outlined"
-              >
-                Confirm
-            </Button>
-            </span>
-    </Tooltip>
-  )
-}
+//const ConfirmButton = ({
+//                         confirmButtonOnClick,
+//                         imageModifiedDuringStep
+//                       }) => {
+//  // TODO: come up with better tooltip phrasing:
+//  return (
+//    <Tooltip title="Use this modified result as base image" placement="top">
+//            <span>
+//              <Button
+//                onClick={ confirmButtonOnClick }
+//                disabled={ !imageModifiedDuringStep() }
+//                startIcon={ <CheckCircleOutline/> }
+//                color="secondary"
+//                variant="outlined"
+//              >
+//                Confirm
+//            </Button>
+//            </span>
+//    </Tooltip>
+//  )
+//}
 
 /**
  * Snackbar with reset/randomize/confirm buttons.
@@ -156,10 +156,11 @@ export const SnackBar = ({
             shouldRandomizeShift={ shouldRandomizeShift }
             shouldRandomizeSwap={ shouldRandomizeSwap }
           />
-          <ConfirmButton
-            confirmButtonOnClick={ confirmButtonOnClick }
-            imageModifiedDuringStep={ imageModifiedDuringStep }
-          />
+          {/*TODO: remove*/}
+          {/*<ConfirmButton*/}
+          {/*  confirmButtonOnClick={ confirmButtonOnClick }*/}
+          {/*  imageModifiedDuringStep={ imageModifiedDuringStep }*/}
+          {/*/>*/}
         </Stack>
       </Container>
     </Paper>
