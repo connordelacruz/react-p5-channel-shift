@@ -1,4 +1,16 @@
-import { Box, Chip, Grid, InputAdornment, Paper, Slider, SliderThumb, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  Chip,
+  Grid,
+  InputAdornment,
+  Paper,
+  Slider,
+  SliderThumb,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme
+} from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import {
@@ -30,6 +42,10 @@ const ShiftChannelSelectChip = ({
                                   // State setter props
                                   setSelectedShiftChannel
                                 }) => {
+  const theme = useTheme()
+  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
+
+  // TODO: maybe just use buttons now since we've strayed from chip styling a lot and there's weird alignment with xs
   return (
     <Chip
       icon={
@@ -40,7 +56,10 @@ const ShiftChannelSelectChip = ({
         </Typography>
       }
       label={
-        `(${ channelShiftValues[channelOffset][0] }px, ${ channelShiftValues[channelOffset][1] }px)`
+        // on narrow views, hide the shift details and just show a '*' if channel is modified
+        isXs
+          ? channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : '*'
+          : `(${ channelShiftValues[channelOffset][0] }px, ${ channelShiftValues[channelOffset][1] }px)`
       }
       variant={
         parseInt(selectedShiftChannel) === channelOffset ? 'filled' : 'outlined'
@@ -303,7 +322,7 @@ export const ShiftChannelsToolUI = ({
     <ToolUIContainer>
       {/*Shift Channel Select Buttons*/ }
       <Stack
-        direction={ { xs: 'column', sm: 'row' } }
+        direction="row"
         alignItems="center"
         justifyContent="space-between"
         spacing={ 1 }
