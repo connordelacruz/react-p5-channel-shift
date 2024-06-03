@@ -1,5 +1,9 @@
 import { Button, Container, Divider, Paper, Stack, Tooltip } from '@mui/material'
-import { Casino, CheckCircleOutline, RestartAlt } from '@mui/icons-material'
+import {
+  Casino,
+//  CheckCircleOutline, // TODO: remove if we're definitely removing confirm function
+  RestartAlt
+} from '@mui/icons-material'
 import React from 'react'
 
 /**
