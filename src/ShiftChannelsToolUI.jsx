@@ -1,15 +1,11 @@
 import {
-  Box,
-  Chip,
+  Box, Button, ButtonGroup,
   Grid,
   InputAdornment,
   Paper,
   Slider,
   SliderThumb,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme
+  Typography
 } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
@@ -25,7 +21,7 @@ import { ToolUIContainer } from './common/ToolUIContainer'
 // ================================================================================
 
 /**
- * Component for channel shift select chips.
+ * Component for channel shift select buttons.
  *
  * @param channelOffset
  * @param channelShiftValues
@@ -34,46 +30,28 @@ import { ToolUIContainer } from './common/ToolUIContainer'
  * @return {Element}
  * @constructor
  */
-const ShiftChannelSelectChip = ({
-                                  channelOffset,
-                                  // State props
-                                  channelShiftValues,
-                                  selectedShiftChannel,
-                                  // State setter props
-                                  setSelectedShiftChannel
-                                }) => {
-  const theme = useTheme()
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
-
-  // TODO: maybe just use buttons now since we've strayed from chip styling a lot and there's weird alignment with xs
+const ShiftChannelSelectButton = ({
+                                    channelOffset,
+                                    // State props
+                                    channelShiftValues,
+                                    selectedShiftChannel,
+                                    // State setter props
+                                    setSelectedShiftChannel
+                                  }) => {
   return (
-    <Chip
-      icon={
-        <Typography variant="button"
-                    sx={ { fontWeight: 'bold' } }
-        >
-          { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }
-        </Typography>
-      }
-      label={
-        // on narrow views, hide the shift details and just show a '*' if channel is modified
-        isXs
-          ? channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : '*'
-          : `(${ channelShiftValues[channelOffset][0] }px, ${ channelShiftValues[channelOffset][1] }px)`
-      }
+    <Button
       variant={
-        parseInt(selectedShiftChannel) === channelOffset ? 'filled' : 'outlined'
+        parseInt(selectedShiftChannel) === channelOffset ? 'contained' : 'outlined'
       }
       onClick={ () => {
         setSelectedShiftChannel(channelOffset)
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
-      sx={ {
-        width: '100%',
-        py: 3,
-        outline: 1,
-      } }
-    />
+      size="large"
+      disableElevation
+      >
+      {Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}{channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : ' *'}
+    </Button>
   )
 }
 
@@ -308,8 +286,8 @@ export const ShiftChannelsToolUI = ({
                                     }) => {
 
   // Channel selection chips
-  const channelChips = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
-    <ShiftChannelSelectChip
+  const channelButtons = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
+    <ShiftChannelSelectButton
       key={ channelOffset.toString() }
       channelOffset={ channelOffset }
       channelShiftValues={ channelShiftValues }
@@ -321,17 +299,15 @@ export const ShiftChannelsToolUI = ({
   return (
     <ToolUIContainer>
       {/*Shift Channel Select Buttons*/ }
-      <Stack
-        direction="row"
-        alignItems="center"
-        justifyContent="space-between"
-        spacing={ 1 }
-        sx={ {
+      <ButtonGroup
+        orientation="horizontal"
+        fullWidth
+        sx={{
           py: 1,
-        } }
-      >
-        { channelChips }
-      </Stack>
+        }}
+        >
+        {channelButtons}
+      </ButtonGroup>
 
       { /*Shift Channel Sliders*/ }
       <ShiftChannelSlider
