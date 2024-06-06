@@ -38,19 +38,20 @@ const ChannelShiftLogo = () => {
         variant="button"
         fontSize="medium"
         sx={ { fontWeight: 'bold' } }
-        color="secondary"
+        color="info.main"
       >
         Channel
       </Typography>
       <SwapHoriz
         fontSize="medium"
         sx={ { mx: 0.5 } }
+        color="warning"
       />
       <Typography
         variant="button"
         fontSize="medium"
         sx={ { fontWeight: 'bold' } }
-        color="info.main"
+        color="secondary"
       >
         Shift
       </Typography>
@@ -105,7 +106,7 @@ const SaveButton = ({ setShouldSaveResult }) => {
       <IconButton
         onClick={ saveButtonOnClick }
         aria-label="save"
-        color="secondary"
+        color="info"
       >
         <Save/>
         <IconButtonResponsiveLabel>
@@ -165,7 +166,7 @@ const LoadButton = ({ setNewFileDataURL }) => {
       <IconButton
         component="label"
         aria-label="load"
-        color="info"
+        color="warning"
       >
         <FileUpload/>
         <IconButtonResponsiveLabel>
@@ -197,9 +198,9 @@ const HelpButton = ({ setHelpOpen }) => {
           setHelpOpen(true)
         } }
       >
-        <HelpOutline color="warning" />
+        <HelpOutline color="secondary" />
         <IconButtonResponsiveLabel
-          color="warning.main"
+          color="secondary"
         >
           Help
         </IconButtonResponsiveLabel>

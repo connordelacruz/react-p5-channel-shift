@@ -279,7 +279,7 @@ function App() {
 
   // State to keep track of source/target selection preference.
   // If true, randomization will try its best to select 2 different channels.
-  const [randomizeSwapPreferDifferentChannels, setRandomizeSwapPreferDifferentChannels] = React.useState(true)
+  const [randomizeSwapPreferDifferentChannels, setRandomizeSwapPreferDifferentChannels] = React.useState(false)
 
   /**
    * Returns a helper function to update source/target states at an individual channel offset.
@@ -551,7 +551,13 @@ function App() {
       {/*END App Bar, Canvas, and Tool Tabs Container*/ }
 
       {/*Tools UI*/ }
-      <Container maxWidth="md" sx={ { pb: 8, my: 2 } }>
+      <Container
+        maxWidth="md"
+        sx={ {
+          pb: 8,
+          my: 2,
+        } }
+      >
 
         {/*Shift Channels*/ }
         <Box hidden={ selectedToolTab !== Constants.SHIFT_TAB_VALUE }>

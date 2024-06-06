@@ -161,20 +161,20 @@ const ShiftChannelSlider = ({
       } }
       variant="outlined"
     >
-      <Typography
-        id={ `${ dimension }-shift-slider-label` }
-        variant="button"
-        gutterBottom
-        sx={ {
-          // Prevent accidental selection when dragging slider
-          userSelect: 'none'
-        } }
-      >
-        { dimension.toUpperCase() } Shift
-      </Typography>
       <Box
         sx={ { px: 2 } }
       >
+        <Typography
+          id={ `${ dimension }-shift-slider-label` }
+          variant="button"
+          gutterBottom
+          sx={ {
+            // Prevent accidental selection when dragging slider
+            userSelect: 'none'
+          } }
+        >
+          { dimension.toUpperCase() } Shift
+        </Typography>
         <Grid
           container
           alignItems="stretch"
@@ -302,9 +302,6 @@ export const ShiftChannelsToolUI = ({
       <ButtonGroup
         orientation="horizontal"
         fullWidth
-        sx={{
-          py: 1,
-        }}
         >
         {channelButtons}
       </ButtonGroup>

@@ -649,14 +649,14 @@ const RandomizeSwapTable = ({
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
           />
-          <TableRow>
+          <TableRow hover>
             <TableCell
               align="center"
               colSpan={ 3 }
             >
               <FormControlLabel
                 control={
-                  <Switch
+                  <Checkbox
                     checked={ randomizeSwapPreferDifferentChannels }
                     onChange={ randomizeSwapPreferDifferentChannelsSwitchOnChange }
                     color="info"
