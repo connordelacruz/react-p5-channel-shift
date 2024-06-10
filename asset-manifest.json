@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/react-p5-channel-shift/static/css/main.a3a14a6a.css",
-    "main.js": "/react-p5-channel-shift/static/js/main.6ad00947.js",
+    "main.css": "/react-p5-channel-shift/static/css/main.561dfa0d.css",
+    "main.js": "/react-p5-channel-shift/static/js/main.499efad2.js",
     "static/media/roboto-latin-500-normal.woff2": "/react-p5-channel-shift/static/media/roboto-latin-500-normal.f25d774ecfe0996f8eb5.woff2",
     "static/media/roboto-latin-700-normal.woff2": "/react-p5-channel-shift/static/media/roboto-latin-700-normal.227c93190fe7f82de3f8.woff2",
     "static/media/roboto-latin-400-normal.woff2": "/react-p5-channel-shift/static/media/roboto-latin-400-normal.b009a76ad6afe4ebd301.woff2",
@@ -59,11 +59,11 @@
     "static/media/roboto-greek-ext-300-normal.woff": "/react-p5-channel-shift/static/media/roboto-greek-ext-300-normal.392a45a84c081c4b412d.woff",
     "static/media/roboto-greek-ext-400-normal.woff": "/react-p5-channel-shift/static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/roboto-greek-ext-700-normal.woff": "/react-p5-channel-shift/static/media/roboto-greek-ext-700-normal.249853776d22a271b2b5.woff",
-    "main.a3a14a6a.css.map": "/react-p5-channel-shift/static/css/main.a3a14a6a.css.map",
-    "main.6ad00947.js.map": "/react-p5-channel-shift/static/js/main.6ad00947.js.map"
+    "main.561dfa0d.css.map": "/react-p5-channel-shift/static/css/main.561dfa0d.css.map",
+    "main.499efad2.js.map": "/react-p5-channel-shift/static/js/main.499efad2.js.map"
   },
   "entrypoints": [
-    "static/css/main.a3a14a6a.css",
-    "static/js/main.6ad00947.js"
+    "static/css/main.561dfa0d.css",
+    "static/js/main.499efad2.js"
   ]
 }
