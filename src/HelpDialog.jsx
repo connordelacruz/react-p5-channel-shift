@@ -30,8 +30,13 @@ export function HelpDialog({ open, onClose }) {
               Channel Shift
             </Typography>
             <Typography variant="caption" gutterBottom>
-              © {new Date().getFullYear()} Connor de la Cruz
+              © { new Date().getFullYear() } Connor de la Cruz
             </Typography>
+            <img
+              src="./channel-shift-preview.png"
+              className="help-dialog-image"
+              alt="Sample Channel Shifted Image of the Chicago Skyline"
+            />
           </Box>
           <Box>
             <Typography gutterBottom>
