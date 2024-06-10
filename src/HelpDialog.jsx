@@ -26,9 +26,14 @@ export function HelpDialog({ open, onClose }) {
           spacing={ 2 }
         >
           <Box>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4">
               Channel Shift
             </Typography>
+            <Typography variant="caption" gutterBottom>
+              © {new Date().getFullYear()} Connor de la Cruz
+            </Typography>
+          </Box>
+          <Box>
             <Typography gutterBottom>
               A tool for shifting and swapping RGB color channels.
             </Typography>
