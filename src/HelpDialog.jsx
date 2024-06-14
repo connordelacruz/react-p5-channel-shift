@@ -5,6 +5,7 @@ import {
   DialogTitle,
   Divider,
   IconButton,
+  Link,
   List,
   ListItem,
   ListItemIcon,
@@ -12,8 +13,9 @@ import {
   Stack,
   Typography
 } from '@mui/material'
-import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save, SwapHoriz } from '@mui/icons-material'
+import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { ChannelShiftLogo } from './common/ChannelShiftLogo'
+import React from 'react'
 
 export function HelpDialog({ open, onClose }) {
   return (<Dialog
@@ -44,24 +46,22 @@ export function HelpDialog({ open, onClose }) {
           sx={ { textAlign: 'center' } }
         >
           <ChannelShiftLogo textFontSize="large" center/>
-          <Typography variant="caption" gutterBottom>
-            © { new Date().getFullYear() } Connor de la Cruz
+          <Typography variant="subtitle2">
+            Create art by playing with color channels.
           </Typography>
         </Box>
 
-        <Box>
+        <Box sx={ { textAlign: 'center' } }>
           {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */ }
           <img
             src={ process.env.PUBLIC_URL + '/channel-shift-preview.png' }
             className="help-dialog-image"
             alt="Sample Channel Shifted Image of the Chicago Skyline"
           />
+          <Typography variant="caption" gutterBottom>
+            © { new Date().getFullYear() } Connor de la Cruz
+          </Typography>
         </Box>
-
-        {/*<Box*/}
-        {/*  sx={ { textAlign: 'center' } }*/}
-        {/*>*/}
-        {/*</Box>*/}
 
         <Divider/>
 
@@ -138,25 +138,26 @@ export function HelpDialog({ open, onClose }) {
               <List>
                 <ListItem>
                   <ListItemText
-                    primary="Shift"
+                    primary={ <Link href="#shift">Shift</Link> }
                     secondary="Move color channels horizontally and vertically."
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Swap"
+                    primary={ <Link href="#swap">Swap</Link> }
                     secondary="Switch 2 color channels with each other."
                   />
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="Randomize"
+                    primary={ <Link href="#randomize">Randomize</Link> }
                     secondary="Customize behavior of the Randomize button."
                   />
                 </ListItem>
               </List>
 
-              See the <b>Tools Overview</b> section below for details on each of these tools.
+              See the <Link href="#tools-overview">Tools Overview</Link> section below for details on each of these
+              tools.
             </Typography>
           </Box>
 
@@ -200,13 +201,21 @@ export function HelpDialog({ open, onClose }) {
           spacing={ 2 }
         >
           <Box>
-            <Typography variant="h4" sx={ { textAlign: 'center' } }>
+            <Typography
+              variant="h4"
+              sx={ { textAlign: 'center' } }
+              id="tools-overview"
+            >
               Tools Overview
             </Typography>
           </Box>
 
           <Box>
-            <Typography variant="h5" gutterBottom>
+            <Typography
+              variant="h5"
+              gutterBottom
+              id="shift"
+            >
               Shift
             </Typography>
             <img
@@ -217,24 +226,52 @@ export function HelpDialog({ open, onClose }) {
             <Typography gutterBottom>
               The <b>Shift</b> tab lets you move color channels horizontally and vertically.
             </Typography>
-            <ul>
-              <li>
-                Select a channel to shift with the <b>Red</b>, <b>Green</b>, or <b>Blue</b> buttons.
-              </li>
-              <li>
-                Shift the selected channel horizontally with the <b>X Shift</b> slider.
-              </li>
-              <li>
-                Shift the selected channel vertically with the <b>Y Shift</b> slider.
-              </li>
-              <li>
-                Set a specific X or Y shift value using the text inputs next to the sliders.
-              </li>
-            </ul>
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <React.Fragment>
+                      <b>Red</b> / <b>Green</b> / <b>Blue</b>
+                    </React.Fragment>
+                  }
+                  secondary={
+                    <React.Fragment>
+                      Select a channel to shift with the <b>Red</b>, <b>Green</b>, or <b>Blue</b> buttons.
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary={<b>X Shift</b>}
+                  secondary={
+                    <React.Fragment>
+                      Shift the selected channel horizontally with the <b>X Shift</b> slider.<br/>
+                      Set a specific horizontal shift value with the <b>X Shift</b> text input.
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary={<b>Y Shift</b>}
+                  secondary={
+                    <React.Fragment>
+                      Shift the selected channel vertically with the <b>Y Shift</b> slider.<br/>
+                      Set a specific vertical shift value with the <b>Y Shift</b> text input.
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+            </List>
           </Box>
 
           <Box>
-            <Typography variant="h5" gutterBottom>
+            <Typography
+              variant="h5"
+              gutterBottom
+              id="swap"
+            >
               Swap
             </Typography>
             <img
@@ -251,14 +288,17 @@ export function HelpDialog({ open, onClose }) {
             </ul>
           </Box>
 
-          {/*TODO: Re-write below*/ }
           <Box>
             <Stack
               direction="column"
               spacing={ 2 }
             >
               <Box>
-                <Typography variant="h5" gutterBottom>
+                <Typography
+                  variant="h5"
+                  gutterBottom
+                  id="randomize"
+                >
                   Randomize
                 </Typography>
                 <Typography gutterBottom>
@@ -294,30 +334,61 @@ export function HelpDialog({ open, onClose }) {
                   The <b>Randomize Shift</b> section lets you control the randomization behavior of channel shift
                   values.
                 </Typography>
-                <ul>
-                  <li>
-                    Check or uncheck the <b>Randomize X Shift?</b> and <b>Randomize Y Shift?</b> boxes for any channel
-                    to
-                    enable or disable X and Y shift randomization for that color channel.
-                  </li>
-                  <li>
-                    Use the <b>Max X Shift %</b> and <b>Max Y Shift %</b> inputs to set the maximum amount for X and Y
-                    shifting for each channel. E.g. Setting a max X shift of 25% means that the corresponding channel
-                    will
-                    not
-                    be shifted horizontally farther than 25% of the image width.
-                  </li>
-                  <li>
-                    The <b>All Channels</b> row can be used to quickly enable/disable X or Y shifting and set max X or Y
-                    shift
-                    percents for all channels at once.
-                  </li>
-                  <li>
-                    You can disable shift randomization entirely using the toggle next to the <b>Randomize
-                    Shift</b> section
-                    title.
-                  </li>
-                </ul>
+                <List>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>Randomize X Shift?</b> / <b>Randomize Y Shift?</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          Check or uncheck the <b>Randomize X Shift?</b> or <b>Randomize Y Shift?</b> box for any
+                          channel to enable or disable X or Y shift randomization for that color channel.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>Max X Shift %</b> / <b>Max Y Shift %</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          Use the <b>Max X Shift %</b> and <b>Max Y Shift %</b> inputs to set the maximum amount for X
+                          and Y
+                          shifting for each channel.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>All Channels</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          The <b>All Channels</b> row can be used to quickly enable/disable X or Y shifting and set max
+                          X or Y
+                          shift
+                          percents for all channels at once.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                </List>
+                <Typography gutterBottom>
+                  You can disable shift randomization entirely using the toggle next to the <b>Randomize
+                  Shift</b> section
+                  title.
+                </Typography>
               </Box>
 
               <Box>
@@ -332,32 +403,65 @@ export function HelpDialog({ open, onClose }) {
                 <Typography gutterBottom>
                   The <b>Randomize Swap</b> section lets you control the randomization behavior of channel swapping.
                 </Typography>
-                <ul>
-                  <li>
-                    Check or uncheck the <b>Random Source Option?</b> and <b>Random Target Option?</b> boxes for any
-                    channel
-                    to enable or disable that channel as a swap option.
-                  </li>
-                  <li>
-                    The <b>All Channels</b> row can be used to quickly enable/disable all channels at once as source or
-                    target
-                    options.
-                  </li>
-                  <li>
-                    Enabling the <b>Attempt to pick different source and target channels when possible</b> toggle will
-                    make
-                    it
-                    so 2 different channels are selected if possible to try and ensure a swap occurs. Disabling this
-                    will
-                    make
-                    it more random, so sometimes the same channel is picked for both, meaning no swap occurs.
-                  </li>
-                  <li>
-                    You can disable swap randomization entirely using the toggle next to the <b>Randomize
-                    Swap</b> section
-                    title.
-                  </li>
-                </ul>
+                <List>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>Random Source Option?</b> / <b>Random Target Option?</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          Check or uncheck the <b>Random Source Option?</b> and <b>Random Target Option?</b> boxes for
+                          any
+                          channel
+                          to enable or disable that channel as a swap option.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>All Channels</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          The <b>All Channels</b> row can be used to quickly enable/disable all channels at once as
+                          source or
+                          target
+                          options.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <React.Fragment>
+                          <b>Attempt to pick different source and target channels when possible</b>
+                        </React.Fragment>
+                      }
+                      secondary={
+                        <React.Fragment>
+                          Enabling the <b>Attempt to pick different source and target channels when
+                          possible</b> checkbox will
+                          make it so 2 different channels are selected (if possible) to ensure a swap occurs.<br/>
+                          Disabling this will make it more random, so sometimes the same channel is picked for both,
+                          meaning no swap occurs.
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
+                </List>
+                <Typography gutterBottom>
+                  You can disable swap randomization entirely using the toggle next to the <b>Randomize
+                  Swap</b> section
+                  title.
+                </Typography>
               </Box>
 
             </Stack>
