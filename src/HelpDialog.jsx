@@ -107,7 +107,13 @@ export function HelpDialog({ open, onClose }) {
                   </ListItemIcon>
                   <ListItemText
                     primary="Load"
-                    secondary="Load a new image. (Note: Images are never uploaded to a server. Anything you upload stays entirely in your browser.)"
+                    secondary={
+                      <React.Fragment>
+                        Load a new image.<br/>
+                        (Note: Images are never uploaded to a server. Any image you load stays entirely in your
+                        browser.)
+                      </React.Fragment>
+                    }
                   />
                 </ListItem>
                 <ListItem>
@@ -184,7 +190,13 @@ export function HelpDialog({ open, onClose }) {
                   </ListItemIcon>
                   <ListItemText
                     primary="Randomize"
-                    secondary='Randomize shift and swap values. Customize the behavior of this button in the "Randomize" Tool Tab.'
+                    secondary={
+                      <React.Fragment>
+                        Randomize shift and swap values.<br/>
+                        Customize the behavior of this button in the "Randomize" Tool
+                        Tab. See the <Link href="#randomize">Randomize</Link> section below for details.
+                      </React.Fragment>
+                    }
                   />
                 </ListItem>
               </List>
@@ -243,7 +255,7 @@ export function HelpDialog({ open, onClose }) {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={<b>X Shift</b>}
+                  primary={ <b>X Shift</b> }
                   secondary={
                     <React.Fragment>
                       Shift the selected channel horizontally with the <b>X Shift</b> slider.<br/>
@@ -254,7 +266,7 @@ export function HelpDialog({ open, onClose }) {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={<b>Y Shift</b>}
+                  primary={ <b>Y Shift</b> }
                   secondary={
                     <React.Fragment>
                       Shift the selected channel vertically with the <b>Y Shift</b> slider.<br/>
@@ -282,10 +294,20 @@ export function HelpDialog({ open, onClose }) {
             <Typography gutterBottom>
               The <b>Swap</b> tab lets you switch 2 color channels with each other.
             </Typography>
-            <ul>
-              <li>Select 2 different channels to swap them.</li>
-              <li>Select the same channel twice to disable swap.</li>
-            </ul>
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="Swap Channels"
+                  secondary="Select 2 different channels to swap them."
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Unswap Channels"
+                  secondary="Select the same channel twice to disable swap."
+                />
+              </ListItem>
+            </List>
           </Box>
 
           <Box>
@@ -304,18 +326,32 @@ export function HelpDialog({ open, onClose }) {
                 <Typography gutterBottom>
                   Clicking the <b>Randomize</b> button will pick random values for shifts and swaps.
                 </Typography>
-                <Typography gutterBottom>
-                  By default:
-                  <ul>
-                    <li>All shift values for all channels will be randomized to anything from 0px to the max size of
-                      each
-                      dimension.
-                    </li>
-                    <li>Swap channels will be randomly selected. They may be 2 different channels, or the same channel
-                      (i.e. no swapping).
-                    </li>
-                  </ul>
+              </Box>
+
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  Default Randomization Behavior:
                 </Typography>
+                <List>
+                  <ListItem>
+                    <ListItemText
+                      primary="X Shift Randomization Default Behavior"
+                      secondary="All channels will have a random X shift set to anything from 0px to the width of the image."
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Y Shift Randomization Default Behavior"
+                      secondary="All channels will have a random Y shift set to anything from 0px to the height of the image."
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary="Swap Randomization Default Behavior"
+                      secondary="Swap channels will be randomly selected. They may be 2 different channels, or the same channel (i.e. no swapping)."
+                    />
+                  </ListItem>
+                </List>
                 <Typography gutterBottom>
                   You can fine-tune randomization behavior in the <b>Randomize</b> tab using the options below.
                 </Typography>
