@@ -2,72 +2,86 @@ import {
   Box,
   Dialog,
   DialogContent,
-  DialogTitle, Divider,
+  DialogTitle,
+  Divider,
   IconButton,
   List,
   ListItem,
-  ListItemIcon, ListItemText,
+  ListItemIcon,
+  ListItemText,
   Stack,
   Typography
 } from '@mui/material'
-import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
+import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save, SwapHoriz } from '@mui/icons-material'
+import { ChannelShiftLogo } from './common/ChannelShiftLogo'
 
 export function HelpDialog({ open, onClose }) {
-  return (
-    <Dialog
-      open={ open }
-      onClose={ onClose }
-      scroll="paper"
+  return (<Dialog
+    open={ open }
+    onClose={ onClose }
+    scroll="paper"
+  >
+    <DialogTitle>
+      Help
+    </DialogTitle>
+    <IconButton
+      aria-label="close"
+      onClick={ onClose }
+      sx={ {
+        position: 'absolute', right: 8, top: 8,
+      } }
     >
-      <DialogTitle>Help</DialogTitle>
-      <IconButton
-        aria-label="close"
-        onClick={ onClose }
-        sx={ {
-          position: 'absolute',
-          right: 8,
-          top: 8,
-        } }
+      <Close/>
+    </IconButton>
+    <DialogContent dividers>
+      <Stack
+        direction="column"
+        spacing={ 2 }
       >
-        <Close/>
-      </IconButton>
-      <DialogContent dividers>
+
+        {/*Title and Header Image*/ }
+        <Box
+          sx={ { textAlign: 'center' } }
+        >
+          <ChannelShiftLogo textFontSize="large" center/>
+          <Typography variant="caption" gutterBottom>
+            © { new Date().getFullYear() } Connor de la Cruz
+          </Typography>
+        </Box>
+
+        <Box>
+          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */ }
+          <img
+            src={ process.env.PUBLIC_URL + '/channel-shift-preview.png' }
+            className="help-dialog-image"
+            alt="Sample Channel Shifted Image of the Chicago Skyline"
+          />
+        </Box>
+
+        {/*<Box*/}
+        {/*  sx={ { textAlign: 'center' } }*/}
+        {/*>*/}
+        {/*</Box>*/}
+
+        <Divider/>
+
+        {/*UI Overview Section*/ }
         <Stack
           direction="column"
+          divider={ <Divider/> }
           spacing={ 2 }
         >
           <Box>
-            <Typography variant="h4">
-              Channel Shift
-            </Typography>
-            <Typography variant="caption" gutterBottom>
-              © { new Date().getFullYear() } Connor de la Cruz
-            </Typography>
-            {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */}
-            <img
-              src={process.env.PUBLIC_URL + '/channel-shift-preview.png'}
-              className="help-dialog-image"
-              alt="Sample Channel Shifted Image of the Chicago Skyline"
-            />
-          </Box>
-
-          <Box>
-            <Typography gutterBottom>
-              A tool for shifting and swapping RGB color channels.
-            </Typography>
-          </Box>
-
-          <Divider/>
-
-          <Box>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" sx={ { textAlign: 'center' } }>
               UI Overview
             </Typography>
+          </Box>
+          <Box>
             <img
-              src={require('./help-screenshots/channel-shift-ui.png')}
+              src={ require('./help-screenshots/channel-shift-ui.png') }
               className="help-dialog-image"
               alt="Overview of app UI"
-              />
+            />
           </Box>
 
           <Box>
@@ -113,6 +127,11 @@ export function HelpDialog({ open, onClose }) {
             <Typography variant="h5" gutterBottom>
               Tool Tabs
             </Typography>
+            <img
+              src={ require('./help-screenshots/tool-tabs.png') }
+              className="help-dialog-image"
+              alt="Tool tabs UI"
+            />
             <Typography gutterBottom>
               Use the <b>Tool Tabs</b> to select one of the following tools:
 
@@ -137,7 +156,7 @@ export function HelpDialog({ open, onClose }) {
                 </ListItem>
               </List>
 
-              See the <b>Tools</b> section below for details on each of these tools.
+              See the <b>Tools Overview</b> section below for details on each of these tools.
             </Typography>
           </Box>
 
@@ -170,12 +189,19 @@ export function HelpDialog({ open, onClose }) {
               </List>
             </Typography>
           </Box>
+        </Stack>
 
-          <Divider/>
+        <Divider/>
 
+        {/*Tools Overview Section*/ }
+        <Stack
+          direction="column"
+          divider={ <Divider/> }
+          spacing={ 2 }
+        >
           <Box>
-            <Typography variant="h4">
-              Tools
+            <Typography variant="h4" sx={ { textAlign: 'center' } }>
+              Tools Overview
             </Typography>
           </Box>
 
@@ -191,15 +217,20 @@ export function HelpDialog({ open, onClose }) {
             <Typography gutterBottom>
               The <b>Shift</b> tab lets you move color channels horizontally and vertically.
             </Typography>
-            <Typography gutterBottom>
-              Select a channel to shift with the <b>Red</b>, <b>Green</b>, or <b>Blue</b> buttons.
-            </Typography>
-            <Typography gutterBottom>
-              Shift the selected channel horizontally with the <b>X Shift</b> slider or text input.
-            </Typography>
-            <Typography gutterBottom>
-              Shift the selected channel vertically with the <b>Y Shift</b> slider or text input.
-            </Typography>
+            <ul>
+              <li>
+                Select a channel to shift with the <b>Red</b>, <b>Green</b>, or <b>Blue</b> buttons.
+              </li>
+              <li>
+                Shift the selected channel horizontally with the <b>X Shift</b> slider.
+              </li>
+              <li>
+                Shift the selected channel vertically with the <b>Y Shift</b> slider.
+              </li>
+              <li>
+                Set a specific X or Y shift value using the text inputs next to the sliders.
+              </li>
+            </ul>
           </Box>
 
           <Box>
@@ -214,92 +245,126 @@ export function HelpDialog({ open, onClose }) {
             <Typography gutterBottom>
               The <b>Swap</b> tab lets you switch 2 color channels with each other.
             </Typography>
-            <Typography gutterBottom>
-              Select 2 different channels to swap them. Select the same channel twice to disable swap.
-            </Typography>
+            <ul>
+              <li>Select 2 different channels to swap them.</li>
+              <li>Select the same channel twice to disable swap.</li>
+            </ul>
           </Box>
 
+          {/*TODO: Re-write below*/ }
           <Box>
-            <Typography variant="h5" gutterBottom>
-              Randomize
-            </Typography>
-            <Typography gutterBottom>
-              Clicking the <b>Randomize</b> button will pick random values for shifts and swaps.
-            </Typography>
-            <Typography gutterBottom>
-              By default:
-              <ul>
-                <li>All shift values for all channels will be randomized to anything from 0px to the max size of each
-                  dimension.
-                </li>
-                <li>Swap channels will be randomly selected, but will always be 2 different channels.</li>
-              </ul>
-            </Typography>
-            <Typography gutterBottom>
-              You can customize randomization behavior in the <b>Randomize</b> tab.
-            </Typography>
+            <Stack
+              direction="column"
+              spacing={ 2 }
+            >
+              <Box>
+                <Typography variant="h5" gutterBottom>
+                  Randomize
+                </Typography>
+                <Typography gutterBottom>
+                  Clicking the <b>Randomize</b> button will pick random values for shifts and swaps.
+                </Typography>
+                <Typography gutterBottom>
+                  By default:
+                  <ul>
+                    <li>All shift values for all channels will be randomized to anything from 0px to the max size of
+                      each
+                      dimension.
+                    </li>
+                    <li>Swap channels will be randomly selected. They may be 2 different channels, or the same channel
+                      (i.e. no swapping).
+                    </li>
+                  </ul>
+                </Typography>
+                <Typography gutterBottom>
+                  You can fine-tune randomization behavior in the <b>Randomize</b> tab using the options below.
+                </Typography>
+              </Box>
 
-            <Typography variant="h6" gutterBottom>
-              Randomize Shift
-            </Typography>
-            <img
-              src={ require('./help-screenshots/randomize-shift-tool-ui.png') }
-              className="help-dialog-image"
-              alt="Randomize shift tool UI"
-            />
-            <Typography gutterBottom>
-              The <b>Randomize Shift</b> section lets you control the randomization behavior of channel shift values.
-            </Typography>
-            <Typography gutterBottom>
-              Check or uncheck the <b>Randomize X Shift?</b> and <b>Randomize Y Shift?</b> boxes for any channel to
-              enable or disable X and Y shift randomization for that color channel.
-            </Typography>
-            <Typography gutterBottom>
-              Use the <b>Max X Shift %</b> and <b>Max Y Shift %</b> inputs to set the maximum amount for X and Y
-              shifting for each channel. E.g. Setting a max X shift of 25% means that the corresponding channel will not
-              be shifted horizontally farther than 25% of the image width.
-            </Typography>
-            <Typography gutterBottom>
-              The <b>All Channels</b> row can be used to quickly enable/disable X or Y shifting and set max X or Y shift
-              percents for all channels at once.
-            </Typography>
-            <Typography gutterBottom>
-              You can disable shift randomization entirely using the toggle next to the <b>Randomize Shift</b> section
-              title.
-            </Typography>
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  Randomize Shift:
+                </Typography>
+                <img
+                  src={ require('./help-screenshots/randomize-shift-tool-ui.png') }
+                  className="help-dialog-image"
+                  alt="Randomize shift tool UI"
+                />
+                <Typography gutterBottom>
+                  The <b>Randomize Shift</b> section lets you control the randomization behavior of channel shift
+                  values.
+                </Typography>
+                <ul>
+                  <li>
+                    Check or uncheck the <b>Randomize X Shift?</b> and <b>Randomize Y Shift?</b> boxes for any channel
+                    to
+                    enable or disable X and Y shift randomization for that color channel.
+                  </li>
+                  <li>
+                    Use the <b>Max X Shift %</b> and <b>Max Y Shift %</b> inputs to set the maximum amount for X and Y
+                    shifting for each channel. E.g. Setting a max X shift of 25% means that the corresponding channel
+                    will
+                    not
+                    be shifted horizontally farther than 25% of the image width.
+                  </li>
+                  <li>
+                    The <b>All Channels</b> row can be used to quickly enable/disable X or Y shifting and set max X or Y
+                    shift
+                    percents for all channels at once.
+                  </li>
+                  <li>
+                    You can disable shift randomization entirely using the toggle next to the <b>Randomize
+                    Shift</b> section
+                    title.
+                  </li>
+                </ul>
+              </Box>
 
-            <Typography variant="h6" gutterBottom>
-              Randomize Swap
-            </Typography>
-            <img
-              src={ require('./help-screenshots/randomize-swap-tool-ui.png') }
-              className="help-dialog-image"
-              alt="Randomize swap tool UI"
-            />
-            <Typography gutterBottom>
-              The <b>Randomize Swap</b> section lets you control the randomization behavior of channel swapping.
-            </Typography>
-            <Typography gutterBottom>
-              Check or uncheck the <b>Random Source Option?</b> and <b>Random Target Option?</b> boxes for any channel
-              to enable or disable that channel as a swap option.
-            </Typography>
-            <Typography gutterBottom>
-              The <b>All Channels</b> row can be used to quickly enable/disable all channels at once as source or target
-              options.
-            </Typography>
-            <Typography gutterBottom>
-              Enabling the <b>Attempt to pick different source and target channels when possible</b> toggle will make it
-              so 2 different channels are selected if possible to try and ensure a swap occurs. Disabling this will make
-              it more random, so sometimes the same channel is picked for both, meaning no swap occurs.
-            </Typography>
-            <Typography gutterBottom>
-              You can disable swap randomization entirely using the toggle next to the <b>Randomize Swap</b> section
-              title.
-            </Typography>
+              <Box>
+                <Typography variant="h6" gutterBottom>
+                  Randomize Swap:
+                </Typography>
+                <img
+                  src={ require('./help-screenshots/randomize-swap-tool-ui.png') }
+                  className="help-dialog-image"
+                  alt="Randomize swap tool UI"
+                />
+                <Typography gutterBottom>
+                  The <b>Randomize Swap</b> section lets you control the randomization behavior of channel swapping.
+                </Typography>
+                <ul>
+                  <li>
+                    Check or uncheck the <b>Random Source Option?</b> and <b>Random Target Option?</b> boxes for any
+                    channel
+                    to enable or disable that channel as a swap option.
+                  </li>
+                  <li>
+                    The <b>All Channels</b> row can be used to quickly enable/disable all channels at once as source or
+                    target
+                    options.
+                  </li>
+                  <li>
+                    Enabling the <b>Attempt to pick different source and target channels when possible</b> toggle will
+                    make
+                    it
+                    so 2 different channels are selected if possible to try and ensure a swap occurs. Disabling this
+                    will
+                    make
+                    it more random, so sometimes the same channel is picked for both, meaning no swap occurs.
+                  </li>
+                  <li>
+                    You can disable swap randomization entirely using the toggle next to the <b>Randomize
+                    Swap</b> section
+                    title.
+                  </li>
+                </ul>
+              </Box>
+
+            </Stack>
           </Box>
-
         </Stack>
-      </DialogContent>
-    </Dialog>
-  )
+
+      </Stack>
+    </DialogContent>
+  </Dialog>)
 }

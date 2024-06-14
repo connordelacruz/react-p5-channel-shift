@@ -1,62 +1,7 @@
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Stack,
-  styled,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from '@mui/material'
-import {
-  FileUpload,
-  HelpOutline,
-  Save,
-  SwapHoriz
-} from '@mui/icons-material'
+import { AppBar, IconButton, Stack, styled, Toolbar, Tooltip, Typography, } from '@mui/material'
+import { FileUpload, HelpOutline, Save } from '@mui/icons-material'
 import React from 'react'
-
-/**
- * App bar logo component.
- *
- * @return {Element}
- * @constructor
- */
-const ChannelShiftLogo = () => {
-  return (
-    <Box
-      component="div"
-      sx={ {
-        display: 'flex',
-        alignItems: 'center',
-        flexGrow: 1,
-        fontWeight: 'bold'
-      } }
-    >
-      <Typography
-        variant="button"
-        fontSize="medium"
-        sx={ { fontWeight: 'bold' } }
-        color="info.main"
-      >
-        Channel
-      </Typography>
-      <SwapHoriz
-        fontSize="medium"
-        sx={ { mx: 0.5 } }
-        color="warning"
-      />
-      <Typography
-        variant="button"
-        fontSize="medium"
-        sx={ { fontWeight: 'bold' } }
-        color="secondary"
-      >
-        Shift
-      </Typography>
-    </Box>
-  )
-}
+import { ChannelShiftLogo } from './common/ChannelShiftLogo'
 
 /**
  * Component to use in app bar IconButtons. Hidden on xs viewports.
@@ -259,14 +204,11 @@ export const ChannelShiftAppBar = ({
   return (
     <AppBar
       position="static"
-      color="default"
+      color="inherit"
       elevation={ 0 }
     >
       <Toolbar
         sx={ {
-          // TODO: uncomment when help button is re-implemented
-//          pl: { xs: 1.5, sm: 2 },
-//          pr: { xs: 0, sm: 2 },
           px: 2,
         } }
       >
