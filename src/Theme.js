@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material'
 import { blue, blueGrey, grey, pink, teal } from '@mui/material/colors'
 
 export const theme = createTheme({
+  // Color Palette
   palette: {
     // Non-color channel UI colors
     secondary: {
@@ -21,5 +22,16 @@ export const theme = createTheme({
     preview: {
       bg: blueGrey[900]
     },
+  },
+
+  // Component Props
+  components: {
+    // Base Button Component
+    MuiButtonBase: {
+      defaultProps: {
+        // Disable ripple effect everywhere
+        disableRipple: true,
+      }
+    }
   }
 })

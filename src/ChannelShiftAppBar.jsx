@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Stack, styled, Toolbar, Tooltip, Typography, } from '@mui/material'
+import { AppBar, IconButton, Stack, styled, Toolbar, Typography, } from '@mui/material'
 import { FileUpload, HelpOutline, Save } from '@mui/icons-material'
 import React from 'react'
 import { ChannelShiftLogo } from './common/ChannelShiftLogo'
@@ -43,21 +43,16 @@ const SaveButton = ({ setShouldSaveResult }) => {
   }
 
   return (
-    <Tooltip
-      title="Download current result as full-res PNG"
-      placement="bottom"
+    <IconButton
+      onClick={ saveButtonOnClick }
+      aria-label="save"
+      color="info"
     >
-      <IconButton
-        onClick={ saveButtonOnClick }
-        aria-label="save"
-        color="info"
-      >
-        <Save/>
-        <IconButtonResponsiveLabel>
-          Save
-        </IconButtonResponsiveLabel>
-      </IconButton>
-    </Tooltip>
+      <Save/>
+      <IconButtonResponsiveLabel>
+        Save
+      </IconButtonResponsiveLabel>
+    </IconButton>
   )
 }
 
@@ -103,26 +98,21 @@ const LoadButton = ({ setNewFileDataURL }) => {
     }
   }
   return (
-    <Tooltip
-      title="Load a new image"
-      placement="bottom"
+    <IconButton
+      component="label"
+      aria-label="load"
+      color="warning"
     >
-      <IconButton
-        component="label"
-        aria-label="load"
-        color="warning"
-      >
-        <FileUpload/>
-        <IconButtonResponsiveLabel>
-          Load
-        </IconButtonResponsiveLabel>
-        <VisuallyHiddenInput
-          type="file"
-          accept="image/*"
-          onChange={ loadImageFileInputOnChange }
-          id="load-image-file-input"/>
-      </IconButton>
-    </Tooltip>
+      <FileUpload/>
+      <IconButtonResponsiveLabel>
+        Load
+      </IconButtonResponsiveLabel>
+      <VisuallyHiddenInput
+        type="file"
+        accept="image/*"
+        onChange={ loadImageFileInputOnChange }
+        id="load-image-file-input"/>
+    </IconButton>
   )
 }
 
@@ -135,21 +125,19 @@ const LoadButton = ({ setNewFileDataURL }) => {
  */
 const HelpButton = ({ setHelpOpen }) => {
   return (
-    <Tooltip title="Help" placement="bottom">
-      <IconButton
-        aria-label="help"
-        onClick={ () => {
-          setHelpOpen(true)
-        } }
+    <IconButton
+      aria-label="help"
+      onClick={ () => {
+        setHelpOpen(true)
+      } }
+    >
+      <HelpOutline color="secondary" />
+      <IconButtonResponsiveLabel
+        color="secondary"
       >
-        <HelpOutline color="secondary" />
-        <IconButtonResponsiveLabel
-          color="secondary"
-        >
-          Help
-        </IconButtonResponsiveLabel>
-      </IconButton>
-    </Tooltip>
+        Help
+      </IconButtonResponsiveLabel>
+    </IconButton>
   )
 }
 

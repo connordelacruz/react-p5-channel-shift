@@ -1,9 +1,5 @@
-import { Button, Container, Divider, Paper, Stack, Tooltip } from '@mui/material'
-import {
-  Casino,
-//  CheckCircleOutline, // TODO: remove if we're definitely removing confirm function
-  RestartAlt
-} from '@mui/icons-material'
+import { Button, Container, Divider, Paper, Stack } from '@mui/material'
+import { Casino, RestartAlt } from '@mui/icons-material'
 import React from 'react'
 
 /**
@@ -19,19 +15,17 @@ const ResetButton = ({
                        imageModifiedDuringStep
                      }) => {
   return (
-    <Tooltip title="Reset all shift and swap values" placement="top">
-      <Button
-        onClick={ resetButtonOnClick }
-        disabled={ !imageModifiedDuringStep() }
-        startIcon={ <RestartAlt/> }
-        color="primary"
-        variant="contained"
-        disableElevation
-        fullWidth
-      >
-        Reset
-      </Button>
-    </Tooltip>
+    <Button
+      onClick={ resetButtonOnClick }
+      disabled={ !imageModifiedDuringStep() }
+      startIcon={ <RestartAlt/> }
+      color="primary"
+      variant="contained"
+      disableElevation
+      fullWidth
+    >
+      Reset
+    </Button>
   )
 }
 
@@ -49,22 +43,18 @@ const RandomizeButton = ({
                            shouldRandomizeShift,
                            shouldRandomizeSwap
                          }) => {
-  // TODO: see Tooltip reference to get this formatting better:
   return (
-    <Tooltip title='Randomize shift and swap values (click "Randomization" tab for more options)'
-             placement="top">
-      <Button
-        onClick={ randomizeButtonOnClick }
-        disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
-        startIcon={ <Casino/> }
-        color="info"
-        variant="contained"
-        disableElevation
-        fullWidth
-      >
-        Randomize
-      </Button>
-    </Tooltip>
+    <Button
+      onClick={ randomizeButtonOnClick }
+      disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
+      startIcon={ <Casino/> }
+      color="info"
+      variant="contained"
+      disableElevation
+      fullWidth
+    >
+      Randomize
+    </Button>
   )
 }
 
