@@ -2,25 +2,29 @@ import * as Constants from './Constants'
 
 
 export function ChannelShiftSketch(p5) {
+  // --------------------------------------------------------------------------------
+  // Image Data Variables
+  // --------------------------------------------------------------------------------
   // Source image + RGB channel images
-  // TODO rename to originalImage
-  let sourceImage
-  // TODO rename arrays to originalChannels
-  let sourceChannels = []
+  let originalImage
+  let originalChannels = []
   // Preview RGB channels, based on sourceChannels but with swaps applied
   let previewChannels = []
+  // Graphics object to draw swapped/shifted channels onto
+  let previewGraphics
 
+  // --------------------------------------------------------------------------------
+  // Local Variables for Props
+  // (Assigned in updateWithProps())
+  // --------------------------------------------------------------------------------
   // x/y shift values to apply to each preview channel
   let channelShiftValues
-
   // Selected source/target channels
   let sourceChannel, targetChannel
+
   // If there's a change in selected source/target channels, this will be set to true.
   // Sketch will update previewChannels accordingly then set this back to false
   let selectedChannelsWereUpdated = false
-
-  // Graphics object to draw swapped/shifted channels onto
-  let previewGraphics
 
   // --------------------------------------------------------------------------------
   // Function Variables
@@ -46,7 +50,7 @@ export function ChannelShiftSketch(p5) {
    * Preload default source image.
    */
   p5.preload = () => {
-    sourceImage = p5.loadImage('default.jpg')
+    originalImage = p5.loadImage('default.jpg')
   }
 
 
@@ -54,13 +58,13 @@ export function ChannelShiftSketch(p5) {
    * p5 setup
    */
   p5.setup = () => {
-    // Disable FES (theoretically improves performance, but tbh I don't know if it's enabled for this react wrapper)
-    p5.disableFriendlyErrors = true
+    // Disable FES in prod
+    // (theoretically improves performance, but tbh I don't know if it's enabled for this react wrapper)
+    p5.disableFriendlyErrors = process.env.NODE_ENV !== 'development'
     // Set pixel density to 1 (helps with performance on high-density displays)
     p5.pixelDensity(1)
     // Set frame rate to 30, we don't need crazy high FPS for this
     p5.frameRate(30)
-
     // Match window width, scale height accordingly
     p5.createCanvas(...calculateCanvasDimensions())
 
@@ -137,6 +141,7 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
+    // TODO: use redraw(), only run if props were updated
     // Update previewChannels if source/target channel selection was changed
     if (selectedChannelsWereUpdated) {
       resetPreviewChannels()
@@ -168,15 +173,15 @@ export function ChannelShiftSketch(p5) {
    */
   function initializeAll() {
     // Graphics object that will be drawn with the RGB layers on it
-    previewGraphics = p5.createGraphics(sourceImage.width, sourceImage.height)
+    previewGraphics = p5.createGraphics(originalImage.width, originalImage.height)
 
     // Extract color channels and initialize previewChannels
     initializeRGBImages()
 
     // Set parent's state for image dimensions
     // (These are initialized when updateWithProps() is called on initial load)
-    setImageWidth(sourceImage.width)
-    setImageHeight(sourceImage.height)
+    setImageWidth(originalImage.width)
+    setImageHeight(originalImage.height)
   }
 
 
@@ -185,30 +190,30 @@ export function ChannelShiftSketch(p5) {
    */
   function initializeRGBImages() {
     // Initialize to blank images
-    sourceChannels[Constants.R_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[Constants.R_OFFSET].loadPixels()
-    sourceChannels[Constants.G_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[Constants.G_OFFSET].loadPixels()
-    sourceChannels[Constants.B_OFFSET] = p5.createImage(sourceImage.width, sourceImage.height)
-    sourceChannels[Constants.B_OFFSET].loadPixels()
+    originalChannels[Constants.R_OFFSET] = p5.createImage(originalImage.width, originalImage.height)
+    originalChannels[Constants.R_OFFSET].loadPixels()
+    originalChannels[Constants.G_OFFSET] = p5.createImage(originalImage.width, originalImage.height)
+    originalChannels[Constants.G_OFFSET].loadPixels()
+    originalChannels[Constants.B_OFFSET] = p5.createImage(originalImage.width, originalImage.height)
+    originalChannels[Constants.B_OFFSET].loadPixels()
     // Copy color channels from sourceImage.pixels
     // This is a 1D array that stores RGBA values. See docs for details:
     // https://p5js.org/reference/#/p5.Image/pixels
-    sourceImage.loadPixels()
-    for (let i = 0; i < sourceImage.pixels.length; i += 4) {
+    originalImage.loadPixels()
+    for (let i = 0; i < originalImage.pixels.length; i += 4) {
       // Red
-      sourceChannels[Constants.R_OFFSET].pixels[i + Constants.R_OFFSET] = sourceImage.pixels[i + Constants.R_OFFSET]
+      originalChannels[Constants.R_OFFSET].pixels[i + Constants.R_OFFSET] = originalImage.pixels[i + Constants.R_OFFSET]
       // Green
-      sourceChannels[Constants.G_OFFSET].pixels[i + Constants.G_OFFSET] = sourceImage.pixels[i + Constants.G_OFFSET]
+      originalChannels[Constants.G_OFFSET].pixels[i + Constants.G_OFFSET] = originalImage.pixels[i + Constants.G_OFFSET]
       // Blue
-      sourceChannels[Constants.B_OFFSET].pixels[i + Constants.B_OFFSET] = sourceImage.pixels[i + Constants.B_OFFSET]
+      originalChannels[Constants.B_OFFSET].pixels[i + Constants.B_OFFSET] = originalImage.pixels[i + Constants.B_OFFSET]
       // Alpha
-      sourceChannels[Constants.R_OFFSET].pixels[i + Constants.A_OFFSET] = sourceChannels[Constants.G_OFFSET].pixels[i + Constants.A_OFFSET] = sourceChannels[Constants.B_OFFSET].pixels[i + Constants.A_OFFSET] = 255
+      originalChannels[Constants.R_OFFSET].pixels[i + Constants.A_OFFSET] = originalChannels[Constants.G_OFFSET].pixels[i + Constants.A_OFFSET] = originalChannels[Constants.B_OFFSET].pixels[i + Constants.A_OFFSET] = 255
     }
     // Load into sourceChannels and previewChannels
-    sourceChannels[Constants.R_OFFSET].updatePixels()
-    sourceChannels[Constants.G_OFFSET].updatePixels()
-    sourceChannels[Constants.B_OFFSET].updatePixels()
+    originalChannels[Constants.R_OFFSET].updatePixels()
+    originalChannels[Constants.G_OFFSET].updatePixels()
+    originalChannels[Constants.B_OFFSET].updatePixels()
     resetPreviewChannels()
   }
 
@@ -217,9 +222,9 @@ export function ChannelShiftSketch(p5) {
    * Reset previewChannels to match sourceChannels.
    */
   function resetPreviewChannels() {
-    previewChannels[Constants.R_OFFSET] = sourceChannels[Constants.R_OFFSET].get(0, 0, sourceChannels[Constants.R_OFFSET].width, sourceChannels[Constants.R_OFFSET].height)
-    previewChannels[Constants.G_OFFSET] = sourceChannels[Constants.G_OFFSET].get(0, 0, sourceChannels[Constants.G_OFFSET].width, sourceChannels[Constants.G_OFFSET].height)
-    previewChannels[Constants.B_OFFSET] = sourceChannels[Constants.B_OFFSET].get(0, 0, sourceChannels[Constants.B_OFFSET].width, sourceChannels[Constants.B_OFFSET].height)
+    previewChannels[Constants.R_OFFSET] = originalChannels[Constants.R_OFFSET].get(0, 0, originalChannels[Constants.R_OFFSET].width, originalChannels[Constants.R_OFFSET].height)
+    previewChannels[Constants.G_OFFSET] = originalChannels[Constants.G_OFFSET].get(0, 0, originalChannels[Constants.G_OFFSET].width, originalChannels[Constants.G_OFFSET].height)
+    previewChannels[Constants.B_OFFSET] = originalChannels[Constants.B_OFFSET].get(0, 0, originalChannels[Constants.B_OFFSET].width, originalChannels[Constants.B_OFFSET].height)
   }
 
 
@@ -236,13 +241,13 @@ export function ChannelShiftSketch(p5) {
     // TODO: come up with better scale for laptop screens
     // First try to set height to 50% of window height and scale width accordingly
     let newHeight = 0.5 * p5.windowHeight
-    let ratio = newHeight / sourceImage.height
-    let newWidth = sourceImage.width * ratio
+    let ratio = newHeight / originalImage.height
+    let newWidth = originalImage.width * ratio
     // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
     if (newWidth > p5.windowWidth) {
       newWidth = p5.windowWidth
-      ratio = newWidth / sourceImage.width
-      newHeight = sourceImage.height * ratio
+      ratio = newWidth / originalImage.width
+      newHeight = originalImage.height * ratio
     }
     return [newWidth, newHeight]
   }
@@ -265,7 +270,7 @@ export function ChannelShiftSketch(p5) {
     const loadCallback = (newImage) => {
       // Load image file into sourceImage
       // TODO: use .get() to create copy?
-      sourceImage = newImage
+      originalImage = newImage
 
       // Reset shift/swap states
       resetShiftAndSwap()
