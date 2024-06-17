@@ -22,9 +22,6 @@ export function ChannelShiftSketch(p5) {
   // Graphics object to draw swapped/shifted channels onto
   let previewGraphics
 
-  // Pause drawing when confirming a result
-  let confirmResultInProgress = false
-
   // --------------------------------------------------------------------------------
   // Function Variables
   //
@@ -34,8 +31,6 @@ export function ChannelShiftSketch(p5) {
   // Image dimension setter functions
   let setImageWidth = null
   let setImageHeight = null
-  // Function to run after confirming a result
-  let postConfirmResult = null
   // Function to set setNewFileDataURL to null after load
   let setNewFileDataURL = null
   // Function to set setShouldSaveResult state to false after completing a save
@@ -98,9 +93,6 @@ export function ChannelShiftSketch(p5) {
     if (setImageHeight === null) {
       setImageHeight = props.setImageHeight
     }
-    if (postConfirmResult === null) {
-      postConfirmResult = props.postConfirmResult
-    }
     if (setShouldSaveResult === null) {
       setShouldSaveResult = props.setShouldSaveResult
     }
@@ -114,11 +106,6 @@ export function ChannelShiftSketch(p5) {
     // Handle a new image being uploaded
     if (props.newFileDataURL !== null) {
       loadImageFile(props.newFileDataURL)
-    }
-
-    // Handle confirm button click
-    if (props.shouldConfirmResult) {
-      confirmResult()
     }
 
     // Handle save button click
@@ -150,31 +137,24 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // Pause re-draws when confirming a result
-    if (!confirmResultInProgress) {
-
-      // Update previewChannels if source/target channel selection was changed
-      if (selectedChannelsWereUpdated) {
-        resetPreviewChannels()
-        // Swap channels if source and target are different
-        if (sourceChannel !== targetChannel) {
-          swapChannels(sourceChannel, targetChannel)
-          selectedChannelsWereUpdated = false
-        }
+    // Update previewChannels if source/target channel selection was changed
+    if (selectedChannelsWereUpdated) {
+      resetPreviewChannels()
+      // Swap channels if source and target are different
+      if (sourceChannel !== targetChannel) {
+        swapChannels(sourceChannel, targetChannel)
+        selectedChannelsWereUpdated = false
       }
-
-      // Draw to previewGraphics
-      previewGraphics.background(0)
-      // Blend RGB channels
-      drawChannelToPreviewGraphics(Constants.R_OFFSET)
-      drawChannelToPreviewGraphics(Constants.G_OFFSET)
-      drawChannelToPreviewGraphics(Constants.B_OFFSET)
-      // Render to screen
-      p5.image(previewGraphics, 0, 0, p5.width, p5.height)
     }
+    // Draw to previewGraphics
+    previewGraphics.background(0)
+    // Blend RGB channels
+    drawChannelToPreviewGraphics(Constants.R_OFFSET)
+    drawChannelToPreviewGraphics(Constants.G_OFFSET)
+    drawChannelToPreviewGraphics(Constants.B_OFFSET)
+    // Render to screen
+    p5.image(previewGraphics, 0, 0, p5.width, p5.height)
   }
-
-
   // ================================================================================
   // Helper Functions
   // ================================================================================
@@ -269,7 +249,7 @@ export function ChannelShiftSketch(p5) {
 
 
   // --------------------------------------------------------------------------------
-  // Load / Save / Confirm Functions
+  // Load / Save Functions
   // --------------------------------------------------------------------------------
 
   /**
@@ -309,25 +289,6 @@ export function ChannelShiftSketch(p5) {
     // TODO: better default filename? save as dialog?
     let ts = Date.now()
     p5.save(previewGraphics, `${ts}.png`)
-  }
-
-
-  /**
-   * Sets confirmResultInProgress to true, sets sourceImage to current previewGraphics,
-   * re-initializes RGB channel arrays, calls postConfirmResult(), then sets
-   * confirmResultInProgress to false.
-   */
-  function confirmResult() {
-    // Pause redraws
-    confirmResultInProgress = true
-    // Copy previewGraphics to sourceImage and re-initialize channel images
-    sourceImage = previewGraphics.get(0, 0, previewGraphics.width, previewGraphics.height)
-    initializeRGBImages()
-    // Tell app to handle post-confirmation tasks
-    postConfirmResult()
-    // Resume redraws
-    // TODO: there's a delay from app updating shift dimensions and this, figure out how to account for that so there isn't a frame of jitter
-    confirmResultInProgress = false
   }
 
 

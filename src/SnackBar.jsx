@@ -58,43 +58,11 @@ const RandomizeButton = ({
   )
 }
 
-// TODO: remove, get rid of onClick? (or comment out in case you wanna add it back later)
 /**
- * Confirm step button.
- *
- * @param confirmButtonOnClick
- * @param imageModifiedDuringStep
- * @return {Element}
- * @constructor
- */
-//const ConfirmButton = ({
-//                         confirmButtonOnClick,
-//                         imageModifiedDuringStep
-//                       }) => {
-//  // TODO: come up with better tooltip phrasing:
-//  return (
-//    <Tooltip title="Use this modified result as base image" placement="top">
-//            <span>
-//              <Button
-//                onClick={ confirmButtonOnClick }
-//                disabled={ !imageModifiedDuringStep() }
-//                startIcon={ <CheckCircleOutline/> }
-//                color="secondary"
-//                variant="outlined"
-//              >
-//                Confirm
-//            </Button>
-//            </span>
-//    </Tooltip>
-//  )
-//}
-
-/**
- * Snackbar with reset/randomize/confirm buttons.
+ * Snackbar with reset/randomize buttons.
  *
  * @param resetButtonOnClick
  * @param randomizeButtonOnClick
- * @param confirmButtonOnClick
  * @param shouldRandomizeShift
  * @param shouldRandomizeSwap
  * @param imageModifiedDuringStep
@@ -105,7 +73,6 @@ export const SnackBar = ({
                            // OnClick handlers
                            resetButtonOnClick,
                            randomizeButtonOnClick,
-                           confirmButtonOnClick,
                            // Randomization state props
                            shouldRandomizeShift,
                            shouldRandomizeSwap,
@@ -124,7 +91,7 @@ export const SnackBar = ({
       } }
     >
       <Container maxWidth="md">
-        {/*Reset/Randomize/Confirm Buttons*/ }
+        {/*Reset/Randomize Buttons*/ }
         <Stack
           direction="row"
           divider={
@@ -150,11 +117,6 @@ export const SnackBar = ({
             shouldRandomizeShift={ shouldRandomizeShift }
             shouldRandomizeSwap={ shouldRandomizeSwap }
           />
-          {/*TODO: remove*/}
-          {/*<ConfirmButton*/}
-          {/*  confirmButtonOnClick={ confirmButtonOnClick }*/}
-          {/*  imageModifiedDuringStep={ imageModifiedDuringStep }*/}
-          {/*/>*/}
         </Stack>
       </Container>
     </Paper>

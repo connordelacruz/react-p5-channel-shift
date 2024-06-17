@@ -393,7 +393,7 @@ function App() {
   }
 
   // ================================================================================
-  // Reset/Randomize/Confirm Snackbar Buttons
+  // Reset/Randomize Snackbar Buttons
   // ================================================================================
 
   // --------------------------------------------------------------------------------
@@ -423,29 +423,6 @@ function App() {
     if (shouldRandomizeSwap) {
       randomizeSwaps()
     }
-  }
-
-  // --------------------------------------------------------------------------------
-  // Confirm Button
-  // --------------------------------------------------------------------------------
-  // Set to true when confirm button is clicked, sketch will handle confirm and set back to false when complete
-  const [shouldConfirmResult, setShouldConfirmResult] = React.useState(false)
-
-  /**
-   * Confirm button onClick handler
-   */
-  const confirmButtonOnClick = () => {
-    setShouldConfirmResult(true)
-  }
-
-  /**
-   * Post-confirm method, called from sketch after handling the confirmation.
-   *
-   * Resets shift/swap states and sets shouldConfirmResult state to false.
-   */
-  const postConfirmResult = () => {
-    resetShiftAndSwap()
-    setShouldConfirmResult(false)
   }
 
   // ================================================================================
@@ -536,7 +513,6 @@ function App() {
           newFileDataURL={ newFileDataURL } setNewFileDataURL={ setNewFileDataURL }
           resetShiftAndSwap={ resetShiftAndSwap }
           shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
-          shouldConfirmResult={ shouldConfirmResult } postConfirmResult={ postConfirmResult }
         />
 
         {/*Tool Tabs*/ }
@@ -622,7 +598,6 @@ function App() {
       <SnackBar
         resetButtonOnClick={ resetShiftAndSwap }
         randomizeButtonOnClick={ randomizeButtonOnClick }
-        confirmButtonOnClick={ confirmButtonOnClick }
         shouldRandomizeShift={ shouldRandomizeShift }
         shouldRandomizeSwap={ shouldRandomizeSwap }
         imageModifiedDuringStep={ imageModifiedDuringStep }
