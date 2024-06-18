@@ -81,6 +81,9 @@ export function ChannelShiftSketch(p5) {
     p5.windowResized = () => {
       p5.resizeCanvas(...calculateCanvasDimensions())
     }
+
+    // Disable loop, only redraw on changes
+    p5.noLoop()
   }
 
 
@@ -90,6 +93,9 @@ export function ChannelShiftSketch(p5) {
    * @param props
    */
   p5.updateWithProps = props => {
+    // Only redraw on changes
+    let shouldRedraw = false
+
     // Initialize state-related function variables
     if (setImageWidth === null) {
       setImageWidth = props.setImageWidth
@@ -110,6 +116,7 @@ export function ChannelShiftSketch(p5) {
     // Handle a new image being uploaded
     if (props.newFileDataURL !== null) {
       loadImageFile(props.newFileDataURL)
+      shouldRedraw = true
     }
 
     // Handle save button click
@@ -123,16 +130,27 @@ export function ChannelShiftSketch(p5) {
     if (!isNaN(propsSourceChannelInt) && propsSourceChannelInt !== sourceChannel) {
       sourceChannel = propsSourceChannelInt
       selectedChannelsWereUpdated = true
+      shouldRedraw = true
     }
     let propsTargetChannelInt = parseInt(props.targetChannel)
     if (!isNaN(propsTargetChannelInt) && propsTargetChannelInt !== targetChannel) {
       targetChannel = propsTargetChannelInt
       selectedChannelsWereUpdated = true
+      shouldRedraw = true
     }
 
     // Set shift values if modified
     if (JSON.stringify(props.channelShiftValues) !== JSON.stringify(channelShiftValues)) {
-      channelShiftValues = [...props.channelShiftValues]
+      // Deep copy array
+      channelShiftValues = props.channelShiftValues.map((arr) => {
+        return arr.slice()
+      })
+      shouldRedraw = true
+    }
+
+    // Redraw if changes were made
+    if (shouldRedraw) {
+      p5.redraw()
     }
   }
 
@@ -141,7 +159,6 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // TODO: use redraw(), only run if props were updated
     // Update previewChannels if source/target channel selection was changed
     if (selectedChannelsWereUpdated) {
       resetPreviewChannels()
