@@ -44,6 +44,8 @@ export function ChannelShiftSketch(p5) {
   let setShouldSaveResult = null
   // Function to reset all shift and swap states
   let resetShiftAndSwap = null
+  // Function to toggle the iOS error modal
+  let setIOSSafariErrorOpen = null
 
   // ================================================================================
   // p5 Sketch Methods
@@ -106,6 +108,7 @@ export function ChannelShiftSketch(p5) {
       setShouldSaveResult = props.setShouldSaveResult
       resetShiftAndSwap = props.resetShiftAndSwap
       setNewFileDataURL = props.setNewFileDataURL
+      setIOSSafariErrorOpen = props.setIOSSafariErrorOpen
 
       setterFunctionsInitialized = true
     }
@@ -253,8 +256,8 @@ export function ChannelShiftSketch(p5) {
    */
   function calculateCanvasDimensions() {
     // TODO: come up with better scale for laptop screens
-    // First try to set height to 50% of window height and scale width accordingly
-    let newHeight = 0.5 * p5.windowHeight
+    // First try to set height to 45% of window height and scale width accordingly
+    let newHeight = 0.45 * p5.windowHeight
     let ratio = newHeight / originalImage.height
     let newWidth = originalImage.width * ratio
     // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
@@ -282,6 +285,21 @@ export function ChannelShiftSketch(p5) {
    */
   function loadImageFile(newFileDataURL) {
     const loadCallback = (newImage) => {
+      // Safari on iOS doesn't support canvases whose width * height > 16777216,
+      // and apparently images are stored as canvases on the page in p5.js.
+      // There doesn't seem to be any way to load large images in this case, and
+      // this callback still executes since it's technically not a load error.
+      // So just inform the user of the issue and return.
+      if (newImage.width * newImage.height > 16777216
+        && /iPad|iPhone|iPod/.test(navigator.userAgent)
+        && navigator.userAgent.indexOf("Safari") > -1) {
+        // Display error
+        setIOSSafariErrorOpen(true)
+        // Set state back to null
+        setNewFileDataURL(null)
+        return
+      }
+
       // Load image file into sourceImage
       // TODO: use .get() to create copy?
       originalImage = newImage

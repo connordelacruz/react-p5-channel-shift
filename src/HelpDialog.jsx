@@ -17,7 +17,7 @@ import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/i
 import { ChannelShiftLogo } from './common/ChannelShiftLogo'
 import React from 'react'
 
-export function HelpDialog({ open, onClose }) {
+export const HelpDialog = ({ open, onClose }) => {
   return (<Dialog
     open={ open }
     onClose={ onClose }

@@ -19,6 +19,7 @@ import { RandomizeToolUI } from './RandomizeToolUI'
 import { SnackBar } from './SnackBar'
 // Misc Components
 import { HelpDialog } from './HelpDialog'
+import { IOSSafariError } from './IOSSafariError'
 // MUI
 import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material'
 
@@ -467,6 +468,12 @@ function App() {
   // Open/close state
   const [helpOpen, setHelpOpen] = React.useState(false)
 
+  // --------------------------------------------------------------------------------
+  // iOS Safari Large Image Error Dialog
+  // --------------------------------------------------------------------------------
+  // Open/close state
+  const [iOSSafariErrorOpen, setIOSSafariErrorOpen] = React.useState(false)
+
   // ================================================================================
   // Render
   // ================================================================================
@@ -513,6 +520,7 @@ function App() {
           newFileDataURL={ newFileDataURL } setNewFileDataURL={ setNewFileDataURL }
           resetShiftAndSwap={ resetShiftAndSwap }
           shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
+          setIOSSafariErrorOpen={ setIOSSafariErrorOpen }
         />
 
         {/*Tool Tabs*/ }
@@ -604,9 +612,20 @@ function App() {
       />
 
       {/*Help Modal*/ }
-      <HelpDialog open={ helpOpen } onClose={ () => {
-        setHelpOpen(false)
-      } }/>
+      <HelpDialog
+        open={ helpOpen }
+        onClose={ () => {
+          setHelpOpen(false)
+        } }
+      />
+
+      {/*iOS Safari Large Image Error Modal*/ }
+      <IOSSafariError
+        open={ iOSSafariErrorOpen }
+        onClose={ () => {
+          setIOSSafariErrorOpen(false)
+        } }
+      />
 
     </ThemeProvider>
   )
