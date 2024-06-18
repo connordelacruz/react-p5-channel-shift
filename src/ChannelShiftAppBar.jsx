@@ -1,31 +1,51 @@
-import { AppBar, IconButton, Stack, styled, Toolbar, Typography, } from '@mui/material'
+import { AppBar, Fab, Stack, styled, Toolbar, useMediaQuery, useTheme, } from '@mui/material'
 import { FileUpload, HelpOutline, Save } from '@mui/icons-material'
 import React from 'react'
 import { ChannelShiftLogo } from './common/ChannelShiftLogo'
 
+
 /**
- * Component to use in app bar IconButtons. Hidden on xs viewports.
+ * App bar button component.
  *
+ * @param labelText
  * @param color
+ * @param onClick
+ * @param icon
  * @param children
- * @return {React.JSX.Element}
+ * @param props
+ * @return {Element}
  * @constructor
  */
-const IconButtonResponsiveLabel = ({ color, children }) => (
-  <Typography
-    variant="button"
-    color={ color }
-    ml={ 1 }
-    sx={ {
-      display: {
-        xs: 'none',
-        sm: 'block',
-      },
-    } }
-  >
-    { children }
-  </Typography>
-)
+const AppBarButton = ({
+                        labelText,
+                        color,
+                        onClick,
+                        icon,
+                        children,
+                        ...props
+                      }) => {
+  const theme = useTheme()
+  // Extended button on larger views
+  const extendedFab = useMediaQuery(theme.breakpoints.up('sm'))
+
+  return (
+    <Fab
+      aria-label={ labelText }
+      color={ color }
+      onClick={ onClick }
+      variant={ extendedFab ? 'extended' : 'circular' }
+      size={ extendedFab ? 'medium' : 'small' }
+      sx={ {
+        boxShadow: 'none'
+      } }
+      { ...props }
+    >
+      { icon }
+      { extendedFab ? labelText : '' }
+      { children }
+    </Fab>
+  )
+}
 
 /**
  * Save image button element.
@@ -43,16 +63,12 @@ const SaveButton = ({ setShouldSaveResult }) => {
   }
 
   return (
-    <IconButton
-      onClick={ saveButtonOnClick }
-      aria-label="save"
+    <AppBarButton
+      labelText="Save"
       color="info"
-    >
-      <Save/>
-      <IconButtonResponsiveLabel>
-        Save
-      </IconButtonResponsiveLabel>
-    </IconButton>
+      onClick={ saveButtonOnClick }
+      icon={ <Save/> }
+    />
   )
 }
 
@@ -98,21 +114,18 @@ const LoadButton = ({ setNewFileDataURL }) => {
     }
   }
   return (
-    <IconButton
+    <AppBarButton
       component="label"
-      aria-label="load"
+      labelText="Load"
       color="warning"
+      icon={ <FileUpload/> }
     >
-      <FileUpload/>
-      <IconButtonResponsiveLabel>
-        Load
-      </IconButtonResponsiveLabel>
       <VisuallyHiddenInput
         type="file"
         accept="image/*"
         onChange={ loadImageFileInputOnChange }
         id="load-image-file-input"/>
-    </IconButton>
+    </AppBarButton>
   )
 }
 
@@ -125,19 +138,14 @@ const LoadButton = ({ setNewFileDataURL }) => {
  */
 const HelpButton = ({ setHelpOpen }) => {
   return (
-    <IconButton
-      aria-label="help"
+    <AppBarButton
+      labelText="Help"
+      color="secondary"
       onClick={ () => {
         setHelpOpen(true)
       } }
-    >
-      <HelpOutline color="secondary" />
-      <IconButtonResponsiveLabel
-        color="secondary"
-      >
-        Help
-      </IconButtonResponsiveLabel>
-    </IconButton>
+      icon={ <HelpOutline/> }
+    />
   )
 }
 
@@ -184,10 +192,10 @@ export const AppBarButtons = ({
  * @constructor
  */
 export const ChannelShiftAppBar = ({
-                                         setShouldSaveResult,
-                                         setNewFileDataURL,
-                                         setHelpOpen
-                                       }) => {
+                                     setShouldSaveResult,
+                                     setNewFileDataURL,
+                                     setHelpOpen
+                                   }) => {
   // TODO: decouple sticky container from canvas + tabs, then update this to be sticky or whatev
   return (
     <AppBar
