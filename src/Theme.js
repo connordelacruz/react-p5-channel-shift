@@ -32,6 +32,14 @@ export const theme = createTheme({
         // Disable ripple effect everywhere
         disableRipple: true,
       }
+    },
+    // Button Groups
+    MuiButtonGroup: {
+      defaultProps: {
+        // Disable ripple effect everywhere
+        // (For some reason button groups aren't covered by MuiButtonBase)
+        disableRipple: true,
+      }
     }
   }
 })
