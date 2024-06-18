@@ -32,6 +32,9 @@ export function ChannelShiftSketch(p5) {
   // Kind of a hack, but need to get various state-related functions passed from App.js.
   // These get initialized once in updateWithProps().
   // --------------------------------------------------------------------------------
+  // Set to true after the below functions are initialized
+  let setterFunctionsInitialized = false
+
   // Image dimension setter functions
   let setImageWidth = null
   let setImageHeight = null
@@ -71,6 +74,9 @@ export function ChannelShiftSketch(p5) {
     // Initialize previewGraphics, source/preview RGB channel images, and update the image dimension states
     initializeAll()
 
+    // Disable loop, only redraw on changes
+    p5.noLoop()
+
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
     // --------------------------------------------------------------------------------
@@ -81,9 +87,6 @@ export function ChannelShiftSketch(p5) {
     p5.windowResized = () => {
       p5.resizeCanvas(...calculateCanvasDimensions())
     }
-
-    // Disable loop, only redraw on changes
-    p5.noLoop()
   }
 
 
@@ -97,20 +100,14 @@ export function ChannelShiftSketch(p5) {
     let shouldRedraw = false
 
     // Initialize state-related function variables
-    if (setImageWidth === null) {
+    if (!setterFunctionsInitialized) {
       setImageWidth = props.setImageWidth
-    }
-    if (setImageHeight === null) {
       setImageHeight = props.setImageHeight
-    }
-    if (setShouldSaveResult === null) {
       setShouldSaveResult = props.setShouldSaveResult
-    }
-    if (resetShiftAndSwap === null) {
       resetShiftAndSwap = props.resetShiftAndSwap
-    }
-    if (setNewFileDataURL === null) {
       setNewFileDataURL = props.setNewFileDataURL
+
+      setterFunctionsInitialized = true
     }
 
     // Handle a new image being uploaded
