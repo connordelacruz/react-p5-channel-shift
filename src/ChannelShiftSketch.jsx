@@ -206,6 +206,12 @@ export function ChannelShiftSketch(p5) {
    * Initialize previewGraphics, RGB image arrays, and set image dimension states.
    */
   function initializeAll() {
+    // Clear up the previous previewGraphics
+    if (previewGraphics !== undefined) {
+      previewGraphics.remove()
+      // Maybe unnecessary, but JS can be weird with what variables it keeps in memory
+      previewGraphics = undefined
+    }
     // Graphics object that will be drawn with the RGB layers on it
     previewGraphics = p5.createGraphics(originalImage.width, originalImage.height)
 
