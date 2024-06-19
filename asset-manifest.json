@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/react-p5-channel-shift/static/css/main.41ca765a.css",
-    "main.js": "/react-p5-channel-shift/static/js/main.cc2f3d6a.js",
+    "main.js": "/react-p5-channel-shift/static/js/main.8d8aa1d1.js",
     "static/media/channel-shift-ui.png": "/react-p5-channel-shift/static/media/channel-shift-ui.b8b8ba5dda7ba2ee827b.png",
     "static/media/randomize-shift-tool-ui.png": "/react-p5-channel-shift/static/media/randomize-shift-tool-ui.bbfe7ee126813b004d09.png",
     "static/media/randomize-swap-tool-ui.png": "/react-p5-channel-shift/static/media/randomize-swap-tool-ui.625384101836a192e4cf.png",
@@ -66,10 +66,10 @@
     "static/media/roboto-greek-ext-400-normal.woff": "/react-p5-channel-shift/static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/roboto-greek-ext-700-normal.woff": "/react-p5-channel-shift/static/media/roboto-greek-ext-700-normal.249853776d22a271b2b5.woff",
     "main.41ca765a.css.map": "/react-p5-channel-shift/static/css/main.41ca765a.css.map",
-    "main.cc2f3d6a.js.map": "/react-p5-channel-shift/static/js/main.cc2f3d6a.js.map"
+    "main.8d8aa1d1.js.map": "/react-p5-channel-shift/static/js/main.8d8aa1d1.js.map"
   },
   "entrypoints": [
     "static/css/main.41ca765a.css",
-    "static/js/main.cc2f3d6a.js"
+    "static/js/main.8d8aa1d1.js"
   ]
 }
