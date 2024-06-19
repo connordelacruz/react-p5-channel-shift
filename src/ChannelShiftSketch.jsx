@@ -1,4 +1,6 @@
 import * as Constants from './Constants'
+import { IOS_SAFARI_MAX_CANVAS_AREA, isIOSSafari } from './common/UserAgentUtils'
+import isMobile from 'is-mobile'
 
 
 export function ChannelShiftSketch(p5) {
@@ -47,6 +49,16 @@ export function ChannelShiftSketch(p5) {
   // Function to toggle the iOS error modal
   let setIOSSafariErrorOpen = null
 
+  // --------------------------------------------------------------------------------
+  // Misc Variables
+  // --------------------------------------------------------------------------------
+  // If this is a mobile device, we'll assume the window can't be resized. We'll set
+  // this to the initial window size in setup() and use it for canvas height calculations.
+  // This is to avoid the canvas jumping around when the address bar is hidden/shown on mobile.
+  // If this is not a mobile device, we'll leave this as false and dynamically calculate
+  // canvas dimensions based on the current window size
+  let mobileDeviceInitialWindowHeight = false
+
   // ================================================================================
   // p5 Sketch Methods
   // ================================================================================
@@ -78,6 +90,11 @@ export function ChannelShiftSketch(p5) {
 
     // Disable loop, only redraw on changes
     p5.noLoop()
+
+    // If this is a mobile device, grab the initial window height for canvas calculations
+    if (isMobile()) {
+      mobileDeviceInitialWindowHeight = p5.windowHeight
+    }
 
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
@@ -256,8 +273,10 @@ export function ChannelShiftSketch(p5) {
    */
   function calculateCanvasDimensions() {
     // TODO: come up with better scale for laptop screens
+    // Use initial window height for mobile, dynamic window height for non-mobile
+    let windowHeight = mobileDeviceInitialWindowHeight ? mobileDeviceInitialWindowHeight : p5.windowHeight
     // First try to set height to 45% of window height and scale width accordingly
-    let newHeight = 0.45 * p5.windowHeight
+    let newHeight = 0.45 * windowHeight
     let ratio = newHeight / originalImage.height
     let newWidth = originalImage.width * ratio
     // If newWidth > windowWidth, instead set width to 100% and scale height accordingly
@@ -290,9 +309,7 @@ export function ChannelShiftSketch(p5) {
       // There doesn't seem to be any way to load large images in this case, and
       // this callback still executes since it's technically not a load error.
       // So just inform the user of the issue and return.
-      if (newImage.width * newImage.height > 16777216
-        && /iPad|iPhone|iPod/.test(navigator.userAgent)
-        && navigator.userAgent.indexOf("Safari") > -1) {
+      if (isIOSSafari() && newImage.width * newImage.height > IOS_SAFARI_MAX_CANVAS_AREA) {
         // Display error
         setIOSSafariErrorOpen(true)
         // Set state back to null
