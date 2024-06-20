@@ -16,6 +16,7 @@ import {
 import { Casino, Close, FileUpload, HelpOutline, RestartAlt, Save } from '@mui/icons-material'
 import { ChannelShiftLogo } from './common/ChannelShiftLogo'
 import React from 'react'
+import * as Constants from './Constants'
 
 export const HelpDialog = ({ open, onClose }) => {
   return (<Dialog
@@ -24,7 +25,7 @@ export const HelpDialog = ({ open, onClose }) => {
     scroll="paper"
   >
     <DialogTitle>
-      Help
+      Channel Shift <Typography variant="caption">v{Constants.VERSION}</Typography>
     </DialogTitle>
     <IconButton
       aria-label="close"
