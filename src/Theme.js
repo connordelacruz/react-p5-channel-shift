@@ -33,12 +33,20 @@ export const theme = createTheme({
         disableRipple: true,
       }
     },
+    // Slightly Less Based Button Component
+    MuiButton: {
+      defaultProps: {
+        // Disable elevation everywhere
+        disableElevation: true,
+      }
+    },
     // Button Groups
     MuiButtonGroup: {
       defaultProps: {
         // Disable ripple effect everywhere
-        // (For some reason button groups aren't covered by MuiButtonBase)
         disableRipple: true,
+        // Disable elevation everywhere
+        disableElevation: true,
       }
     }
   }

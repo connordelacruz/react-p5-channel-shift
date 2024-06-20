@@ -1,18 +1,7 @@
-import {
-  Box, Button, ButtonGroup,
-  Grid,
-  InputAdornment,
-  Paper,
-  Slider,
-  SliderThumb,
-  Typography
-} from '@mui/material'
+import { Box, Button, ButtonGroup, Grid, InputAdornment, Paper, Slider, SliderThumb, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
-import {
-  SwapHoriz,
-  SwapVert
-} from '@mui/icons-material'
+import { SwapHoriz, SwapVert } from '@mui/icons-material'
 import { NumericTextInput } from './common/NumericTextInput'
 import { ToolUIContainer } from './common/ToolUIContainer'
 
@@ -48,7 +37,6 @@ const ShiftChannelSelectButton = ({
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       size="large"
-      disableElevation
       >
       {Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}{channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : ' *'}
     </Button>

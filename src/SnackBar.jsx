@@ -1,4 +1,4 @@
-import { Button, Container, Divider, Paper, Stack } from '@mui/material'
+import { Button, Container, Paper, Stack } from '@mui/material'
 import { Casino, RestartAlt } from '@mui/icons-material'
 import React from 'react'
 
@@ -21,7 +21,7 @@ const ResetButton = ({
       startIcon={ <RestartAlt/> }
       color="primary"
       variant="contained"
-      disableElevation
+      size="large"
       fullWidth
     >
       Reset
@@ -50,7 +50,7 @@ const RandomizeButton = ({
       startIcon={ <Casino/> }
       color="info"
       variant="contained"
-      disableElevation
+      size="large"
       fullWidth
     >
       Randomize
@@ -94,19 +94,9 @@ export const SnackBar = ({
         {/*Reset/Randomize Buttons*/ }
         <Stack
           direction="row"
-          divider={
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={ {
-                display: { xs: 'none', sm: 'block' }
-              } }
-            />
-          }
           alignItems="center"
           justifyContent={ { xs: 'space-between', sm: 'space-evenly' } }
-          spacing={ { xs: 1, sm: 2 } }
-          py={ 0.5 }
+          spacing={ { xs: 1.5, sm: 2 } }
         >
           <ResetButton
             resetButtonOnClick={ resetButtonOnClick }
