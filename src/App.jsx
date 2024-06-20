@@ -17,11 +17,12 @@ import { SwapChannelsToolUI } from './SwapChannelsToolUI'
 import { RandomizeToolUI } from './RandomizeToolUI'
 // Snack Bar Component
 import { SnackBar } from './SnackBar'
-// Misc Components
+// Dialog Components
 import { HelpDialog } from './HelpDialog'
 import { IOSSafariError } from './IOSSafariError'
 // MUI
 import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material'
+import { LoadingDialog } from './LoadingDialog'
 
 // ================================================================================
 // App Component
@@ -39,6 +40,12 @@ function App() {
   const [imageWidth, setImageWidth] = React.useState(0)
   const [imageHeight, setImageHeight] = React.useState(0)
 
+  // --------------------------------------------------------------------------------
+  // Sketch State
+  // --------------------------------------------------------------------------------
+  // Set to true when setup() method completes
+  const [setupCompleted, setSetupCompleted] = React.useState(false)
+
   // ================================================================================
   // Save/Load
   // ================================================================================
@@ -55,6 +62,23 @@ function App() {
   // State for uploaded image data. Initialized to null, set to base64 data URL once file is loaded.
   // Sketch will load data as image and set to null again when complete
   const [newFileDataURL, setNewFileDataURL] = React.useState(null)
+
+  // --------------------------------------------------------------------------------
+  // Loading Modal
+  // --------------------------------------------------------------------------------
+  // Modal to display while loading. Default to true since sketch needs to load initial image.
+  // Sketch will hide this in setup().
+  const [loadingOpen, setLoadingOpen] = React.useState(true)
+
+  /**
+   * Loading modal should be shown if:
+   * - setupCompleted is false
+   * - newFileDataURL is not null
+   */
+  React.useEffect(() => {
+    setLoadingOpen(!(setupCompleted && newFileDataURL === null))
+  }, [setupCompleted, newFileDataURL])
+
 
   // ================================================================================
   // Tool Tabs
@@ -508,12 +532,14 @@ function App() {
         <ChannelShiftAppBar
           setShouldSaveResult={ setShouldSaveResult }
           setNewFileDataURL={ setNewFileDataURL }
+          setLoadingOpen={ setLoadingOpen }
           setHelpOpen={ setHelpOpen }
         />
 
         {/*Canvas*/ }
         <ReactP5Wrapper
           sketch={ ChannelShiftSketch }
+          setSetupCompleted={ setSetupCompleted }
           setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
           sourceChannel={ sourceChannel } targetChannel={ targetChannel }
           channelShiftValues={ channelShiftValues }
@@ -617,6 +643,11 @@ function App() {
         onClose={ () => {
           setHelpOpen(false)
         } }
+      />
+
+      {/*Loading Modal*/ }
+      <LoadingDialog
+        open={ loadingOpen }
       />
 
       {/*iOS Safari Large Image Error Modal*/ }

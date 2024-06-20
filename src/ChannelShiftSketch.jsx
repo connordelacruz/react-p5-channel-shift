@@ -37,6 +37,8 @@ export function ChannelShiftSketch(p5) {
   // Set to true after the below functions are initialized
   let setterFunctionsInitialized = false
 
+  // Setter function to let app know that setup has completed
+  let setSetupCompleted = null
   // Image dimension setter functions
   let setImageWidth = null
   let setImageHeight = null
@@ -96,6 +98,9 @@ export function ChannelShiftSketch(p5) {
       mobileDeviceInitialWindowHeight = p5.windowHeight
     }
 
+    // Update setup complete state
+    setSetupCompleted(true)
+
     // --------------------------------------------------------------------------------
     // additional p5.js methods (need to be defined here because of variable scope)
     // --------------------------------------------------------------------------------
@@ -120,6 +125,7 @@ export function ChannelShiftSketch(p5) {
 
     // Initialize state-related function variables
     if (!setterFunctionsInitialized) {
+      setSetupCompleted = props.setSetupCompleted
       setImageWidth = props.setImageWidth
       setImageHeight = props.setImageHeight
       setShouldSaveResult = props.setShouldSaveResult

@@ -76,10 +76,14 @@ const SaveButton = ({ setShouldSaveResult }) => {
  * Load image button element.
  *
  * @param setNewFileDataURL
+ * @param setLoadingOpen
  * @return {Element}
  * @constructor
  */
-const LoadButton = ({ setNewFileDataURL }) => {
+const LoadButton = ({
+                      setNewFileDataURL,
+                      setLoadingOpen
+                    }) => {
   // Styled hidden input element. Required to use button as file input with MUI
   const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -100,6 +104,7 @@ const LoadButton = ({ setNewFileDataURL }) => {
    * base64 data URL and set setNewFileDataURL to it.
    */
   const loadImageFileInputOnChange = (event) => {
+    setLoadingOpen(true)
     if (event.target.files.length > 0) {
       let file = event.target.files[0]
       // Verify it's an image
@@ -154,6 +159,7 @@ const HelpButton = ({ setHelpOpen }) => {
  *
  * @param setShouldSaveResult
  * @param setNewFileDataURL
+ * @param setLoadingOpen
  * @param setHelpOpen
  * @return {Element}
  * @constructor
@@ -161,6 +167,7 @@ const HelpButton = ({ setHelpOpen }) => {
 export const AppBarButtons = ({
                                 setShouldSaveResult,
                                 setNewFileDataURL,
+                                setLoadingOpen,
                                 setHelpOpen
                               }) => {
   return <Stack
@@ -174,6 +181,7 @@ export const AppBarButtons = ({
     />
     <LoadButton
       setNewFileDataURL={ setNewFileDataURL }
+      setLoadingOpen={ setLoadingOpen }
     />
     <HelpButton
       setHelpOpen={ setHelpOpen }
@@ -187,6 +195,7 @@ export const AppBarButtons = ({
  *
  * @param setShouldSaveResult
  * @param setNewFileDataURL
+ * @param setLoadingOpen
  * @param setHelpOpen
  * @return {Element}
  * @constructor
@@ -194,6 +203,7 @@ export const AppBarButtons = ({
 export const ChannelShiftAppBar = ({
                                      setShouldSaveResult,
                                      setNewFileDataURL,
+                                     setLoadingOpen,
                                      setHelpOpen
                                    }) => {
   // TODO: decouple sticky container from canvas + tabs, then update this to be sticky or whatev
@@ -212,6 +222,7 @@ export const ChannelShiftAppBar = ({
         <AppBarButtons
           setShouldSaveResult={ setShouldSaveResult }
           setNewFileDataURL={ setNewFileDataURL }
+          setLoadingOpen={ setLoadingOpen }
           setHelpOpen={ setHelpOpen }
         />
       </Toolbar>
