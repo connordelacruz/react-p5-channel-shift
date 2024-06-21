@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "./static/css/main.291eb37a.css",
-    "main.js": "./static/js/main.d757b2f4.js",
+    "main.js": "./static/js/main.5f093826.js",
     "static/media/channel-shift-ui.png": "./static/media/channel-shift-ui.b8b8ba5dda7ba2ee827b.png",
+    "static/media/default.jpg": "./static/media/default.05eaa850598c05c32d84.jpg",
     "static/media/randomize-shift-tool-ui.png": "./static/media/randomize-shift-tool-ui.bbfe7ee126813b004d09.png",
     "static/media/randomize-swap-tool-ui.png": "./static/media/randomize-swap-tool-ui.625384101836a192e4cf.png",
     "static/media/shift-tool-ui.png": "./static/media/shift-tool-ui.bd09020ce65d1507f77c.png",
@@ -66,10 +67,10 @@
     "static/media/roboto-greek-ext-400-normal.woff": "./static/media/roboto-greek-ext-400-normal.f708607d2a7290fb8bfa.woff",
     "static/media/roboto-greek-ext-700-normal.woff": "./static/media/roboto-greek-ext-700-normal.249853776d22a271b2b5.woff",
     "main.291eb37a.css.map": "./static/css/main.291eb37a.css.map",
-    "main.d757b2f4.js.map": "./static/js/main.d757b2f4.js.map"
+    "main.5f093826.js.map": "./static/js/main.5f093826.js.map"
   },
   "entrypoints": [
     "static/css/main.291eb37a.css",
-    "static/js/main.d757b2f4.js"
+    "static/js/main.5f093826.js"
   ]
 }
