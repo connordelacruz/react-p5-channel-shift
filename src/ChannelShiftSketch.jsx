@@ -69,7 +69,7 @@ export function ChannelShiftSketch(p5) {
    * Preload default source image.
    */
   p5.preload = () => {
-    originalImage = p5.loadImage('default.jpg')
+    originalImage = p5.loadImage(require('./sketch-images/default.jpg'))
   }
 
 
