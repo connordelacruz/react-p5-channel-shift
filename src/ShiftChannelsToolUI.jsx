@@ -2,8 +2,8 @@ import { Box, Button, ButtonGroup, Grid, InputAdornment, Paper, Slider, SliderTh
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHoriz, SwapVert } from '@mui/icons-material'
-import { NumericTextInput } from './common/NumericTextInput'
 import { ToolUIContainer } from './common/ToolUIContainer'
+import { NumericTextInput } from './common/NumericTextInput'
 
 // ================================================================================
 // Shift Channels Tool UI
@@ -37,8 +37,8 @@ const ShiftChannelSelectButton = ({
       } }
       color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
       size="large"
-      >
-      {Constants.CHANNEL_DISPLAY_NAMES[channelOffset]}{channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : ' *'}
+    >
+      { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }{ channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : ' *' }
     </Button>
   )
 }
@@ -142,106 +142,127 @@ const ShiftChannelSlider = ({
   }
 
   return (
-    <Paper
+    <Box
       sx={ {
-        p: 2,
-        my: 2,
+        px: { xs: 2, sm: 3 },
+        mb: { xs: 1.5, sm: 3 },
+        // Prevent accidental selection when dragging slider
+        userSelect: 'none'
       } }
-      variant="outlined"
     >
-      <Box
-        sx={ { px: 2 } }
+      <Typography
+        id={ `${ dimension }-shift-slider-label` }
+        variant="button"
+        gutterBottom
+        sx={ {
+          '&::after': {
+            content: { xs: '" - "', sm: 'none' },
+          },
+        } }
       >
-        <Typography
-          id={ `${ dimension }-shift-slider-label` }
-          variant="button"
-          gutterBottom
-          sx={ {
-            // Prevent accidental selection when dragging slider
-            userSelect: 'none'
-          } }
-        >
-          { dimension.toUpperCase() } Shift
-        </Typography>
-        <Grid
-          container
-          alignItems="stretch"
-          justifyContent="space-around"
-          spacing={ 2 }
-        >
-          {/* Slider */ }
-          <Grid item sm={ 9 } xs={ 12 }>
-            <Slider
-              value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
-              onChange={ shiftSliderOnChange }
-              min={ 0 }
-              max={ imageDimensionSize }
-              valueLabelDisplay="auto"
-              marks={ [
-                { value: 0, label: '' },
-                { value: imageDimensionSize, label: '' }
-              ] }
-              slots={ { thumb: ShiftChannelSliderThumb } }
-              slotProps={ {
-                thumb: {
-                  dimensionIndex: dimensionIndex,
-                  selectedShiftChannel: selectedShiftChannel,
-                }
-              } }
-              color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
-              sx={{
-                '& .MuiSlider-rail': {
-                  height: 12,
-                },
-                '& .MuiSlider-track': {
-                  height: 12,
-                },
-                '& .MuiSlider-mark': {
-                  display: 'none',
-                },
-              }}
-              aria-labelledby={ `${ dimension }-shift-slider-label` }
-            />
-            {/* Fix for min/max marks going out of bounds */ }
-            <Box
+        { dimension.toUpperCase() } Shift
+      </Typography>
+      <Typography
+        variant="button"
+        sx={ {
+          display: { xs: 'inline', sm: 'none' },
+          color: Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] + '.main',
+          textTransform: 'none',
+        } }
+      >
+        { channelShiftValues[selectedShiftChannel][dimensionIndex] }px
+      </Typography>
+      <Grid
+        container
+        alignItems="stretch"
+        justifyContent="space-around"
+        spacing={ 2 }
+      >
+        {/* Slider */ }
+        <Grid item xs={ 12 } sm={ 9 }>
+          <Slider
+            value={ channelShiftValues[selectedShiftChannel][dimensionIndex] }
+            onChange={ shiftSliderOnChange }
+            min={ 0 }
+            max={ imageDimensionSize }
+            valueLabelDisplay="auto"
+            marks={ [
+              { value: 0, label: '' },
+              { value: imageDimensionSize, label: '' }
+            ] }
+            slots={ { thumb: ShiftChannelSliderThumb } }
+            slotProps={ {
+              thumb: {
+                dimensionIndex: dimensionIndex,
+                selectedShiftChannel: selectedShiftChannel,
+              }
+            } }
+            color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+            sx={ {
+              '& .MuiSlider-rail': {
+                height: 12,
+              },
+              '& .MuiSlider-track': {
+                height: 12,
+              },
+              '& .MuiSlider-mark': {
+                display: 'none',
+              },
+            } }
+            aria-labelledby={ `${ dimension }-shift-slider-label` }
+          />
+          {/* Fix for min/max marks going out of bounds */ }
+          <Box
+            sx={ {
+              display: 'flex',
+              justifyContent: 'space-between',
+              // Prevent accidental selection when dragging slider
+              userSelect: 'none',
+            } }
+          >
+            <Typography
+              variant="body2"
               sx={ {
-                display: 'flex',
-                justifyContent: 'space-between',
-                // Prevent accidental selection when dragging slider
-                userSelect: 'none'
+                color: 'text.secondary',
               } }
             >
-              <Typography
-                variant="body2"
-              >
-                0px
-              </Typography>
-              <Typography
-                variant="body2"
-              >
-                { imageDimensionSize }px
-              </Typography>
-            </Box>
-          </Grid>
-
-          {/* Text input */ }
-          <Grid item sm={ 3 } xs={ 12 }>
-            <NumericTextInput
-              valueState={ channelShiftTextInputValues[dimensionIndex] }
-              min={ 0 }
-              max={ imageDimensionSize }
-              onChangeHandleValue={ shiftTextInputOnChangeHandleValue }
-              onBlurHandleValidatedValue={ shiftTextInputOnBlurHandleValidatedValue }
-              InputProps={ {
-                endAdornment: <InputAdornment position="end">px</InputAdornment>,
+              0px
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={ {
+                color: 'text.secondary',
               } }
-              color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
-              sx={ { width: '100%' } }
-            />
-          </Grid>
+            >
+              { imageDimensionSize }px
+            </Typography>
+          </Box>
         </Grid>
-      </Box>
-    </Paper>
+
+        {/* Text input (wide viewports only) */ }
+        <Grid
+          item
+          sm={ 3 }
+          xs={ 12 }
+          sx={ {
+            display: { xs: 'none', sm: 'block' }
+          } }
+        >
+          <NumericTextInput
+            valueState={ channelShiftTextInputValues[dimensionIndex] }
+            min={ 0 }
+            max={ imageDimensionSize }
+            onChangeHandleValue={ shiftTextInputOnChangeHandleValue }
+            onBlurHandleValidatedValue={ shiftTextInputOnBlurHandleValidatedValue }
+            InputProps={ {
+              endAdornment: <InputAdornment position="end">px</InputAdornment>,
+            } }
+            color={ Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] }
+            sx={ { width: '100%' } }
+          />
+        </Grid>
+      </Grid>
+    </Box>
   )
 }
 
@@ -287,32 +308,60 @@ export const ShiftChannelsToolUI = ({
   return (
     <ToolUIContainer>
       {/*Shift Channel Select Buttons*/ }
-      <ButtonGroup
-        orientation="horizontal"
-        fullWidth
+      <Box>
+        <ButtonGroup
+          orientation="horizontal"
+          fullWidth
+          sx={ {
+            borderBottomRightRadius: 0,
+            borderBottomLeftRadius: 0,
+            '& .MuiButtonGroup-firstButton': {
+              borderBottomLeftRadius: 0,
+            },
+            '& .MuiButtonGroup-lastButton': {
+              borderBottomRightRadius: 0,
+            },
+            '& .MuiButton-outlined': {
+              borderBottomWidth: 0,
+              '&:hover': {
+                borderBottomWidth: 0,
+              }
+            }
+          } }
         >
-        {channelButtons}
-      </ButtonGroup>
-
+          { channelButtons }
+        </ButtonGroup>
+      </Box>
       { /*Shift Channel Sliders*/ }
-      <ShiftChannelSlider
-        dimensionIndex={ 0 }
-        imageDimensionSize={ imageWidth }
-        selectedShiftChannel={ selectedShiftChannel }
-        channelShiftValues={ channelShiftValues }
-        channelShiftTextInputValues={ channelShiftTextInputValues }
-        setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
-        setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
-      />
-      <ShiftChannelSlider
-        dimensionIndex={ 1 }
-        imageDimensionSize={ imageHeight }
-        selectedShiftChannel={ selectedShiftChannel }
-        channelShiftValues={ channelShiftValues }
-        channelShiftTextInputValues={ channelShiftTextInputValues }
-        setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
-        setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
-      />
+      <Paper
+        variant="outlined"
+        sx={ {
+          borderColor: Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] + '.main',
+          borderTopRightRadius: 0,
+          borderTopLeftRadius: 0,
+          borderWidth: 2,
+          p: 2
+        } }
+      >
+        <ShiftChannelSlider
+          dimensionIndex={ 0 }
+          imageDimensionSize={ imageWidth }
+          selectedShiftChannel={ selectedShiftChannel }
+          channelShiftValues={ channelShiftValues }
+          channelShiftTextInputValues={ channelShiftTextInputValues }
+          setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
+          setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
+        />
+        <ShiftChannelSlider
+          dimensionIndex={ 1 }
+          imageDimensionSize={ imageHeight }
+          selectedShiftChannel={ selectedShiftChannel }
+          channelShiftValues={ channelShiftValues }
+          channelShiftTextInputValues={ channelShiftTextInputValues }
+          setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
+          setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
+        />
+      </Paper>
     </ToolUIContainer>
   )
 }

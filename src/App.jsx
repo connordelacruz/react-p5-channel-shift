@@ -565,7 +565,7 @@ function App() {
         maxWidth="md"
         sx={ {
           pb: 8,
-          my: 2,
+          mt: 1,
         } }
       >
 

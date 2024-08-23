@@ -19,8 +19,8 @@ const ResetButton = ({
       onClick={ resetButtonOnClick }
       disabled={ !imageModifiedDuringStep() }
       startIcon={ <RestartAlt/> }
-      color="primary"
-      variant="contained"
+      color="secondary"
+      variant="outlined"
       size="large"
       fullWidth
     >
