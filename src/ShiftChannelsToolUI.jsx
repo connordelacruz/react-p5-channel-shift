@@ -339,7 +339,7 @@ export const ShiftChannelsToolUI = ({
           borderColor: Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] + '.main',
           borderTopRightRadius: 0,
           borderTopLeftRadius: 0,
-          borderWidth: 2,
+          borderWidth: 1.5,
           p: 2
         } }
       >
