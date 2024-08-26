@@ -1,10 +1,14 @@
 import {
+  Button,
   Checkbox,
   Collapse,
   Dialog,
+  DialogActions,
   DialogContent,
+  DialogTitle,
   Divider,
   FormControlLabel,
+  IconButton,
   InputAdornment,
   Paper,
   Switch,
@@ -21,6 +25,7 @@ import React from 'react'
 import { ChannelLabel } from './common/ChannelLabel'
 import { NumericTextInput } from './common/NumericTextInput'
 import { ToolUIContainer } from './common/ToolUIContainer'
+import { Close } from '@mui/icons-material'
 
 // ================================================================================
 // Randomization Options Tool UI
@@ -868,8 +873,22 @@ export const RandomizationSettingsDialog = ({
       open={ open }
       onClose={ onClose }
       scroll="paper"
+      maxWidth="md"
+      fullWidth={ true }
     >
-      <DialogContent>
+      <DialogTitle>
+        Randomization Settings
+      </DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={ onClose }
+        sx={ {
+          position: 'absolute', right: 8, top: 8,
+        } }
+      >
+        <Close/>
+      </IconButton>
+      <DialogContent dividers>
         <RandomizeToolUI
           // Randomize Shift State Props
           shouldRandomizeShift={ shouldRandomizeShift }
@@ -895,6 +914,17 @@ export const RandomizationSettingsDialog = ({
           setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
         />
       </DialogContent>
+      <DialogActions>
+        <Button
+          onClick={ onClose }
+          variant="contained"
+          color="secondary"
+          fullWidth
+          size="large"
+        >
+          Done
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 
