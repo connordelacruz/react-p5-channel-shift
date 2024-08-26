@@ -1,5 +1,5 @@
-import { Button, Container, Paper, Stack } from '@mui/material'
-import { Casino, RestartAlt } from '@mui/icons-material'
+import { Button, ButtonGroup, Container, Paper, Stack } from '@mui/material'
+import { Casino, RestartAlt, Settings } from '@mui/icons-material'
 import React from 'react'
 
 /**
@@ -33,6 +33,7 @@ const ResetButton = ({
  * Randomize button.
  *
  * @param randomizeButtonOnClick
+ * @param randomizationSettingsButtonOnClick
  * @param shouldRandomizeShift
  * @param shouldRandomizeSwap
  * @return {Element}
@@ -40,21 +41,37 @@ const ResetButton = ({
  */
 const RandomizeButton = ({
                            randomizeButtonOnClick,
+                           randomizationSettingsButtonOnClick,
                            shouldRandomizeShift,
                            shouldRandomizeSwap
                          }) => {
   return (
-    <Button
-      onClick={ randomizeButtonOnClick }
-      disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
-      startIcon={ <Casino/> }
-      color="info"
+    <ButtonGroup
       variant="contained"
+      color="info"
       size="large"
       fullWidth
     >
-      Randomize
-    </Button>
+      <Button
+        onClick={ randomizeButtonOnClick }
+        disabled={ !shouldRandomizeShift && !shouldRandomizeSwap }
+        startIcon={ <Casino/> }
+        sx={ {
+          flex: 4,
+        } }
+      >
+        Randomize
+      </Button>
+      <Button
+        onClick={ randomizationSettingsButtonOnClick }
+        size="small"
+        sx={ {
+          flex: 1,
+        } }
+      >
+        <Settings/>
+      </Button>
+    </ButtonGroup>
   )
 }
 
@@ -63,6 +80,7 @@ const RandomizeButton = ({
  *
  * @param resetButtonOnClick
  * @param randomizeButtonOnClick
+ * @param randomizationSettingsButtonOnClick
  * @param shouldRandomizeShift
  * @param shouldRandomizeSwap
  * @param imageModifiedDuringStep
@@ -73,6 +91,7 @@ export const SnackBar = ({
                            // OnClick handlers
                            resetButtonOnClick,
                            randomizeButtonOnClick,
+                           randomizationSettingsButtonOnClick,
                            // Randomization state props
                            shouldRandomizeShift,
                            shouldRandomizeSwap,
@@ -104,6 +123,7 @@ export const SnackBar = ({
           />
           <RandomizeButton
             randomizeButtonOnClick={ randomizeButtonOnClick }
+            randomizationSettingsButtonOnClick={ randomizationSettingsButtonOnClick }
             shouldRandomizeShift={ shouldRandomizeShift }
             shouldRandomizeSwap={ shouldRandomizeSwap }
           />

@@ -14,7 +14,7 @@ import { ToolTabs } from './ToolTabs'
 // Tool UI Components
 import { ShiftChannelsToolUI } from './ShiftChannelsToolUI'
 import { SwapChannelsToolUI } from './SwapChannelsToolUI'
-import { RandomizeToolUI } from './RandomizeToolUI'
+import { RandomizationSettingsDialog } from './RandomizeToolUI'
 // Snack Bar Component
 import { SnackBar } from './SnackBar'
 // Dialog Components
@@ -450,6 +450,13 @@ function App() {
     }
   }
 
+  // --------------------------------------------------------------------------------
+  // Randomize Settings Button
+  // --------------------------------------------------------------------------------
+  // Open/close state
+  const [randomizationSettingsOpen, setRandomizationSettingsOpen] = React.useState(false)
+
+
   // ================================================================================
   // Helper Functions
   // ================================================================================
@@ -597,34 +604,6 @@ function App() {
           />
         </Box>
 
-        {/*Randomize*/ }
-        <Box hidden={ selectedToolTab !== Constants.RANDOMIZE_TAB_VALUE }>
-          <RandomizeToolUI
-            // Randomize Shift State Props
-            shouldRandomizeShift={ shouldRandomizeShift }
-            randomizeShiftChannels={ randomizeShiftChannels }
-            randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
-            // Randomize Shift State Setter Props
-            setShouldRandomizeShift={ setShouldRandomizeShift }
-            setRandomizeShiftChannel={ setRandomizeShiftChannel }
-            setRandomizeShiftChannels={ setRandomizeShiftChannels }
-            setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
-            setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
-            // Randomize Swap State Props
-            shouldRandomizeSwap={ shouldRandomizeSwap }
-            randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
-            randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
-            randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
-            // Randomize Swap State Setter Props
-            setShouldRandomizeSwap={ setShouldRandomizeSwap }
-            setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
-            setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
-            setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
-            setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
-            setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
-          />
-        </Box>
-
       </Container>
       {/*END Tools UI*/ }
 
@@ -632,9 +611,42 @@ function App() {
       <SnackBar
         resetButtonOnClick={ resetShiftAndSwap }
         randomizeButtonOnClick={ randomizeButtonOnClick }
+        randomizationSettingsButtonOnClick={ () => {
+          setRandomizationSettingsOpen(true)
+        } }
         shouldRandomizeShift={ shouldRandomizeShift }
         shouldRandomizeSwap={ shouldRandomizeSwap }
         imageModifiedDuringStep={ imageModifiedDuringStep }
+      />
+
+      {/*Randomization Settings Modal*/ }
+      <RandomizationSettingsDialog
+        open={ randomizationSettingsOpen }
+        onClose={ () => {
+          setRandomizationSettingsOpen(false)
+        } }
+        // Randomize Shift State Props
+        shouldRandomizeShift={ shouldRandomizeShift }
+        randomizeShiftChannels={ randomizeShiftChannels }
+        randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+        // Randomize Shift State Setter Props
+        setShouldRandomizeShift={ setShouldRandomizeShift }
+        setRandomizeShiftChannel={ setRandomizeShiftChannel }
+        setRandomizeShiftChannels={ setRandomizeShiftChannels }
+        setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+        setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+        // Randomize Swap State Props
+        shouldRandomizeSwap={ shouldRandomizeSwap }
+        randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+        randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+        randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
+        // Randomize Swap State Setter Props
+        setShouldRandomizeSwap={ setShouldRandomizeSwap }
+        setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+        setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
+        setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+        setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+        setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
       />
 
       {/*Help Modal*/ }

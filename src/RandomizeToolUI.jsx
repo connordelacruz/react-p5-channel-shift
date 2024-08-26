@@ -1,11 +1,18 @@
 import {
-  Checkbox, Collapse, Divider, FormControlLabel,
+  Checkbox,
+  Collapse,
+  Dialog,
+  DialogContent,
+  Divider,
+  FormControlLabel,
   InputAdornment,
-  Paper, Switch,
+  Paper,
+  Switch,
   Table,
   TableBody,
   TableCell,
-  TableContainer, TableHead,
+  TableContainer,
+  TableHead,
   TableRow,
   Typography
 } from '@mui/material'
@@ -827,4 +834,68 @@ export const RandomizeToolUI = ({
 
     </ToolUIContainer>
   )
+}
+
+// TODO: merge this with above, rename file
+export const RandomizationSettingsDialog = ({
+                                              open,
+                                              onClose,
+                                              // Shift state props
+                                              shouldRandomizeShift,
+                                              randomizeShiftChannels,
+                                              randomizeShiftMaxPercents,
+                                              // Shift state setter functions
+                                              setShouldRandomizeShift,
+                                              setRandomizeShiftChannel,
+                                              setRandomizeShiftChannels,
+                                              setRandomizeShiftMaxPercent,
+                                              setRandomizeShiftMaxPercents,
+                                              // Swap state props
+                                              shouldRandomizeSwap,
+                                              randomizeSwapSourceChannels,
+                                              randomizeSwapTargetChannels,
+                                              randomizeSwapPreferDifferentChannels,
+                                              // Swap state setter props
+                                              setShouldRandomizeSwap,
+                                              setRandomizeSwapSourceChannel,
+                                              setRandomizeSwapSourceChannels,
+                                              setRandomizeSwapTargetChannel,
+                                              setRandomizeSwapTargetChannels,
+                                              setRandomizeSwapPreferDifferentChannels
+                                            }) => {
+  return (
+    <Dialog
+      open={ open }
+      onClose={ onClose }
+      scroll="paper"
+    >
+      <DialogContent>
+        <RandomizeToolUI
+          // Randomize Shift State Props
+          shouldRandomizeShift={ shouldRandomizeShift }
+          randomizeShiftChannels={ randomizeShiftChannels }
+          randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
+          // Randomize Shift State Setter Props
+          setShouldRandomizeShift={ setShouldRandomizeShift }
+          setRandomizeShiftChannel={ setRandomizeShiftChannel }
+          setRandomizeShiftChannels={ setRandomizeShiftChannels }
+          setRandomizeShiftMaxPercent={ setRandomizeShiftMaxPercent }
+          setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
+          // Randomize Swap State Props
+          shouldRandomizeSwap={ shouldRandomizeSwap }
+          randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+          randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+          randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
+          // Randomize Swap State Setter Props
+          setShouldRandomizeSwap={ setShouldRandomizeSwap }
+          setRandomizeSwapSourceChannel={ setRandomizeSwapSourceChannel }
+          setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
+          setRandomizeSwapTargetChannel={ setRandomizeSwapTargetChannel }
+          setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
+          setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
+        />
+      </DialogContent>
+    </Dialog>
+  )
+
 }

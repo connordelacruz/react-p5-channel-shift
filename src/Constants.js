@@ -46,6 +46,5 @@ CHANNEL_MUI_COLORS[B_OFFSET] = B_MUI_COLOR
 // Constants for tab values
 export const SHIFT_TAB_VALUE = 'shift'
 export const SWAP_TAB_VALUE = 'swap'
-export const RANDOMIZE_TAB_VALUE = 'randomize'
 
 // TODO: TOOL_UI_PAPER_SX / _PROPS

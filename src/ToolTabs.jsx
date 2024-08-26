@@ -62,10 +62,6 @@ export const ToolTabs = ({
             value={ Constants.SWAP_TAB_VALUE }
             label={ `Swap${ swapModifiedDuringStep() ? ' *' : '' }` }
           />
-          <Tab
-            value={ Constants.RANDOMIZE_TAB_VALUE }
-            label="Randomize"
-          />
         </Tabs>
       </Container>
     </Box>

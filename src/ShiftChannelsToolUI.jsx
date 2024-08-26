@@ -156,7 +156,7 @@ const ShiftChannelSlider = ({
         gutterBottom
         sx={ {
           '&::after': {
-            content: { xs: '" - "', sm: 'none' },
+            content: { xs: '": "', sm: 'none' },
           },
         } }
       >
