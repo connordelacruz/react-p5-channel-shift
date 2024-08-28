@@ -536,7 +536,7 @@ const RandomizeSwapChannelCheckbox = ({
 }
 
 /**
- * Randomize swap table row component.
+ * Randomize swap table channel row component.
  *
  * @param channelOffset
  * @param randomizeSwapSourceChannels
@@ -546,15 +546,15 @@ const RandomizeSwapChannelCheckbox = ({
  * @return {Element}
  * @constructor
  */
-const RandomizeSwapTableRow = ({
-                                 channelOffset,
-                                 // State props
-                                 randomizeSwapSourceChannels,
-                                 randomizeSwapTargetChannels,
-                                 // State setter functions
-                                 setRandomizeSwapSourceChannel,
-                                 setRandomizeSwapTargetChannel
-                               }) => {
+const RandomizeSwapTableChannelRow = ({
+                                        channelOffset,
+                                        // State props
+                                        randomizeSwapSourceChannels,
+                                        randomizeSwapTargetChannels,
+                                        // State setter functions
+                                        setRandomizeSwapSourceChannel,
+                                        setRandomizeSwapTargetChannel
+                                      }) => {
   return (
     <TableRow hover>
       <TableCell>
@@ -651,7 +651,7 @@ const RandomizeSwapSelectAllTableRow = ({
 }
 
 /**
- * Randomize swap table component.
+ * Randomize swap settings component.
  *
  * @param randomizeSwapSourceChannels
  * @param randomizeSwapTargetChannels
@@ -661,21 +661,21 @@ const RandomizeSwapSelectAllTableRow = ({
  * @return {Element}
  * @constructor
  */
-const RandomizeSwapTable = ({
-                              // State props
-                              randomizeSwapSourceChannels,
-                              randomizeSwapTargetChannels,
-                              randomizeSwapPreferDifferentChannels,
-                              // State setter functions
-                              setRandomizeSwapSourceChannel,
-                              setRandomizeSwapSourceChannels,
-                              setRandomizeSwapTargetChannel,
-                              setRandomizeSwapTargetChannels,
-                              setRandomizeSwapPreferDifferentChannels
-                            }) => {
+const RandomizeSwapSettingsUI = ({
+                                   // State props
+                                   randomizeSwapSourceChannels,
+                                   randomizeSwapTargetChannels,
+                                   randomizeSwapPreferDifferentChannels,
+                                   // State setter functions
+                                   setRandomizeSwapSourceChannel,
+                                   setRandomizeSwapSourceChannels,
+                                   setRandomizeSwapTargetChannel,
+                                   setRandomizeSwapTargetChannels,
+                                   setRandomizeSwapPreferDifferentChannels
+                                 }) => {
   // Generate table rows
   const tableRows = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
-    <RandomizeSwapTableRow
+    <RandomizeSwapTableChannelRow
       key={ channelOffset.toString() }
       channelOffset={ channelOffset }
       randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
@@ -695,45 +695,71 @@ const RandomizeSwapTable = ({
   }
 
   return (
-    <TableContainer>
-      <Table
-        size="small"
+    <Box>
+      <Paper
+        sx={ {
+          p: 2,
+          mt: 2,
+        } }
+        variant="outlined"
       >
-        <TableHead>
-          <TableRow>
-            <TableCell>Channel</TableCell>
-            <TableCell align="center">Random Source Option?</TableCell>
-            <TableCell align="center">Random Target Option?</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          { tableRows }
-          <RandomizeSwapSelectAllTableRow
-            randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
-            setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
-            randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
-            setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
-          />
-          <TableRow hover>
-            <TableCell
-              align="center"
-              colSpan={ 3 }
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={ randomizeSwapPreferDifferentChannels }
-                    onChange={ randomizeSwapPreferDifferentChannelsSwitchOnChange }
-                    color="info"
-                  />
-                }
-                label="Attempt to pick different source and target channels when possible"
+        <TableContainer>
+          <Table
+            size="small"
+          >
+            <TableHead>
+              <TableRow>
+                <TableCell>Channel</TableCell>
+                <TableCell align="center">Source Option</TableCell>
+                <TableCell align="center">Target Option</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              { tableRows }
+              <RandomizeSwapSelectAllTableRow
+                randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
+                setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
+                randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
+                setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
               />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+      <Paper
+        sx={ {
+          py: 2,
+          px: 3,
+          mt: 2,
+        } }
+        variant="outlined"
+      >
+        <Typography
+          variant="button"
+          gutterBottom
+          sx={ {
+            display: 'block',
+            color: 'info.main',
+          } }
+        >
+          Advanced Swap Settings:
+        </Typography>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={ randomizeSwapPreferDifferentChannels }
+              onChange={ randomizeSwapPreferDifferentChannelsSwitchOnChange }
+              color="info"
+            />
+          }
+          label="Try to pick 2 different channels when possible"
+          sx={ {
+            // Prevent accidental selection when dragging slider
+            userSelect: 'none'
+          } }
+        />
+      </Paper>
+    </Box>
   )
 }
 
@@ -868,14 +894,13 @@ export const RandomizeToolUI = ({
         }
       />
       <Collapse in={ shouldRandomizeSwap }>
-        <Paper
+        <Box
           sx={ {
-            p: 2,
             mt: 2,
           } }
           variant="outlined"
         >
-          <RandomizeSwapTable
+          <RandomizeSwapSettingsUI
             randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
             randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
             randomizeSwapPreferDifferentChannels={ randomizeSwapPreferDifferentChannels }
@@ -885,14 +910,39 @@ export const RandomizeToolUI = ({
             setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
             setRandomizeSwapPreferDifferentChannels={ setRandomizeSwapPreferDifferentChannels }
           />
-        </Paper>
+        </Box>
       </Collapse>
 
     </ToolUIContainer>
   )
 }
 
-// TODO: doc, merge this with above, rename file
+/**
+ * Modal containing randomization settings.
+ *
+ * @param open
+ * @param onClose
+ * @param shouldRandomizeShift
+ * @param randomizeShiftChannels
+ * @param randomizeShiftMaxPercents
+ * @param setShouldRandomizeShift
+ * @param setRandomizeShiftChannel
+ * @param setRandomizeShiftChannels
+ * @param setRandomizeShiftMaxPercent
+ * @param setRandomizeShiftMaxPercents
+ * @param shouldRandomizeSwap
+ * @param randomizeSwapSourceChannels
+ * @param randomizeSwapTargetChannels
+ * @param randomizeSwapPreferDifferentChannels
+ * @param setShouldRandomizeSwap
+ * @param setRandomizeSwapSourceChannel
+ * @param setRandomizeSwapSourceChannels
+ * @param setRandomizeSwapTargetChannel
+ * @param setRandomizeSwapTargetChannels
+ * @param setRandomizeSwapPreferDifferentChannels
+ * @return {Element}
+ * @constructor
+ */
 export const RandomizationSettingsDialog = ({
                                               open,
                                               onClose,

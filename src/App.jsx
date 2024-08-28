@@ -14,10 +14,10 @@ import { ToolTabs } from './ToolTabs'
 // Tool UI Components
 import { ShiftChannelsToolUI } from './ShiftChannelsToolUI'
 import { SwapChannelsToolUI } from './SwapChannelsToolUI'
-import { RandomizationSettingsDialog } from './RandomizeToolUI'
 // Snack Bar Component
 import { SnackBar } from './SnackBar'
 // Dialog Components
+import { RandomizationSettingsDialog } from './RandomizationSettingsDialog'
 import { HelpDialog } from './HelpDialog'
 import { IOSSafariError } from './IOSSafariError'
 // MUI
