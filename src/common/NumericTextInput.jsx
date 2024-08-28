@@ -12,6 +12,7 @@ import React from 'react'
  * @param onBlurHandleValidatedValue Function that takes validated value onBlur and sets state(s) accordingly.
  * @param showLabelOnFocus (Default: true) If true, display labelText when field is focused.
  * @param labelText (Default: '⏎ Enter to set') Label text to show on focus if above prop is true.
+ * @param sx
  * @param props Any remaining props to pass to TextField component.
  * @return {Element}
  * @constructor
@@ -101,6 +102,19 @@ export const NumericTextInput = ({
     }
   }
 
+  /**
+   * For mobile, prevent context menu from popping up.
+   *
+   * Since the input text is selected onFocus, the context
+   * menu on mobile would pop up every time. It looks messy
+   * and blocks the "Enter to set" label text.
+   *
+   * @param event
+   */
+  const textInputOnContextMenu = (event) => {
+    event.preventDefault()
+  }
+
   return (
     <TextField
       value={ valueState }
@@ -108,6 +122,7 @@ export const NumericTextInput = ({
       onChange={ textInputOnChange }
       onBlur={ textInputOnBlur }
       onKeyDown={ textInputOnKeyDown }
+      onContextMenu={ textInputOnContextMenu }
       label={ showLabelOnFocus && textInputIsFocused ? labelText : null }
       autoComplete="off"
       size="small"
