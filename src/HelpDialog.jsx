@@ -25,7 +25,7 @@ export const HelpDialog = ({ open, onClose }) => {
     scroll="paper"
   >
     <DialogTitle>
-      Channel Shift <Typography variant="caption">v{Constants.VERSION}</Typography>
+      Channel Shift <Typography variant="caption">v{ Constants.VERSION }</Typography>
     </DialogTitle>
     <IconButton
       aria-label="close"
@@ -56,7 +56,7 @@ export const HelpDialog = ({ open, onClose }) => {
           {/* eslint-disable-next-line jsx-a11y/img-redundant-alt */ }
           <img
             src={ process.env.PUBLIC_URL + '/channel-shift-preview.png' }
-            className="help-dialog-image"
+            className="help-dialog-image banner-image"
             alt="Sample Channel Shifted Image of the Chicago Skyline"
           />
           <Typography variant="caption" gutterBottom>
@@ -77,18 +77,24 @@ export const HelpDialog = ({ open, onClose }) => {
               UI Overview
             </Typography>
           </Box>
-          <Box>
-            <img
-              src={ require('./help-screenshots/channel-shift-ui.png') }
-              className="help-dialog-image"
-              alt="Overview of app UI"
-            />
-          </Box>
+          {/*TODO: add this back when you have the patience to deal with Gimp lol*/ }
+          {/*<Box>*/ }
+          {/*  <img*/ }
+          {/*    src={ require('./help-screenshots/channel-shift-ui.png') }*/ }
+          {/*    className="help-dialog-image"*/ }
+          {/*    alt="Overview of app UI"*/ }
+          {/*  />*/ }
+          {/*</Box>*/ }
 
           <Box>
             <Typography variant="h5" gutterBottom>
               Save / Load / Help
             </Typography>
+            <img
+              src={ require('./help-screenshots/app-bar.png') }
+              className="help-dialog-image"
+              alt="Save/Load/Help buttons"
+            />
             <Typography gutterBottom>
               On the top right of the app, there are 3 buttons:
 
@@ -172,6 +178,11 @@ export const HelpDialog = ({ open, onClose }) => {
             <Typography variant="h5" gutterBottom>
               Reset / Randomize
             </Typography>
+            <img
+              src={ require('./help-screenshots/reset-randomize.png') }
+              className="help-dialog-image"
+              alt="Reset/Randomize buttons"
+            />
             <Typography gutterBottom>
               On the bottom of the app, there are 2 buttons:
 
@@ -256,22 +267,15 @@ export const HelpDialog = ({ open, onClose }) => {
               </ListItem>
               <ListItem>
                 <ListItemText
-                  primary={ <b>X Shift</b> }
+                  primary={
+                  <React.Fragment>
+                    <b>X Shift</b> / <b>Y Shift</b>
+                  </React.Fragment>
+                  }
                   secondary={
                     <React.Fragment>
                       Shift the selected channel horizontally with the <b>X Shift</b> slider.<br/>
-                      Set a specific horizontal shift value with the <b>X Shift</b> text input.
-                    </React.Fragment>
-                  }
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary={ <b>Y Shift</b> }
-                  secondary={
-                    <React.Fragment>
                       Shift the selected channel vertically with the <b>Y Shift</b> slider.<br/>
-                      Set a specific vertical shift value with the <b>Y Shift</b> text input.
                     </React.Fragment>
                   }
                 />
@@ -363,7 +367,7 @@ export const HelpDialog = ({ open, onClose }) => {
                   Randomize Shift:
                 </Typography>
                 <img
-                  src={ require('./help-screenshots/randomize-shift-tool-ui.png') }
+                  src={ require('./help-screenshots/randomize-shift-settings-ui.png') }
                   className="help-dialog-image"
                   alt="Randomize shift tool UI"
                 />
@@ -433,7 +437,7 @@ export const HelpDialog = ({ open, onClose }) => {
                   Randomize Swap:
                 </Typography>
                 <img
-                  src={ require('./help-screenshots/randomize-swap-tool-ui.png') }
+                  src={ require('./help-screenshots/randomize-swap-settings-ui.png') }
                   className="help-dialog-image"
                   alt="Randomize swap tool UI"
                 />

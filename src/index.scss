@@ -11,5 +11,10 @@ body {
 // Help dialog image
 img.help-dialog-image {
     display: block;
-    width: 100%;
+    width: 90%;
+    margin: 6px auto;
+    // Banner image
+    &.banner-image {
+        width: 100%;
+    }
 }
