@@ -486,13 +486,13 @@ const RandomizeShiftSettingsUI = ({
 
   return (
     <Box>
-      { channelSettings }
       <RandomizeShiftAllChannelsSettings
         randomizeShiftChannels={ randomizeShiftChannels }
         randomizeShiftMaxPercents={ randomizeShiftMaxPercents }
         setRandomizeShiftChannels={ setRandomizeShiftChannels }
         setRandomizeShiftMaxPercents={ setRandomizeShiftMaxPercents }
       />
+      { channelSettings }
     </Box>
   )
 }
@@ -715,13 +715,13 @@ const RandomizeSwapSettingsUI = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              { tableRows }
               <RandomizeSwapSelectAllTableRow
                 randomizeSwapSourceChannels={ randomizeSwapSourceChannels }
                 setRandomizeSwapSourceChannels={ setRandomizeSwapSourceChannels }
                 randomizeSwapTargetChannels={ randomizeSwapTargetChannels }
                 setRandomizeSwapTargetChannels={ setRandomizeSwapTargetChannels }
               />
+              { tableRows }
             </TableBody>
           </Table>
         </TableContainer>
