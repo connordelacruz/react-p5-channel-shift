@@ -15,7 +15,6 @@ export const R_OFFSET = 0
 export const G_OFFSET = 1
 export const B_OFFSET = 2
 export const A_OFFSET = 3
-// TODO: same thing for x/y coords?
 
 // Array of above export constants, for mapping components
 export const CHANNEL_OFFSETS = [R_OFFSET, G_OFFSET, B_OFFSET]
@@ -37,10 +36,16 @@ CHANNEL_MUI_COLORS[G_OFFSET] = G_MUI_COLOR
 CHANNEL_MUI_COLORS[B_OFFSET] = B_MUI_COLOR
 
 // ================================================================================
-// Shift Mode Constants
+// Mosh Mode Constants
 // ================================================================================
-// Indexes for shift modes
-export const SHIFT_MODE_DEFAULT = 0
+// Indexes for mosh modes
+export const MOSH_MODE_NONE = 0
+export const MOSH_MODE_SCALE = 1
+
+// Display names for mosh modes
+export const MOSH_MODE_DISPLAY_NAMES = []
+MOSH_MODE_DISPLAY_NAMES[MOSH_MODE_NONE] = 'None'
+MOSH_MODE_DISPLAY_NAMES[MOSH_MODE_SCALE] = 'Scale'
 
 // ================================================================================
 // UI Constants
@@ -53,5 +58,3 @@ export const SHIFT_MODE_DEFAULT = 0
 export const SHIFT_TAB_VALUE = 'shift'
 export const SWAP_TAB_VALUE = 'swap'
 export const MOSH_TAB_VALUE = 'mosh'
-
-// TODO: TOOL_UI_PAPER_SX / _PROPS

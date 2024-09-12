@@ -23,7 +23,7 @@ import { IOSSafariError } from './IOSSafariError'
 // MUI
 import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material'
 import { LoadingDialog } from './LoadingDialog'
-import { ShiftModesToolUI } from './ShiftModesToolUI'
+import { MoshToolUI } from './MoshToolUI'
 
 // ================================================================================
 // App Component
@@ -184,21 +184,32 @@ function App() {
   // --------------------------------------------------------------------------------
 
   /**
-   * Returns default values for selected shift mode state.
+   * Returns default values for selected mosh modes state.
    *
    * @return {*[]}
    */
-  const selectedShiftModesDefault = () => {
-    const selectedShiftModesDefault = []
-    selectedShiftModesDefault[Constants.R_OFFSET] = Constants.SHIFT_MODE_DEFAULT
-    selectedShiftModesDefault[Constants.G_OFFSET] = Constants.SHIFT_MODE_DEFAULT
-    selectedShiftModesDefault[Constants.B_OFFSET] = Constants.SHIFT_MODE_DEFAULT
-    return selectedShiftModesDefault
+  const selectedMoshModesDefault = () => {
+    const selectedMoshModesDefault = []
+    selectedMoshModesDefault[Constants.R_OFFSET] = Constants.MOSH_MODE_NONE
+    selectedMoshModesDefault[Constants.G_OFFSET] = Constants.MOSH_MODE_NONE
+    selectedMoshModesDefault[Constants.B_OFFSET] = Constants.MOSH_MODE_NONE
+    return selectedMoshModesDefault
   }
 
   // Which shift mode is selected for each channel
-  const [selectedShiftModes, setSelectedShiftModes] = React.useState(selectedShiftModesDefault())
-  // TODO: helper to set mode for just 1 channel, pass to UI
+  const [selectedMoshModes, setSelectedMoshModes] = React.useState(selectedMoshModesDefault())
+
+  /**
+   * Helper for setting the mosh mode of the selected mosh channel.
+   *
+   * @param newValue
+   */
+  const setSelectedChannelMoshMode = (newValue) => {
+    const newSelectedMoshModes = [...selectedMoshModes]
+    // Update selected channel's mode
+    newSelectedMoshModes[selectedMoshChannel] = newValue
+    setSelectedMoshModes(newSelectedMoshModes)
+  }
 
   // TODO: array of shift mode handlers indexed by the corresponding constant
 
@@ -641,11 +652,13 @@ function App() {
           />
         </Box>
 
-        {/*Shift Modes ("Mosh")*/ }
+        {/*Mosh Tools*/ }
         <Box hidden={ selectedToolTab !== Constants.MOSH_TAB_VALUE }>
-          <ShiftModesToolUI
+          <MoshToolUI
             selectedMoshChannel={ selectedMoshChannel }
             setSelectedMoshChannel={ setSelectedMoshChannel }
+            selectedMoshModes={ selectedMoshModes }
+            setSelectedChannelMoshMode={ setSelectedChannelMoshMode }
           />
         </Box>
       </Container>
