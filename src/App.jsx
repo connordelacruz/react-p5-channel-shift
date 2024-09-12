@@ -594,13 +594,27 @@ function App() {
         {/*Canvas*/ }
         <ReactP5Wrapper
           sketch={ ChannelShiftSketch }
+          // Setup state setter
           setSetupCompleted={ setSetupCompleted }
-          setImageWidth={ setImageWidth } setImageHeight={ setImageHeight }
-          sourceChannel={ sourceChannel } targetChannel={ targetChannel }
+          // Image dimension setters
+          setImageWidth={ setImageWidth }
+          setImageHeight={ setImageHeight }
+          // Shift states
           channelShiftValues={ channelShiftValues }
-          newFileDataURL={ newFileDataURL } setNewFileDataURL={ setNewFileDataURL }
+          // Swap states
+          sourceChannel={ sourceChannel }
+          targetChannel={ targetChannel }
+          // Mosh states
+          selectedMoshModes={ selectedMoshModes }
+          // Uploaded file state + setter
+          newFileDataURL={ newFileDataURL }
+          setNewFileDataURL={ setNewFileDataURL }
+          // Reset setter
           resetShiftAndSwap={ resetShiftAndSwap }
-          shouldSaveResult={ shouldSaveResult } setShouldSaveResult={ setShouldSaveResult }
+          // Should save state + setter
+          shouldSaveResult={ shouldSaveResult }
+          setShouldSaveResult={ setShouldSaveResult }
+          // iOS error setter
           setIOSSafariErrorOpen={ setIOSSafariErrorOpen }
         />
 

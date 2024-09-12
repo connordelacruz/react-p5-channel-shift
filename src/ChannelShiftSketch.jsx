@@ -23,6 +23,8 @@ export function ChannelShiftSketch(p5) {
   let channelShiftValues
   // Selected source/target channels
   let sourceChannel, targetChannel
+  // Selected mosh modes
+  let selectedMoshModes
 
   // If there's a change in selected source/target channels, this will be set to true.
   // Sketch will update previewChannels accordingly then set this back to false
@@ -169,6 +171,12 @@ export function ChannelShiftSketch(p5) {
         return arr.slice()
       })
       shouldRedraw = true
+    }
+
+    // Set mosh selection if modified
+    if (JSON.stringify(props.selectedMoshModes) !== JSON.stringify(selectedMoshModes)) {
+      selectedMoshModes = [...props.selectedMoshModes]
+      // TODO: shouldRedraw = true (when ready to implement)
     }
 
     // Redraw if changes were made
