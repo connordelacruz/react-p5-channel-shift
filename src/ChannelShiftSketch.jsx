@@ -21,14 +21,25 @@ export function ChannelShiftSketch(p5) {
   // --------------------------------------------------------------------------------
   // x/y shift values to apply to each preview channel
   let channelShiftValues
+
   // Selected source/target channels
   let sourceChannel, targetChannel
-  // Selected mosh modes
-  let selectedMoshModes
-
   // If there's a change in selected source/target channels, this will be set to true.
   // Sketch will update previewChannels accordingly then set this back to false
   let selectedChannelsWereUpdated = false
+
+  // Selected mosh modes
+  let selectedMoshModes = []
+  selectedMoshModes[Constants.R_OFFSET] = Constants.MOSH_MODE_NONE
+  selectedMoshModes[Constants.G_OFFSET] = Constants.MOSH_MODE_NONE
+  selectedMoshModes[Constants.B_OFFSET] = Constants.MOSH_MODE_NONE
+  // If a mosh mode has changed, the corresponding index will be set to true.
+  // Sketch will update previewChannels accordingly then set this back to false
+  let selectedMoshModeWasUpdated = []
+  selectedMoshModeWasUpdated[Constants.R_OFFSET] = false
+  selectedMoshModeWasUpdated[Constants.G_OFFSET] = false
+  selectedMoshModeWasUpdated[Constants.B_OFFSET] = false
+
 
   // --------------------------------------------------------------------------------
   // Function Variables
@@ -175,8 +186,19 @@ export function ChannelShiftSketch(p5) {
 
     // Set mosh selection if modified
     if (JSON.stringify(props.selectedMoshModes) !== JSON.stringify(selectedMoshModes)) {
+      // Figure out which channels have been modified
+      Constants.CHANNEL_OFFSETS.forEach((channelOffset) => {
+        selectedMoshModeWasUpdated[channelOffset] = props.selectedMoshModes[channelOffset] !== selectedMoshModes[channelOffset]
+      })
+      // Copy array
       selectedMoshModes = [...props.selectedMoshModes]
       // TODO: shouldRedraw = true (when ready to implement)
+
+      // TODO DEBUGGING: set deez back 2 false 4 now
+//      console.log('Updated:', selectedMoshModeWasUpdated, 'New modes:', selectedMoshModes)
+      selectedMoshModeWasUpdated[Constants.R_OFFSET] = false
+      selectedMoshModeWasUpdated[Constants.G_OFFSET] = false
+      selectedMoshModeWasUpdated[Constants.B_OFFSET] = false
     }
 
     // Redraw if changes were made
@@ -190,7 +212,10 @@ export function ChannelShiftSketch(p5) {
    * p5 draw
    */
   p5.draw = () => {
-    // Update previewChannels if source/target channel selection was changed
+    // --------------------------------------------------------------------------------
+    // Update previewChannels
+    // --------------------------------------------------------------------------------
+    // Handle swap selection change
     if (selectedChannelsWereUpdated) {
       resetPreviewChannels()
       // Swap channels if source and target are different
@@ -199,6 +224,16 @@ export function ChannelShiftSketch(p5) {
         selectedChannelsWereUpdated = false
       }
     }
+
+    // Handle mosh modes if any were modified
+    // TODO: should this always get updated if swaps are updated?
+    if (selectedMoshModeWasUpdated.some((val) => val)) {
+      // TODO: for each true val, mosh that channel, then set wasUpdated to false
+    }
+
+    // --------------------------------------------------------------------------------
+    // Render image
+    // --------------------------------------------------------------------------------
     // Draw to previewGraphics
     previewGraphics.background(0)
     // Blend RGB channels
