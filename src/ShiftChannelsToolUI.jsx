@@ -1,47 +1,13 @@
-import { Box, Button, ButtonGroup, Grid, InputAdornment, Paper, Slider, SliderThumb, Typography } from '@mui/material'
+import { Box, Grid, InputAdornment, Slider, SliderThumb, Typography } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 import { SwapHoriz, SwapVert } from '@mui/icons-material'
-import { ToolUIContainer } from './common/ToolUIContainer'
 import { NumericTextInput } from './common/NumericTextInput'
+import { ChannelTabsContainer } from './common/ChannelTabsContainer'
 
 // ================================================================================
 // Shift Channels Tool UI
 // ================================================================================
-
-/**
- * Component for channel shift select buttons.
- *
- * @param channelOffset
- * @param channelShiftValues
- * @param selectedShiftChannel
- * @param setSelectedShiftChannel
- * @return {Element}
- * @constructor
- */
-const ShiftChannelSelectButton = ({
-                                    channelOffset,
-                                    // State props
-                                    channelShiftValues,
-                                    selectedShiftChannel,
-                                    // State setter props
-                                    setSelectedShiftChannel
-                                  }) => {
-  return (
-    <Button
-      variant={
-        parseInt(selectedShiftChannel) === channelOffset ? 'contained' : 'outlined'
-      }
-      onClick={ () => {
-        setSelectedShiftChannel(channelOffset)
-      } }
-      color={ Constants.CHANNEL_MUI_COLORS[channelOffset] }
-      size="large"
-    >
-      { Constants.CHANNEL_DISPLAY_NAMES[channelOffset] }{ channelShiftValues[channelOffset][0] === 0 && channelShiftValues[channelOffset][1] === 0 ? '' : ' *' }
-    </Button>
-  )
-}
 
 /**
  * Custom slider thumb component that displays an icon corresponding to whether this is horizontal or vertical shift.
@@ -293,75 +259,34 @@ export const ShiftChannelsToolUI = ({
                                       setSelectedShiftChannel,
                                       setChannelShiftTextInputValue
                                     }) => {
-
-  // Channel selection chips
-  const channelButtons = Constants.CHANNEL_OFFSETS.map((channelOffset) =>
-    <ShiftChannelSelectButton
-      key={ channelOffset.toString() }
-      channelOffset={ channelOffset }
-      channelShiftValues={ channelShiftValues }
-      selectedShiftChannel={ selectedShiftChannel }
-      setSelectedShiftChannel={ setSelectedShiftChannel }
-    />
-  )
+  const channelWasModified = (channelOffset) => {
+    return channelShiftValues[channelOffset][0] !== 0 || channelShiftValues[channelOffset][1] !== 0
+  }
 
   return (
-    <ToolUIContainer>
-      {/*Shift Channel Select Buttons*/ }
-      <Box>
-        <ButtonGroup
-          orientation="horizontal"
-          fullWidth
-          sx={ {
-            borderBottomRightRadius: 0,
-            borderBottomLeftRadius: 0,
-            '& .MuiButtonGroup-firstButton': {
-              borderBottomLeftRadius: 0,
-            },
-            '& .MuiButtonGroup-lastButton': {
-              borderBottomRightRadius: 0,
-            },
-            '& .MuiButton-outlined': {
-              borderBottomWidth: 0,
-              '&:hover': {
-                borderBottomWidth: 0,
-              }
-            }
-          } }
-        >
-          { channelButtons }
-        </ButtonGroup>
-      </Box>
-      { /*Shift Channel Sliders*/ }
-      <Paper
-        variant="outlined"
-        sx={ {
-          borderColor: Constants.CHANNEL_MUI_COLORS[selectedShiftChannel] + '.main',
-          borderTopRightRadius: 0,
-          borderTopLeftRadius: 0,
-          borderWidth: 1.5,
-          p: 2
-        } }
-      >
-        <ShiftChannelSlider
-          dimensionIndex={ 0 }
-          imageDimensionSize={ imageWidth }
-          selectedShiftChannel={ selectedShiftChannel }
-          channelShiftValues={ channelShiftValues }
-          channelShiftTextInputValues={ channelShiftTextInputValues }
-          setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
-          setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
-        />
-        <ShiftChannelSlider
-          dimensionIndex={ 1 }
-          imageDimensionSize={ imageHeight }
-          selectedShiftChannel={ selectedShiftChannel }
-          channelShiftValues={ channelShiftValues }
-          channelShiftTextInputValues={ channelShiftTextInputValues }
-          setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
-          setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
-        />
-      </Paper>
-    </ToolUIContainer>
+    <ChannelTabsContainer
+      selectedChannelState={ selectedShiftChannel }
+      setSelectedChannelState={ setSelectedShiftChannel }
+      channelWasModifiedFunction={ channelWasModified }
+    >
+      <ShiftChannelSlider
+        dimensionIndex={ 0 }
+        imageDimensionSize={ imageWidth }
+        selectedShiftChannel={ selectedShiftChannel }
+        channelShiftValues={ channelShiftValues }
+        channelShiftTextInputValues={ channelShiftTextInputValues }
+        setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
+        setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
+      />
+      <ShiftChannelSlider
+        dimensionIndex={ 1 }
+        imageDimensionSize={ imageHeight }
+        selectedShiftChannel={ selectedShiftChannel }
+        channelShiftValues={ channelShiftValues }
+        channelShiftTextInputValues={ channelShiftTextInputValues }
+        setSelectedChannelShiftValue={ setSelectedChannelShiftValue }
+        setChannelShiftTextInputValue={ setChannelShiftTextInputValue }
+      />
+    </ChannelTabsContainer>
   )
 }
