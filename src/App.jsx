@@ -23,6 +23,7 @@ import { IOSSafariError } from './IOSSafariError'
 // MUI
 import { Box, Container, CssBaseline, Paper, ThemeProvider } from '@mui/material'
 import { LoadingDialog } from './LoadingDialog'
+import { ShiftModesToolUI } from './ShiftModesToolUI'
 
 // ================================================================================
 // App Component
@@ -98,9 +99,8 @@ function App() {
   // ================================================================================
 
   // --------------------------------------------------------------------------------
-  // Selected channel to shift
+  // Selected channel tab to shift
   // --------------------------------------------------------------------------------
-  // x/y shift current channel selection
   const [selectedShiftChannel, setSelectedShiftChannel] = React.useState(Constants.R_OFFSET)
 
   // --------------------------------------------------------------------------------
@@ -168,6 +168,43 @@ function App() {
     }
 // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channelShiftValues, selectedShiftChannel])
+
+  // ================================================================================
+  // Shift Modes (AKA Mosh)
+  // ================================================================================
+
+  // --------------------------------------------------------------------------------
+  // UI
+  // --------------------------------------------------------------------------------
+  // Selected channel tab to show mosh settings for
+  const [selectedMoshChannel, setSelectedMoshChannel] = React.useState(Constants.R_OFFSET)
+
+  // --------------------------------------------------------------------------------
+  // Mode selection
+  // --------------------------------------------------------------------------------
+
+  /**
+   * Returns default values for selected shift mode state.
+   *
+   * @return {*[]}
+   */
+  const selectedShiftModesDefault = () => {
+    const selectedShiftModesDefault = []
+    selectedShiftModesDefault[Constants.R_OFFSET] = Constants.SHIFT_MODE_DEFAULT
+    selectedShiftModesDefault[Constants.G_OFFSET] = Constants.SHIFT_MODE_DEFAULT
+    selectedShiftModesDefault[Constants.B_OFFSET] = Constants.SHIFT_MODE_DEFAULT
+    return selectedShiftModesDefault
+  }
+
+  // Which shift mode is selected for each channel
+  const [selectedShiftModes, setSelectedShiftModes] = React.useState(selectedShiftModesDefault())
+  // TODO: helper to set mode for just 1 channel, pass to UI
+
+  // TODO: array of shift mode handlers indexed by the corresponding constant
+
+  // TODO: figure out how to store state of shift mode-specific configs for each channel
+
+  // TODO: pass relevant states/vars to sketch
 
   // ================================================================================
   // Randomize
@@ -604,6 +641,13 @@ function App() {
           />
         </Box>
 
+        {/*Shift Modes ("Mosh")*/ }
+        <Box hidden={ selectedToolTab !== Constants.MOSH_TAB_VALUE }>
+          <ShiftModesToolUI
+            selectedMoshChannel={ selectedMoshChannel }
+            setSelectedMoshChannel={ setSelectedMoshChannel }
+          />
+        </Box>
       </Container>
       {/*END Tools UI*/ }
 

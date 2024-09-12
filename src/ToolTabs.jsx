@@ -2,6 +2,17 @@ import { Box, Container, Tab, Tabs } from '@mui/material'
 import * as Constants from './Constants'
 import React from 'react'
 
+// TODO: moshModifiedDuringStep
+/**
+ * Tool tabs component.
+ *
+ * @param selectedToolTab
+ * @param setSelectedToolTab
+ * @param shiftModifiedDuringStep
+ * @param swapModifiedDuringStep
+ * @return {Element}
+ * @constructor
+ */
 export const ToolTabs = ({
                            selectedToolTab,
                            setSelectedToolTab,
@@ -36,6 +47,7 @@ export const ToolTabs = ({
           onChange={ toolTabsOnChange }
           variant="fullWidth"
           indicatorColor="secondary"
+          // TODO: can we change the color of the indicator based on which tab is selected?
           sx={ {
             '& .MuiTabs-indicator': {
               height: '100%',
@@ -54,6 +66,7 @@ export const ToolTabs = ({
             },
           } }
         >
+          {/*TODO: custom colors for each tab?*/}
           <Tab
             value={ Constants.SHIFT_TAB_VALUE }
             label={ `Shift${ shiftModifiedDuringStep() ? ' *' : '' }` }
@@ -61,6 +74,10 @@ export const ToolTabs = ({
           <Tab
             value={ Constants.SWAP_TAB_VALUE }
             label={ `Swap${ swapModifiedDuringStep() ? ' *' : '' }` }
+          />
+          <Tab
+            value={ Constants.MOSH_TAB_VALUE }
+            label="Mosh"
           />
         </Tabs>
       </Container>
